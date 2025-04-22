@@ -15,8 +15,8 @@
                   <ion-row v-if="lifeMoment.contents && lifeMoment.contents.length > 0" class="media-grid" :class="`media-count-${lifeMoment.contents.length}`">
                     <template v-for="(content, index) in lifeMoment.contents" :key="content.id">
                       <ion-col v-if="index < 4" class="media-item">
-                        <img v-if="content.type.startsWith('image/')" :src="`${import.meta.env.VITE_API_URL}${content.fileUrl}`" class="media-content" alt="img" />
-                        <video v-else-if="content.type.startsWith('video/')" :src="`${import.meta.env.VITE_API_URL}${content.fileUrl}`"  controls class="media-content"></video>
+                        <img v-if="content.type.startsWith('image/')" :src="`${apiUrl}${content.fileUrl}`" class="media-content" alt="img" />
+                        <video v-else-if="content.type.startsWith('video/')" :src="`${apiUrl}${content.fileUrl}`"  controls class="media-content"></video>
                       </ion-col>
                     </template>
                     <ion-col v-if="lifeMoment.contents.length > 4" class="overlay-more">
@@ -77,6 +77,7 @@ export default defineComponent({
     return {
       selectedLifeMoment: null,
       isLifeMomentFormModalOpen: false as boolean,
+      apiUrl: import.meta.env.VITE_API_URL
     };
   },
   props: {
