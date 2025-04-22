@@ -11,11 +11,10 @@
               </ion-buttons>
             </div>
             <div v-else-if="content.type.startsWith('video/')">
-              <video :src="`https://api.sendpathy.aaa${content.fileUrl}`" controls class="media-content"></video>
-              <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
+              <video :src="`${import.meta.env.VITE_API_URL}${content.fileUrl}`" controls class="media-content"></video>              <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
             </div>
             <div v-else-if="content.type.startsWith('audio/')">
-              <audio :src="`https://api.sendpathy.aaa${content.fileUrl}`" controls class="media-content"></audio>
+              <video :src="`${import.meta.env.VITE_API_URL}${content.fileUrl}`" controls class="media-content"></video>
               <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
             </div>
           </div>
@@ -153,7 +152,7 @@ export default defineComponent({
     },
     getImageUrl(content) {
       if (content.fileUrl && content.fileUrl.startsWith('/uploads')) {
-        return `https://api.sendpathy.aaa${content.fileUrl}`;
+        return `${import.meta.env.VITE_API_URL}${content.fileUrl}`;
       }
       return `data:${content.type};base64,${content.base64Content}`;
     },

@@ -4,7 +4,7 @@ class WebSocketService {
     public socket: Socket;
 
     constructor() {
-        this.socket = io('https://api.sendpathy.aaa/events', {
+        this.socket = io(import.meta.env.VITE_API_URL + '/events', {
             transports: ['websocket'],
         });
 

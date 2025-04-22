@@ -5,7 +5,7 @@ class NotificationWebSocketService {
   public socket: Socket;
 
   constructor() {
-    this.socket = io('https://api.sendpathy.aaa/notifications', {
+    this.socket = io(import.meta.env.VITE_API_URL + '/notifications', {
       transports: ['websocket'],
     });
 
