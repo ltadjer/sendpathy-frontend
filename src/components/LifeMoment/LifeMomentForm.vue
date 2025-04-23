@@ -11,10 +11,10 @@
               </ion-buttons>
             </div>
             <div v-else-if="content.type.startsWith('video/')">
-              <video :src="`${apiUrl}${content.fileUrl}`" controls class="media-content"></video>              <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
+              <video :src="`${content.fileUrl}`" controls class="media-content"></video>              <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
             </div>
             <div v-else-if="content.type.startsWith('audio/')">
-              <video :src="`${apiUrl}${content.fileUrl}`" controls class="media-content"></video>
+              <video :src="`${content.fileUrl}`" controls class="media-content"></video>
               <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
             </div>
           </div>
