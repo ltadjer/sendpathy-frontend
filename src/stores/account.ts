@@ -53,7 +53,6 @@ export const useAccountStore = defineStore('account', {
         this.isAuthenticated = true;
       } catch (error) {
         console.error('Failed to fetch user data:', error);
-        await this.logout();
       }
     },
 
@@ -63,12 +62,12 @@ export const useAccountStore = defineStore('account', {
       toastStore.showToast('Déconnexion réussie', 'primary');
       this.isAuthenticated = false;
       this.user = null;
-      WebSocketService.disconnect(); // Disconnect WebSocket on logout
+      WebSocketService.disconnect();
     },
 
     async refreshToken() {
       try {
-        const response = await AuthService.refreshToken();
+        await AuthService.refreshToken();
       } catch (error) {
         console.error('Failed to refresh token:', error);
         await this.logout();

@@ -15,7 +15,7 @@
           </ion-item>
           <ion-buttons slot="end">
             <ion-button size="small" class="ion-no-shadow">
-              <img alt="Logo" src="@/assets/logo.png" width="50px" />
+              <img alt="Logo" src="@/assets/logo.svg" width="70px" />
             </ion-button>
           </ion-buttons>
         </ion-toolbar>

@@ -325,7 +325,7 @@ ion-button {
 }
 
 ion-toggle {
-  --handle-background: #f5f5fa;
+  --handle-background: #dcc2ff;
   --handle-background-checked: #fd7dfb;
   --track-background: rgba(151, 71, 255, 0.3);
   --track-background-checked: rgba(253, 125, 251, 0.6);

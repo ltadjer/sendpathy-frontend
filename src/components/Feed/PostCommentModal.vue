@@ -246,5 +246,6 @@ div {
   width: 100%;
   height: auto;
   z-index: -1;
+  opacity: 0.7;
 }
 </style>

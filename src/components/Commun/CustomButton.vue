@@ -41,8 +41,8 @@ export default defineComponent({
 <style scoped>
 .gradient-text {
   background: none;
-  color: #555555;
-  font-weight: normal;
+  color: var(--ion-color-tertiary);
+  font-weight: bold;
   -webkit-background-clip: text;
   -webkit-text-fill-color: inherit;
   transition: background 0.3s ease, -webkit-text-fill-color 0.3s ease;

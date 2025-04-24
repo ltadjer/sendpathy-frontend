@@ -8,7 +8,7 @@
       </ion-toolbar>
     </ion-header>
     <!-- TODO: Add a component -->
-    <ion-content :fullscreen="true" v-if="user" class="ion-margin-top">
+    <ion-content :fullscreen="true" v-if="user">
       <ion-item lines="none" class="ion-margin">
         <ion-grid class="ion-padding">
           <ion-row>
@@ -93,8 +93,8 @@
   </ion-page>
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonAvatar, IonButtons, IonButton, IonLabel, IonInput, IonModal, IonFooter, IonIcon, IonGrid,
+import { defineComponent } from 'vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonAvatar, IonButtons, IonLabel, IonGrid,
   IonRow, IonCol, IonText, IonSegment, IonSegmentButton, IonBackButton, useIonRouter } from '@ionic/vue';
 import { arrowBackOutline, closeOutline } from 'ionicons/icons';
 import { usePostStore } from '@/stores/post';
@@ -104,7 +104,6 @@ import LifeMomentList from '@/components/LifeMoment/LifeMomentList.vue';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import ProfileEditModal from '@/components/Profile/ProfileEditModal.vue';
 import ProfileFriendshipsModal from '@/components/Profile/ProfileFriendshipsModal.vue';
-import { useRoute } from 'vue-router';
 import { useAccountStore } from '@/stores/account';
 import { useFriendshipStore } from '@/stores/friendship';
 import { useConversationStore } from '@/stores/conversation';
@@ -118,16 +117,10 @@ export default defineComponent({
     IonToolbar,
     IonTitle,
     IonContent,
-    IonList,
     IonItem,
     IonAvatar,
     IonButtons,
-    IonButton,
     IonLabel,
-    IonInput,
-    IonModal,
-    IonFooter,
-    IonIcon,
     IonBackButton,
     IonGrid,
     IonRow, IonCol, IonText, IonSegment, IonSegmentButton,
@@ -170,7 +163,7 @@ export default defineComponent({
       this.user = this.currentUser;
     } else {
       this.user = await useAccountStore().findOneById(this.userId);
-      useConversationStore().fetchAllConversations();
+      await useConversationStore().fetchAllConversations();
     }
     this.isPendingFriendship = !!this.pendingFriendships.find(user => user.id === this.userId);
     this.isPendingSentFriendship = !!this.pendingSentFriendships.find(user => user.id === this.userId);

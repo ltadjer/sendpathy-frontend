@@ -8,7 +8,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-grid class="flex-center">
+      <ion-grid>
         <ion-row>
           <ion-col class="ion-text-center">
             <img alt="Logo" src="/img/logo-with-shadow.svg" width="120px" />
@@ -16,7 +16,7 @@
               <h1 class="gradient-text ion-input-spacing">Hâte de te connaître !</h1>
             </ion-text>
             <form @submit.prevent="register" class="ion-text-left form-container">
-              <ion-button expand="block" color="primary" @click="generateAvatars">Générer un avatar</ion-button>
+              <ion-button expand="block" @click.prevent="generateAvatars">Générer un avatar</ion-button>
               <div class="avatar-selection">
                 <div v-for="(avatar, index) in avatars" :key="index" class="avatar-container"
                      :class="{ 'selected': avatar === selectedAvatar }"
@@ -46,17 +46,6 @@
               <ion-select
                 class="ion-input-spacing"
                 interface="popover"
-                placeholder="Langue maternelle"
-                v-model="nativeLanguage"
-                required
-              >
-                <ion-select-option v-for="language in languages" :key="language" :value="language">
-                  {{ language }}
-                </ion-select-option>
-              </ion-select>
-              <ion-select
-                class="ion-input-spacing"
-                interface="popover"
                 placeholder="Année de naissance"
                 v-model="yearOfBirth"
                 required
@@ -65,14 +54,48 @@
                   {{ year }}
                 </ion-select-option>
               </ion-select>
-              <ion-input
-                class="ion-input-spacing"
-                placeholder="Mot de passe"
-                type="password"
-                v-model="password"
-                required>
-                <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-              </ion-input>
+
+                <ion-input
+                  :type="passwordType"
+                  placeholder="Mot de passe"
+                  v-model="password"
+                  class="ion-input-spacing"
+                  required
+                >
+                  <ion-icon
+                    slot="end"
+                    :icon="passwordType === 'password' ? eyeOutline : eyeOffOutline"
+                    @click="togglePassword('password')"
+                    class="password-toggle-icon"
+                  ></ion-icon>
+                </ion-input>
+
+
+                <ion-input
+                  :type="confirmPasswordType"
+                  placeholder="Confirmez le mot de passe"
+                  v-model="confirmPassword"
+                  required
+                >
+                  <ion-icon
+                    slot="end"
+                    :icon="confirmPasswordType === 'password' ? eyeOutline : eyeOffOutline"
+                    @click="togglePassword('confirm')"
+                    class="password-toggle-icon"
+                  ></ion-icon>
+                </ion-input>
+              <ion-list class="password-list">
+                <ion-item v-for="(rule, index) in passwordRules" :key="index" lines="none" class="ion-no-shadow">
+                  <ion-icon
+                    slot="start"
+                    :icon="rule.check(password) ? checkmarkOutline : closeOutline"
+                  ></ion-icon>
+                  <ion-label :class="{ 'valid': rule.check(password) }">
+                    {{ rule.message }}
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+
               <custom-button expand="block" color="primary" type="submit" text="S'inscrire"></custom-button>
             </form>
           </ion-col>
@@ -82,6 +105,7 @@
     </ion-content>
   </ion-page>
 </template>
+
 <script>
 import { defineComponent } from 'vue';
 import {
@@ -92,21 +116,29 @@ import {
   IonCol,
   IonText,
   IonInput,
-  IonList,
   IonSelect,
   IonSelectOption,
   IonButton,
-  IonInputPasswordToggle,
+  IonItem,
+  IonList,
+  IonLabel,
+  IonIcon,
   IonHeader,
   IonToolbar,
-IonBackButton,
+  IonBackButton,
   IonButtons
 } from '@ionic/vue';
-import { arrowBackOutline } from 'ionicons/icons';
+import {
+  arrowBackOutline,
+  checkmarkOutline,
+  closeOutline,
+  eyeOutline,
+  eyeOffOutline
+} from 'ionicons/icons';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import ToastMessage from '@/components/Commun/ToastMessage.vue';
 import { useAccountStore } from '@/stores/account';
-
+import { useToastStore } from '@/stores/toast';
 
 export default defineComponent({
   name: 'RegisterView',
@@ -120,11 +152,13 @@ export default defineComponent({
     IonCol,
     IonText,
     IonInput,
-    IonList,
     IonSelect,
     IonSelectOption,
     IonButton,
-    IonInputPasswordToggle,
+    IonItem,
+    IonList,
+    IonLabel,
+    IonIcon,
     IonHeader,
     IonToolbar,
     IonBackButton,
@@ -135,22 +169,20 @@ export default defineComponent({
       email: '',
       username: '',
       password: '',
+      confirmPassword: '',
       nativeLanguage: '',
       yearOfBirth: null,
-      selectedAvatar: '', // Avatar sélectionné
-      avatars: [], // Liste des avatars générés
+      selectedAvatar: '',
+      avatars: [],
       years: [],
-      languages: [
-        'Anglais',
-        'Français',
-        'Espagnol',
-        'Allemand',
-        'Chinois',
-        'Japonais',
-        'Coréen',
-        'Russe',
-        'Portugais',
-        'Italien',
+      passwordType: 'password',
+      confirmPasswordType: 'password',
+      passwordRules: [
+        { check: (v) => !!v, message: 'Le champ mot de passe est requis' },
+        { check: (v) => v && v.length >= 12, message: 'Le mot de passe doit contenir au moins 12 caractères' },
+        { check: (v) => v && /[A-Za-z]/.test(v), message: 'Le mot de passe doit contenir au moins une lettre' },
+        { check: (v) => v && /\d/.test(v), message: 'Le mot de passe doit contenir au moins un chiffre' },
+        { check: (v) => v && /[!@#$%^&*(),.?":{}|<>]/.test(v), message: 'Le mot de passe doit contenir au moins un caractère spécial' },
       ],
     };
   },
@@ -162,10 +194,10 @@ export default defineComponent({
     }
   },
   setup() {
-    return { arrowBackOutline };
+    const toastStore = useToastStore();
+    return { arrowBackOutline, toastStore, checkmarkOutline, closeOutline, eyeOutline, eyeOffOutline };
   },
   methods: {
-    // Générer plusieurs avatars
     generateAvatars() {
       const newAvatars = [];
       const backgroundColors = ['b6e3f4', 'c0aede', 'd1d4f9', 'ffd5dc', 'ffdfbf'];
@@ -176,15 +208,31 @@ export default defineComponent({
       }
       this.avatars = newAvatars;
     },
-    // Sélectionner un avatar
     selectAvatar(avatar) {
       this.selectedAvatar = avatar;
     },
+    togglePassword(field) {
+      if (field === 'password') {
+        this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+      } else {
+        this.confirmPasswordType = this.confirmPasswordType === 'password' ? 'text' : 'password';
+      }
+    },
     async register() {
       try {
+        if (this.password !== this.confirmPassword) {
+          this.toastStore.showToast('Les mots de passe ne correspondent pas.', 'danger');
+          return;
+        }
+
+        const isValid = this.passwordRules.every((rule) => rule.check(this.password));
+        if (!isValid) {
+          this.toastStore.showToast('Veuillez respecter les règles de mot de passe.', 'danger');
+          return;
+        }
         const age = new Date().getFullYear() - this.yearOfBirth;
         if (age < 18) {
-          alert('Vous devez avoir au moins 18 ans pour vous inscrire.');
+          this.toastStore.showToast('Vous devez avoir au moins 18 ans pour vous inscrire.', 'danger');
           return;
         }
 
@@ -192,7 +240,6 @@ export default defineComponent({
           email: this.email,
           username: this.username,
           password: this.password,
-          nativeLanguage: this.nativeLanguage,
           age: age,
           avatar: this.selectedAvatar,
         };
@@ -205,6 +252,18 @@ export default defineComponent({
     navigateToLogin() {
       this.$router.push('/connexion');
     }
-  },
+  }
 });
 </script>
+
+<style scoped>
+.password-list {
+  margin: 1rem 0;
+}
+.password-list .valid {
+  font-weight: bold;
+}
+.password-toggle-icon {
+  cursor: pointer;
+}
+</style>

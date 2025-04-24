@@ -69,14 +69,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonItem, IonLabel, IonInput, IonTextarea, IonList, IonGrid, IonRow, IonCol, IonAvatar } from '@ionic/vue';
+import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonItem, IonInput, IonTextarea, IonList, IonGrid, IonRow, IonCol, IonAvatar } from '@ionic/vue';
 import { closeOutline } from 'ionicons/icons';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import { useAccountStore } from '@/stores/account';
 
 export default defineComponent({
   name: 'ProfileEditModal',
-  components: { IonList, IonGrid, IonRow, IonCol, IonAvatar, IonTextarea, CustomButton, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonItem, IonLabel, IonInput },
+  components: { IonList, IonGrid, IonRow, IonCol, IonAvatar, IonTextarea, CustomButton, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonItem, IonInput },
   props: {
     isOpen: {
       type: Boolean,

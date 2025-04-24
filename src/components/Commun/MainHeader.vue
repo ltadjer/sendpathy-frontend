@@ -179,13 +179,13 @@ export default defineComponent({
 }
 
 .sidebar {
-  width: 280px; /* Largeur fixe */
+  width: 280px;
   padding: 20px;
-  background: #f5f5fa;
+  background: #dcc2ff;
   box-shadow: var(--neumorphism-out-shadow);
   margin: 1rem;
   border-radius: 1rem;
-  flex-shrink: 0; /* Empêche la réduction */
+  flex-shrink: 0;
   z-index: 100000;
   display: flex
 ;

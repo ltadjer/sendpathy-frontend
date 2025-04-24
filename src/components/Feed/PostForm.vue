@@ -182,8 +182,9 @@ ion-item {
   background-image: url('/img/fond-sendpathy.svg');
   background-size: cover;
   background-position: center;
-  height: 300px;
+  height: 260px;
   resize: none;
+  opacity: .6;
 }
 
 .custom-textarea textarea {
