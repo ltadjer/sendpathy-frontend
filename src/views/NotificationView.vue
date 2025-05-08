@@ -3,13 +3,14 @@
     <ion-header :translucent="true" class="ion-padding header-page">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" />
+          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" />
         </ion-buttons>
         <ion-title>Notifications</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-list class="ion-padding">
+        <ion-item-sliding v-for="notification in notifications" :key="notification.id" class="notification-item">
         <ion-item lines="none" v-for="notification in notifications" :key="notification.id" class="notification-item">
           <ion-avatar slot="start">
             <img :src="notification.sender.avatar" alt="Sender Avatar" />
@@ -26,6 +27,12 @@
             <ion-button @click="inviteBack(notification.sender.id)">Inviter en retour</ion-button>
           </div>
         </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option @click="deleteNotification(notification.id)">
+              <span class="item-option-text">Supprimer</span>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -120,6 +127,10 @@ export default defineComponent({
       if (friendship) {
         await useFriendshipStore().deleteOneFriendship(friendship.id);
       }
+    },
+    async deleteNotification(notificationId: string) {
+      await useNotificationStore().deleteOneNotification(notificationId);
+      await useNotificationStore().fetchAllNotifications();
     },
     async inviteBack(userId: string) {
       await useFriendshipStore().createOneFriendship({ requesterId: this.currentUser.id, receiverId: userId, status: 'PENDING' });

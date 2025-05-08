@@ -68,7 +68,7 @@
   </ion-page>
 </template>
 <script lang="ts">
-import { IonPage, IonAvatar, IonItem, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonFab, IonFabButton, IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonContent, IonList, IonLabel } from '@ionic/vue';
+import { IonPage, IonAvatar, IonItem, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonFab, IonFabButton } from '@ionic/vue';
 import { settingsOutline, homeOutline, chatbubblesOutline, journalOutline, todayOutline, add, logOutOutline } from 'ionicons/icons';
 import PostFormModal from '@/components/Feed/PostFormModal.vue';
 import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue';
@@ -81,8 +81,7 @@ import FriendshipsModal from '@/components/Message/FriendshipsModal.vue'
 export default defineComponent({
   name: 'MainHeader',
   components: {
-    FriendshipsModal, CustomButton, IonPage, IonAvatar, IonItem, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonFab, IonFabButton, PostFormModal, LifeMomentFormModal, IonButton,
-    IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonContent, IonList, IonLabel },
+    FriendshipsModal, CustomButton, IonPage, IonAvatar, IonItem, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonFab, IonFabButton, PostFormModal, LifeMomentFormModal},
   data() {
     return {
       homeOutline,
@@ -130,6 +129,7 @@ export default defineComponent({
       } else if (this.$route.path === '/feed') {
         this.isPostFormModalOpen = true;
       } else if (this.$route.path === '/conversations') {
+        console.log('Opening FriendshipsModal');
         this.isFriendshipsModalOpen = true;
       }
     },
@@ -181,7 +181,7 @@ export default defineComponent({
 .sidebar {
   width: 280px;
   padding: 20px;
-  background: #dcc2ff;
+  background: var(--ion-color-primary);
   box-shadow: var(--neumorphism-out-shadow);
   margin: 1rem;
   border-radius: 1rem;

@@ -5,31 +5,28 @@ const api = axios.create({
   withCredentials: true, // Ensure cookies are sent with requests
 });
 
+import AuthService from '@/services/auth.service';
+
 api.interceptors.response.use(
-  response => response,
-  async (error) => {
-    if (error.response.status === 401 && !error.config._retry) {
-      error.config._retry = true;
-      try {
-        //await refreshToken();
-        return api(error.config);
-      } catch (refreshError) {
-        console.error('Failed to refresh token:', refreshError);
+    res => res,
+    async error => {
+      const original = error.config;
+      if (error.response.status === 401 && !original._retry) {
+        original._retry = true;
+        try {
+          await AuthService.refreshToken();
+          return api(original);
+        } catch (e) {
+          await AuthService.logout();
+          window.location.href = '/connexion';
+          return Promise.reject(e);
+        }
       }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
 );
 
-async function refreshToken() {
-  try {
-    const response = await api.post('/auth/refresh-token');
-    return response.data;
-  } catch (error) {
-    console.error('Error refreshing token:', error);
-    throw error;
-  }
-}
+
 
 export default {
   async get(url, config = {}) {

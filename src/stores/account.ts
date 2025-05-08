@@ -7,8 +7,22 @@ export const useAccountStore = defineStore('account', {
   state: () => ({
     user: null,
     isAuthenticated: false,
+    _refreshTimeoutId: null as ReturnType<typeof setTimeout> | null,
   }),
   actions: {
+    scheduleRefresh(lifetimeMs = 15 * 60 * 1000) {
+      if (this._refreshTimeoutId) clearTimeout(this._refreshTimeoutId);
+
+      const timeout = lifetimeMs - 60 * 1000;
+      this._refreshTimeoutId = setTimeout(async () => {
+        try {
+          await this.refreshToken();
+          this.scheduleRefresh(lifetimeMs);
+        } catch {
+          await this.logout();
+        }
+      }, timeout);
+    },
     async register(user) {
       const toastStore = useToastStore();
       try {
@@ -36,6 +50,7 @@ export const useAccountStore = defineStore('account', {
         if (response) {
           if (response.status === 200 || response.status === 201) {
             toastStore.showToast('Connexion réussie', 'primary');
+            this.scheduleRefresh(15 * 60 * 1000);
           } else if (response.status === 401) {
             toastStore.showToast('Échec de la connexion, vérifiez vos identifiants ou confirmez votre email', 'danger');
           }
@@ -51,6 +66,7 @@ export const useAccountStore = defineStore('account', {
         const response = await AuthService.checkAuth();
         this.user = response.data;
         this.isAuthenticated = true;
+        this.scheduleRefresh(15 * 60 * 1000);
       } catch (error) {
         console.error('Failed to fetch user data:', error);
       }
@@ -63,6 +79,7 @@ export const useAccountStore = defineStore('account', {
       this.isAuthenticated = false;
       this.user = null;
       WebSocketService.disconnect();
+      if (this._refreshTimeoutId) clearTimeout(this._refreshTimeoutId);
     },
 
     async refreshToken() {

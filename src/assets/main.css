@@ -13,6 +13,15 @@ body {
     scrollbar-color: #FD7DFB50 var(--ion-color-primary);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold !important;
+}
+
 ::-webkit-scrollbar {
     width: 4px;
     height: 4px;
@@ -104,6 +113,7 @@ ion-footer {
 ion-searchbar {
     --border-radius: 1rem !important;
     --box-shadow: var(--neumorphism-in-shadow) !important;
+    --background: var(--ion-color-primary) !important;
 }
 
 .no-background {
@@ -126,6 +136,11 @@ ion-card, ion-item {
 ion-card:hover,
 ion-item:hover {
     transform: translateY(-5px);
+}
+
+ion-segment {
+    --background: var(--ion-color-primary) !important;
+    background: var(--ion-color-primary) !important;
 }
 
 ion-segment-button {
@@ -358,6 +373,7 @@ ion-thumbnail {
 
 ion-tab-bar {
     box-shadow: var(--neumorphism-out-shadow) !important;
+    --background: var(--ion-color-primary) !important;
     --border: none;
     border-radius: 1rem !important;
 }
@@ -437,9 +453,15 @@ ion-modal ion-grid {
     height: 48px;
 }
 
+.header-background {
+    --background: var(--ion-background-color) !important;
+    background: var(--ion-color-primary) !important;
+}
 .header-page ion-toolbar,
 .footer-page ion-toolbar {
     box-shadow: var(--neumorphism-out-shadow);
+    background: var(--ion-color-primary) !important;
+    --background: var(--ion-color-primary) !important;
     border-radius: 1rem;
 }
 
@@ -452,4 +474,21 @@ ion-modal ion-grid {
     flex-wrap: wrap;
     gap: 8px;
     padding-bottom: 1.2rem;
+}
+
+.header-ios ion-toolbar:last-of-type {
+    --border-width: 0;
+}
+
+ion-item-divider {
+    --background: var(--ion-color-primary) !important;
+}
+
+ion-item-sliding {
+    box-shadow: var(--neumorphism-out-shadow);
+    border-radius: 1rem;
+}
+
+ion-item-option:hover {
+    box-shadow: var(--neumorphism-in-shadow);
 }

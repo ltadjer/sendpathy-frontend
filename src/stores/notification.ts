@@ -20,6 +20,14 @@ export const useNotificationStore = defineStore('notification', {
     addNotification(notification) {
       this.notifications.push(notification);
     },
+    async deleteOneNotification(notificationId: string) {
+      const response = await notificationService.deleteOneNotification(notificationId);
+      if (response.status === 200) {
+        this.notifications = this.notifications.filter(n => n.id !== notificationId);
+      } else {
+        console.error('Error deleting notification:', response);
+      }
+    }
   },
   created() {
     NotificationWebSocketService.on('newNotification', this.addNotification);

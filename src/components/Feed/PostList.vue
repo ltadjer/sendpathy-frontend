@@ -1,6 +1,7 @@
 <template>
       <post-form-modal v-if="isPostFormModalOpen" @close="closePostFormModal" :post="selectedPost" :current-user="currentUser" />
       <ion-list class="ion-padding">
+        <template v-if="filteredPosts.length > 0">
         <post-filter-button v-if="$route.fullPath.includes('feed')" class="ion-margin-bottom ion-text-end" @update:selectedTags="updateSelectedTags" @update:selectedTriggers="updateSelectedTriggers"></post-filter-button>
 
         <ion-item
@@ -75,13 +76,35 @@
           </ion-grid>
         </ion-item>
         <post-comment-modal v-if="isCommentModalOpen" :comments="comments" @close="closeCommentModal" :post-id="selectedPostId" :current-user="currentUser"></post-comment-modal>
+        </template>
+        <template v-else>
+          <ion-item lines="none" class="no-posts">
+            <ion-grid>
+              <ion-row class="ion-justify-content-center">
+                <ion-col size="12">
+                  <ion-label>
+                    <h2 class="font-bold">Pas encore de posts</h2>
+                    <p>Exprimez ce que vous ressentez, anonymement et en toute liberté. Votre voix compte ici.</p>
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row class="ion-justify-content-center">
+                <ion-col size="12" class="ion-text-center">
+                  <ion-button expand="block" @click="openPostForm">
+                    Ajouter un post
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </template>
       </ion-list>
       <ToastMessage />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonContent, IonList, IonItem, IonButton, IonIcon, IonAvatar, IonButtons, IonGrid, IonCol, IonRow, IonText, IonTextarea, IonPopover, IonChip, IonLabel } from '@ionic/vue';
+import { IonList, IonButton, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonTextarea, IonPopover, IonChip, IonLabel } from '@ionic/vue';
 import PostFormModal from '@/components/Feed/PostFormModal.vue';
 import PostCommentModal from '@/components/Feed/PostCommentModal.vue';
 import { chatbubbleOutline, heart, heartOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
@@ -96,13 +119,11 @@ export default defineComponent({
     ToastMessage,
     PostFormModal,
     PostFilterButton,
-    IonContent,
     IonList,
     IonItem,
     IonButton,
     IonIcon,
     IonAvatar,
-    IonButtons,
     IonGrid,
     IonCol,
     IonRow,
@@ -111,6 +132,7 @@ export default defineComponent({
     IonPopover,
     IonChip,
     IonLabel,
+    IonButton,
     PostCommentModal
   },
   setup() {
@@ -185,6 +207,9 @@ export default defineComponent({
       this.isPostFormModalOpen = false;
       this.selectedPostId = null;
     },
+    openPostForm() {
+      this.isPostFormModalOpen = true;
+    },
     updateSelectedTags(tags) {
       this.selectedTags = tags;
     },
@@ -203,7 +228,7 @@ ion-grid {
   padding: 1rem;
 }
 
-ion-item:not(ion-popover ion-item) {
+ion-item:not(ion-popover ion-item):not(.no-posts) {
   --padding-start: 0px;
   --inner-padding-end: 0px;
 }

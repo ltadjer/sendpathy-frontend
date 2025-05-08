@@ -73,20 +73,23 @@ router.beforeEach(async (to, from, next) => {
 
   try {
     await accountStore.checkAuth();
+    if (accountStore.isAuthenticated) {
+      accountStore.scheduleRefresh(15 * 60 * 1000);
+    }
   } catch (error) {
-    console.error('Failed to check authentication:', error);
+    console.error('Échec de la vérification de session :', error);
   }
 
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const requiresGuest = to.matched.some(record => record.meta.requiresGuest);
+  const requiresAuth = to.matched.some(r => r.meta.requiresAuth);
+  const requiresGuest = to.matched.some(r => r.meta.requiresGuest);
 
   if (requiresAuth && !accountStore.isAuthenticated) {
-    next('/connexion');
-  } else if (requiresGuest && accountStore.isAuthenticated) {
-    next('/');
-  } else {
-    next();
+    return next('/connexion');
   }
+  if (requiresGuest && accountStore.isAuthenticated) {
+    return next('/');
+  }
+  next();
 });
 
 export default router;

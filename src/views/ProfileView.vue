@@ -3,7 +3,7 @@
     <ion-header :translucent="true" class="ion-padding header-page" v-if="!isDesktop">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" />
+          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" />
         </ion-buttons>
       </ion-toolbar>
     </ion-header>

@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" @click="navigateToLogin" />
+          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" @click="navigateToLogin" text="" />
         </ion-buttons>
       </ion-toolbar>
     </ion-header>

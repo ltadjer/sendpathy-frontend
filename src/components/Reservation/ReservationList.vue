@@ -1,104 +1,115 @@
 <template>
-  <ion-header :translucent="true" class="ion-padding header-page">
-    <ion-toolbar>
-      <ion-item lines="none" class="ion-no-shadow ion-align-items-center">
-        <div class="avatar-container">
-          <ion-avatar slot="start">
-            <img alt="User Avatar" :src="currentUser?.avatar" />
-          </ion-avatar>
-        </div>
-        <ion-title>Réservations</ion-title>
-      </ion-item>
-      <ion-buttons slot="end">
-        <ion-button size="small" class="ion-no-shadow">
-          <img alt="Logo" src="@/assets/logo.svg" width="70px" />
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
   <ion-content>
-    <ion-segment v-model="selectedSegment" class="ion-padding">
-      <ion-segment-button value="upcoming" :class="{'ion-shadow-in': selectedSegment === 'upcoming'}">
-        <ion-label><span :class="{'gradient-text': selectedSegment === 'upcoming'}">A venir</span></ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="past" :class="{'ion-shadow-in': selectedSegment === 'past'}">
-        <ion-label><span :class="{'gradient-text': selectedSegment === 'past'}">Passées</span></ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <template v-if="reservations && reservations.length > 0">
+      <ion-segment v-model="selectedSegment" class="ion-padding">
+        <ion-segment-button value="upcoming" :class="{'ion-shadow-in': selectedSegment === 'upcoming'}">
+          <ion-label><span :class="{'gradient-text': selectedSegment === 'upcoming'}">A venir</span></ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="past" :class="{'ion-shadow-in': selectedSegment === 'past'}">
+          <ion-label><span :class="{'gradient-text': selectedSegment === 'past'}">Passées</span></ion-label>
+        </ion-segment-button>
+      </ion-segment>
 
-    <ion-grid class="ion-padding-start ion-padding-end">
-      <ion-row>
-        <ion-col size="12" size-md="6" v-for="reservation in filteredReservations" :key="reservation.id">
-          <ion-card class="reservation-card">
-            <ion-card-header>
-              <ion-card-title> Dr {{ getTherapistName(reservation.slot.therapistId) }}
-                <ion-icon class="custom-icon" :icon="enterOutline">
-                  <a v-if="reservation.videoCallLink" :href="reservation.videoCallLink" target="_blank"></a>
-                </ion-icon></ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
+      <ion-grid class="ion-padding-start ion-padding-end">
+        <ion-row>
+          <ion-col size="12" size-md="6" v-for="reservation in filteredReservations" :key="reservation.id">
+            <ion-card class="reservation-card">
+              <ion-card-header>
+                <ion-card-title> Dr {{ getTherapistName(reservation.slot.therapistId) }}
+                  <ion-icon class="custom-icon" :icon="enterOutline">
+                    <a v-if="reservation.videoCallLink" :href="reservation.videoCallLink" target="_blank"></a>
+                  </ion-icon></ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row class="ion-padding-start ion-padding-end">
+                    <ion-col size="6">
+                      <ion-card-subtitle>Service</ion-card-subtitle>
+                      <ion-card-title>Psychologue</ion-card-title>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="ion-padding-start ion-padding-end">
+                    <ion-col size="6">
+                      <ion-card-subtitle>Date</ion-card-subtitle>
+                      <ion-card-title>{{ formatDate(reservation.slot.startTime) }}</ion-card-title>
+                    </ion-col>
+                    <ion-col size="6">
+                      <ion-card-subtitle>Heure</ion-card-subtitle>
+                      <ion-card-title>{{ formatTime(reservation.slot.startTime) }} - {{ formatTime(reservation.slot.endTime) }}</ion-card-title>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="6">
+                      <ion-button expand="block"  @click="updateReservation(reservation.id)">
+                        <span class="gradient-text">Déplacer le RDV</span>
+                      </ion-button>
+                    </ion-col>
+                    <ion-col size="6">
+                      <ion-button expand="block" @click="deleteOneReservation(reservation.id)">
+                        <span>Annuler le RDV</span>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-alert
+        :is-open="isAlertOpen"
+        header="Confirmation"
+        message="Êtes-vous sûr de vouloir annuler cette réservation ?"
+        :buttons="[
+          { text: 'Annuler', role: 'cancel', handler: () => (isAlertOpen = false) },
+          { text: 'Confirmer', handler: confirmDelete }
+        ]"
+      ></ion-alert>
+    </template>
+   <template v-else>
+     <ion-grid class="ion-padding">
+       <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none" class="no-reservations">
               <ion-grid>
-                <ion-row class="ion-padding-start ion-padding-end">
-                  <ion-col size="6">
-                    <ion-card-subtitle>Service</ion-card-subtitle>
-                    <ion-card-title>Psychologue</ion-card-title>
+                <ion-row class="ion-justify-content-center">
+                  <ion-col size="12">
+                    <ion-label>
+                      <h2 class="font-bold">Aucune consultation</h2>
+                      <p>Prendre soin de soi, c’est déjà un grand pas. Réservez un moment d’écoute bienveillant quand vous serez prêt·e.</p>
+                    </ion-label>
+
                   </ion-col>
                 </ion-row>
-                <ion-row class="ion-padding-start ion-padding-end">
-                  <ion-col size="6">
-                    <ion-card-subtitle>Date</ion-card-subtitle>
-                    <ion-card-title>{{ formatDate(reservation.slot.startTime) }}</ion-card-title>
-                  </ion-col>
-                  <ion-col size="6">
-                    <ion-card-subtitle>Heure</ion-card-subtitle>
-                    <ion-card-title>{{ formatTime(reservation.slot.startTime) }} - {{ formatTime(reservation.slot.endTime) }}</ion-card-title>
+                <ion-row class="ion-justify-content-center">
+                  <ion-col size="12" class="ion-text-center">
+                    <ion-button expand="block" @click="openReservationForm()">
+                      Prendre un rendez-vous
+                    </ion-button>
                   </ion-col>
                 </ion-row>
               </ion-grid>
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="6">
-                    <ion-button expand="block"  @click="updateReservation(reservation.id)">
-                      <span class="gradient-text">Déplacer le RDV</span>
-                    </ion-button>
-                  </ion-col>
-                  <ion-col size="6">
-                    <ion-button expand="block" @click="deleteOneReservation(reservation.id)">
-                      <span>Annuler le RDV</span>
-                    </ion-button>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+            </ion-item>
 
-    <!-- Confirmation Alert -->
-    <ion-alert
-      :is-open="isAlertOpen"
-      header="Confirmation"
-      message="Êtes-vous sûr de vouloir annuler cette réservation ?"
-      :buttons="[
-        { text: 'Annuler', role: 'cancel', handler: () => (isAlertOpen = false) },
-        { text: 'Confirmer', handler: confirmDelete }
-      ]"
-    ></ion-alert>
+          </ion-col>
+       </ion-row>
+     </ion-grid>
+   </template>
   </ion-content>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar, IonAvatar, IonButtons, IonButton, IonCard, IonCardTitle, IonCardSubtitle, IonCardContent, IonCardHeader, IonGrid, IonRow, IonCol, IonIcon, IonSegment, IonSegmentButton, IonAlert } from '@ionic/vue';
+import { defineComponent } from 'vue';
+import { IonContent, IonItem, IonLabel, IonCard, IonCardTitle, IonCardSubtitle, IonCardContent, IonCardHeader, IonGrid, IonRow, IonCol, IonIcon, IonSegment, IonSegmentButton, IonAlert, IonButton } from '@ionic/vue';
 import { enterOutline } from 'ionicons/icons';
 import { formatTime } from '@/utils/date';
 import { useReservationStore } from '@/stores/reservation';
 
 export default defineComponent({
   name: 'ReservationList',
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonAvatar, IonButtons, IonButton, IonCard, IonCardTitle, IonCardSubtitle, IonCardContent, IonCardHeader, IonGrid, IonRow, IonCol, IonIcon, IonSegment, IonSegmentButton, IonAlert },
+  components: { IonContent, IonItem, IonLabel, IonCard, IonCardTitle, IonCardSubtitle, IonCardContent, IonCardHeader, IonGrid, IonRow, IonCol, IonIcon, IonSegment, IonSegmentButton, IonAlert, IonButton },
 
   props: {
     currentUser: {
@@ -163,6 +174,9 @@ export default defineComponent({
         this.reservationToDelete = null;
       }
       this.isAlertOpen = false;
+    },
+    openReservationForm() {
+      this.$router.push('/reservations/nouvelle-reservation/');
     }
   }
 });

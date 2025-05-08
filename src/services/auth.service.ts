@@ -31,11 +31,7 @@ export default  {
    */
 
   async checkAuth() {
-    try {
-      return await api.get('/auth/me'); // Une route pour retourner les infos utilisateur
-    } catch (error) {
-      throw error
-    }
+    return await api.get('/auth/me');
   },
 
   /**
@@ -44,12 +40,7 @@ export default  {
    */
 
   async refreshToken() {
-    try {
-      const response = await api.post('/auth/refresh-token');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    await api.post('/auth/refresh-token');
   },
   /**
    * Demande une réinitialisation de mot de passe pour un utilisateur.
@@ -73,30 +64,20 @@ export default  {
   },
 
   async updateAccessCode(accessCode: string) {
-    try {
       const response = await api.patch(`/users/access-code`, { accessCode: accessCode });
       return response.data;
-    } catch (error) {
-      throw error;
-    }
+
   },
 
   async validateAccessCode(accessCode: string) {
-    try {
       const response = await api.post(`/users/validate-access-code`, { accessCode: accessCode });
       return response.data;
-    } catch (error) {
-      throw error;
-    }
+
   },
 
   async setAccessCode(accessCode: string) {
-    try {
       const response = await api.post(`/users/access-code`, { accessCode: accessCode });
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   },
 
   /**
@@ -108,48 +89,28 @@ export default  {
   },
 
   async findOneById(id: string) {
-    try {
       const response = await api.get(`/users/${id}`);
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   },
 
   async updateUser(userId: string, updatedUser: any) {
-    try {
       const response = await api.patch(`/users/${userId}`, updatedUser);
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   },
 
   async updateUserTags(userId: string, tags: string[]) {
-    try {
       const response = await api.patch(`/users/${userId}/tags`, { tagIds: tags });
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   },
 
   async updateUserTriggers(userId: string, triggers: string[]) {
-    try {
       const response = await api.patch(`/users/${userId}/triggers`, { triggerIds: triggers });
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   },
 
   async deleteUser(userId: string) {
-    try {
       const response = await api.delete(`/users/${userId}`);
       return response.data;
-    } catch (error) {
-      throw error;
-    }
   },
 
 }

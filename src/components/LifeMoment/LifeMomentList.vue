@@ -1,6 +1,7 @@
 <template>
       <life-moment-form-modal v-if="isLifeMomentFormModalOpen" :lifeMoment="selectedLifeMoment" @close="closeLifeMomentFormModal" />
       <ion-list class="ion-padding">
+        <template v-if="lifeMoments.length > 0">
         <ion-item class="ion-margin-bottom" lines="none" v-for="lifeMoment in lifeMoments" :key="lifeMoment.id" @click="editLifeMoment(lifeMoment)">
           <ion-grid>
             <ion-row>
@@ -44,11 +45,33 @@
             </ion-row>
           </ion-grid>
         </ion-item>
+        </template>
+        <template v-else>
+          <ion-item lines="none" class="no-life-moments">
+            <ion-grid>
+              <ion-row class="ion-justify-content-center">
+                <ion-col size="12">
+                  <ion-label>
+                    <h2 class="gradient-text font-bold">Aucun moment partagé pour l’instant</h2>
+                    <p>Capturez un instant, une émotion, un souvenir... et laissez une trace authentique de votre parcours.</p>
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row class="ion-justify-content-center">
+                <ion-col size="12" class="ion-text-center">
+                  <ion-button expand="block" @click="openLifeMomentForm">
+                    Ajouter un moment
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </template>
       </ion-list>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {IonContent, IonList, IonItem, IonButton, IonButtons, IonAvatar, IonGrid, IonRow, IonCol, IonIcon, IonPopover, IonText } from '@ionic/vue';
+import {IonList, IonItem, IonGrid, IonRow, IonCol, IonIcon, IonPopover, IonText } from '@ionic/vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
 import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
@@ -57,14 +80,8 @@ import { formatDate } from '@/utils/date';
 export default defineComponent({
   name: 'LifeMomentList',
   components: {
-    IonButtons,
-    IonAvatar,
-    IonContent,
     IonList,
     IonItem,
-    IonButton,
-    IonButtons,
-    IonAvatar,
     IonGrid,
     IonRow,
     IonCol,
@@ -101,6 +118,9 @@ export default defineComponent({
     },
     closeLifeMomentFormModal() {
       this.isLifeMomentFormModalOpen = false;
+    },
+    openLifeMomentForm() {
+      this.isLifeMomentFormModalOpen = true;
     },
 
   },

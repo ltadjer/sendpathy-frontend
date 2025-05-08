@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="true" :icon="arrowBackOutline"/>
+          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text=""/>
         </ion-buttons>
         <ion-title>Réinitialiser du mot de passe</ion-title>
       </ion-toolbar>

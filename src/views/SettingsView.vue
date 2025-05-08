@@ -3,7 +3,7 @@
     <ion-header :translucent="true" class="ion-padding header-page">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" />
+          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" />
         </ion-buttons>
         <ion-title>Paramètres</ion-title>
       </ion-toolbar>
@@ -72,7 +72,7 @@
               </ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item lines="none">
+          <ion-item lines="none" v-if="triggers && triggers.length > 0">
             <ion-label>Triggers</ion-label>
             <ion-select v-model="selectedTriggers" interface="popover" multiple="true" @ionChange="updateTriggers">
               <ion-select-option v-for="trigger in triggers" :key="trigger.id" :value="trigger.id">
@@ -80,7 +80,7 @@
               </ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item lines="none">
+          <ion-item lines="none" v-if="tags && tags.length > 0">
             <ion-label>Tags</ion-label>
             <ion-select v-model="selectedTags" interface="popover" multiple="true" @ionChange="updateTags">
               <ion-select-option v-for="tag in tags" :key="tag.id" :value="tag.id">
@@ -147,7 +147,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { pencilOutline } from 'ionicons/icons';
+import { pencilOutline, arrowBackOutline } from 'ionicons/icons';
 import { useTagStore } from '@/stores/tag';
 import { useTriggerStore } from '@/stores/trigger';
 import { useAccountStore } from '@/stores/account';
@@ -224,6 +224,7 @@ export default defineComponent({
   setup() {
     return {
       pencilOutline,
+      arrowBackOutline
     };
   },
   async created() {
@@ -317,7 +318,7 @@ ion-select {
   margin: 0.8rem;
 }
 
-ion-item-group:nth-child(3) ion-item {
+ion-item-group:nth-child(4) ion-item {
   --inner-padding-end: none !important;
 }
 ion-button {
@@ -326,15 +327,11 @@ ion-button {
 
 ion-toggle {
   --handle-background: #dcc2ff;
-  --handle-background-checked: #fd7dfb;
+  --handle-background-checked: var(--ion-color-tertiary);
   --track-background: rgba(151, 71, 255, 0.3);
   --track-background-checked: rgba(253, 125, 251, 0.6);
   --handle-border-radius: 50%;
   --handle-box-shadow: var(--neumorphism-out-shadow);
-}
-
-ion-toggle::part(track) {
-  border-radius: 10px;
 }
 
 ion-toggle::part(handle) {

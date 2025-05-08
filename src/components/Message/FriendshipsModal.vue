@@ -17,8 +17,10 @@
         v-model="searchTerm"
         placeholder="Rechercher"
       ></ion-searchbar>
-      <ion-list v-if="friendsList.length > 0" class="ion-padding">
-        <ion-item
+        <ion-list class="ion-padding">
+          <template  v-if="friendsList.length > 0">
+
+          <ion-item
           lines="none"
           v-for="friend in filteredFriends"
           :key="friend.id"
@@ -31,21 +33,49 @@
           </div>
           <ion-label>{{ friend.username }}</ion-label>
         </ion-item>
+      </template>
+
+      <template v-else>
+          <ion-item lines="none" class="no-conversations">
+                  <ion-label>
+                    <h2>Aucun connexion mutuelle pour l'instant. </h2>
+                    <p></p>
+                  </ion-label>
+
+          </ion-item>
+
+        </template>
       </ion-list>
-      <div v-else class="ion-padding no-friends-message">
-        <p>Aucun connexion mutuelle pour l'instant.</p>
-      </div>
+
     </ion-content>
   </ion-modal>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonSearchbar } from '@ionic/vue';
+import {
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonList,
+  IonItem,
+  IonAvatar,
+  IonLabel,
+  IonSearchbar,
+  IonRow, IonGrid, IonCol
+} from '@ionic/vue';
 import { closeOutline } from 'ionicons/icons';
 
 export default defineComponent({
   name: 'FriendshipsModal',
-  components: { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonAvatar, IonLabel },
+  components: {
+    IonCol,
+    IonGrid,
+    IonRow, IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonAvatar, IonLabel },
   props: {
     isOpen: { type: Boolean, required: true },
     friendsList: { type: Array as PropType<Array<{ id: string; avatar: string; username: string }>>, required: true },
