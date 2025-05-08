@@ -22,7 +22,7 @@
 
                 <div class="user-info ion-margin-start">
                   <ion-label v-if="user.age" class="sub-header">{{ user?.age }} ans</ion-label>
-                  <ion-title class="ion-no-padding">{{ user?.username }}</ion-title>
+                  <p class="ion-no-padding">{{ user?.username }}</p>
                 </div>
                 <custom-button slot="end" text="Modifier" @click="openModal" v-if="isCurrentUser" />
               </ion-item>
@@ -343,6 +343,10 @@ ion-avatar {
   justify-content: center;
 }
 
+.user-info p {
+  font-weight: bold;
+}
+
 custom-button {
   align-self: end;
 }
@@ -395,4 +399,5 @@ ion-header {
   background: var(--ion-color-primary);
   padding: 0 1rem;
 }
+
 </style>

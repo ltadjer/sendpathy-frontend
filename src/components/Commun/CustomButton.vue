@@ -39,15 +39,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.gradient-text {
-  background: none;
-  color: var(--ion-color-tertiary);
-  font-weight: bold;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: inherit;
-  transition: background 0.3s ease, -webkit-text-fill-color 0.3s ease;
-}
-
 ion-button:hover .gradient-text,
 ion-button:active .gradient-text,
 ion-button:focus .gradient-text {
