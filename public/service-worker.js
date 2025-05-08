@@ -3,7 +3,7 @@ const urlsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
-    '/src/main.tsx',
+    '/src/main.ts',
 ];
 
 self.addEventListener('install', event => {

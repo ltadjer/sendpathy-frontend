@@ -15,12 +15,18 @@ import { useAccountStore } from '@/stores/account';
 import ProfileView from '@/views/ProfileView.vue';
 import NotificationView from '@/views/NotificationView.vue';
 import SettingsView from '@/views/SettingsView.vue';
+import OnboardingView from '@/views/OnboardingView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/feed',
+    redirect: () => {
+      const onboardingCompleted = localStorage.getItem('onboardingCompleted')
+      return onboardingCompleted ? '/feed' : '/onboarding'
+    }
   },
+  { path: '/onboarding', component: OnboardingView },
+  { path: '/connexion', component: LoginView, meta: { requiresGuest: true } },
   {
     path: '/',
     component: MainHeader,
@@ -57,7 +63,6 @@ const routes: Array<RouteRecordRaw> = [
   },
   { path: '/conversations/:conversationId', name: 'ConversationList', component: MessageView, props: true, meta: { requiresAuth: true }},
 
-  { path: '/connexion', component: LoginView, meta: { requiresGuest: true } },
   { path: '/inscription', component: RegisterView, meta: { requiresGuest: true } },
   { path: '/request-password-reset', component: RequestPasswordResetView, meta: { requiresGuest: true } },
   { path: '/reset-password', component: ResetPasswordView, meta: { requiresGuest: true } },
@@ -70,6 +75,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const accountStore = useAccountStore();
+  console.log(accountStore.isAuthenticated)
 
   try {
     await accountStore.checkAuth();
@@ -84,7 +90,7 @@ router.beforeEach(async (to, from, next) => {
   const requiresGuest = to.matched.some(r => r.meta.requiresGuest);
 
   if (requiresAuth && !accountStore.isAuthenticated) {
-    return next('/connexion');
+    return next('/onboarding');
   }
   if (requiresGuest && accountStore.isAuthenticated) {
     return next('/');

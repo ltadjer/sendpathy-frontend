@@ -11,15 +11,19 @@ api.interceptors.response.use(
     res => res,
     async error => {
       const original = error.config;
+
+      if (original.url?.includes('/auth/refresh-token')) {
+        await AuthService.logout();
+        return Promise.reject(error);
+      }
+
       if (error.response.status === 401 && !original._retry) {
         original._retry = true;
         try {
           await AuthService.refreshToken();
           return api(original);
-        } catch (e) {
-          await AuthService.logout();
-          window.location.href = '/connexion';
-          return Promise.reject(e);
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
         }
       }
       return Promise.reject(error);

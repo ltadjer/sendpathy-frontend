@@ -11,6 +11,7 @@ export const useAccountStore = defineStore('account', {
   }),
   actions: {
     scheduleRefresh(lifetimeMs = 15 * 60 * 1000) {
+      // on vide l'ancien timer si existant
       if (this._refreshTimeoutId) clearTimeout(this._refreshTimeoutId);
 
       const timeout = lifetimeMs - 60 * 1000;
@@ -19,6 +20,7 @@ export const useAccountStore = defineStore('account', {
           await this.refreshToken();
           this.scheduleRefresh(lifetimeMs);
         } catch {
+          // logout nettoie déjà le timer
           await this.logout();
         }
       }, timeout);
@@ -79,7 +81,12 @@ export const useAccountStore = defineStore('account', {
       this.isAuthenticated = false;
       this.user = null;
       WebSocketService.disconnect();
-      if (this._refreshTimeoutId) clearTimeout(this._refreshTimeoutId);
+
+      // STOPPER le timer de refresh
+      if (this._refreshTimeoutId) {
+        clearTimeout(this._refreshTimeoutId);
+        this._refreshTimeoutId = null;
+      }
     },
 
     async refreshToken() {
