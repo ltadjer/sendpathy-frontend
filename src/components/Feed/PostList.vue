@@ -1,7 +1,7 @@
 <template>
       <post-form-modal v-if="isPostFormModalOpen" @close="closePostFormModal" :post="selectedPost" :current-user="currentUser" />
       <ion-list class="ion-padding">
-        <template v-if="paginatedPosts && paginatedPosts.length > 0">
+        <template v-if="posts && posts.length > 0">
         <post-filter-button v-if="$route.fullPath.includes('feed')" class="ion-margin-bottom ion-text-end" @update:selectedTags="updateSelectedTags" @update:selectedTriggers="updateSelectedTriggers"></post-filter-button>
 
         <ion-item
@@ -94,9 +94,8 @@
               </ion-row>
               <ion-row class="ion-justify-content-center">
                 <ion-col size="12" class="ion-text-center">
-                  <ion-button expand="block" @click="openPostForm">
-                    Ajouter un post
-                  </ion-button>
+                  <custom-button expand="block" @click="openPostForm" text="Ajouter un post">
+                  </custom-button>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -108,7 +107,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonList, IonButton, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonTextarea, IonPopover, IonChip, IonLabel,IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
+import { IonList, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonTextarea, IonPopover, IonChip, IonLabel,IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
 import PostFormModal from '@/components/Feed/PostFormModal.vue';
 import PostCommentModal from '@/components/Feed/PostCommentModal.vue';
 import { chatbubbleOutline, heart, heartOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
@@ -116,16 +115,17 @@ import { usePostStore } from '@/stores/post';
 import PostFilterButton from '@/components/Feed/PostFilterButton.vue';
 import ToastMessage from '@/components/Commun/ToastMessage.vue'
 import { timeSince } from '@/utils/date';
+import CustomButton from "@/components/Commun/CustomButton.vue";
 
 export default defineComponent({
   name: 'PostList',
   components: {
+    CustomButton,
     ToastMessage,
     PostFormModal,
     PostFilterButton,
     IonList,
     IonItem,
-    IonButton,
     IonIcon,
     IonAvatar,
     IonGrid,
@@ -263,7 +263,7 @@ ion-popover ion-list {
 
 ion-popover ion-item button:hover {
   --box-shadow: var(--neumorphism-in-shadow) !important;
-  color: var(--ion-color-secondary) !important;
+  color: var(--ion-color-primary) !important;
   font-weight: bold;
 }
 </style>

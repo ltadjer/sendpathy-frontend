@@ -1,26 +1,13 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-header :translucent="true" class="ion-padding header-page">
-        <ion-toolbar>
-          <ion-item lines="none" class="ion-no-shadow ion-align-items-center">
-            <router-link to="/profil">
-              <div class="avatar-container">
-                <ion-avatar slot="start">
-                  <img alt="User Avatar" :src="currentUser?.avatar" />
-                </ion-avatar>
-              </div>
-            </router-link>
-            <ion-title>Moments de vie</ion-title>
-          </ion-item>
-          <ion-buttons slot="end">
-            <ion-button size="small" class="ion-no-shadow">
-              <img alt="Logo" src="@/assets/logo.svg" width="70px" />
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-    </ion-header>
+    <MainHeader
+        title="Moments de vie"
+        :showAvatar="true"
+        :avatarSrc="currentUser?.avatar"
+        :showEndButtons="true"
+        :showLogo="false"
+    >
+    </MainHeader>
     <ion-content>
       <access-code-modal
         :is-open="isAccessCodeModalOpen"
@@ -40,12 +27,14 @@ import LifeMomentList from '@/components/LifeMoment/LifeMomentList.vue';
 import AccessCodeModal from '@/components/LifeMoment/AccessCodeModal.vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
 import { useAccountStore } from '@/stores/account';
-import { IonPage,IonAvatar, IonHeader, IonToolbar, IonItem, IonTitle, IonButtons, IonButton, IonContent } from '@ionic/vue';
+import { IonPage, IonButton, IonContent } from '@ionic/vue';
+import MainHeader from '@/components/Commun/MainHeader.vue';
 
 export default defineComponent({
   name: 'LifeMomentView',
   components: {
-    IonAvatar, IonHeader, IonToolbar, IonItem, IonTitle, IonButtons, IonButton,
+    MainHeader,
+    IonButton,
     AccessCodeModal,
     LifeMomentList,
     IonContent,

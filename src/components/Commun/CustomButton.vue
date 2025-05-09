@@ -40,7 +40,7 @@ export default defineComponent({
 
 <style scoped>
 .gradient-text {
- color: #555555;
+ color: var(--ion-text-color);
   font-weight: normal;
 }
 ion-button:hover .gradient-text,

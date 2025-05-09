@@ -2,13 +2,14 @@
   <ion-page>
     <ion-content class="ion-padding onboarding-content">
       <swiper
+          @swiper="onSwiperReady"
           :pagination="{ clickable: true }"
           :loop="false"
           :autoplay="{ delay: 3000, disableOnInteraction: false }"
           class="onboarding-swiper"
       >
         <swiper-slide class="slide slide-animated-logo">
-          <img src="@/assets/logo.svg" alt="Sendpathy Logo" class="logo-animate" />
+          <img src="@/assets/logo-light.svg" alt="Sendpathy Logo" class="logo-animate" />
         </swiper-slide>
         <swiper-slide class="slide slide-welcome">
           <img src="@/assets/onboarding1.png" alt="Communauté empathique" />
@@ -21,21 +22,30 @@
         <swiper-slide class="slide slide-modes">
           <img src="@/assets/onboarding2.png" alt="Fonctionnalités" />
           <h1><span class="gradient-text">Deux façons de vous exprimer</span></h1>
-          <div class="modes">
-            <div class="mode-card">
-              <h2><span class="gradient-text">Fil d’actualité</span></h2>
-              <p>
-                Découvrez et réagissez aux émotions de la communauté,
-                anonymement.
-              </p>
-            </div>
-            <div class="mode-card">
-              <h2><span class="gradient-text">Journal intime</span></h2>
-              <p>
-                Écrivez vos pensées et ressentez l’apaisement d’un espace perso.
-              </p>
-            </div>
-          </div>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-card>
+                  <ion-card-header>
+                    <ion-card-title><span class="gradient-text">Fil d’actualité</span></ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content>
+                    Découvrez et réagissez aux émotions de la communauté, anonymement.
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+              <ion-col size="12" size-md="6">
+                <ion-card>
+                  <ion-card-header>
+                    <ion-card-title><span class="gradient-text">Journal intime</span></ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content>
+                    Écrivez vos pensées et ressentez l’apaisement d’un espace perso.
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </swiper-slide>
         <swiper-slide class="slide slide-psy">
           <img src="@/assets/onboarding3.png" alt="Fonctionnalités" />
@@ -47,6 +57,10 @@
           <custom-button text="Commencer" @click="goToLogin" />
         </swiper-slide>
       </swiper>
+      <div class="swipe-indicator">
+        <p>Swipe</p>
+        <span class="arrow"></span>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -61,12 +75,23 @@ import CustomButton from '@/components/Commun/CustomButton.vue'
 export default defineComponent({
   name: 'OnboardingView',
   components: { IonPage, IonContent, Swiper, SwiperSlide, CustomButton },
+  data() {
+    return {
+      swiperInstance: null // Stocke l'instance de Swiper
+    }
+  },
   methods: {
     goToLogin() {
       localStorage.setItem('onboardingCompleted', 'true')
       this.$router.push('/connexion')
+    },
+    onSwiperReady(swiper) {
+      this.swiperInstance = swiper // Initialise l'instance de Swiper
+      setTimeout(() => {
+        this.swiperInstance.slideTo(1) // Passe au deuxième slide (index 1)
+      }, 3000)
     }
-  }
+  },
 })
 </script>
 
@@ -100,45 +125,6 @@ export default defineComponent({
   overflow: hidden;
 }
 
-/* Cloud group container */
-.cloud {
-  position: absolute;
-  display: flex;
-  align-items: center;
-}
-
-.cloud .circle {
-  background: var(--ion-color-light);
-  border-radius: 50%;
-  box-shadow: -8px -8px 16px #ffffff, 8px 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.cloud .c1 {
-  width: 80px;
-  height: 80px;
-}
-
-.cloud .c2 {
-  width: 60px;
-  height: 60px;
-  margin-left: -20px;
-}
-
-.cloud .c3 {
-  width: 100px;
-  height: 100px;
-  margin-left: -20px;
-}
-
-.cloud1 {
-  top: 10%;
-  left: 10%;
-}
-
-.cloud2 {
-  bottom: 10%;
-  right: 10%;
-}
 
 .onboarding-swiper {
   width: 100%;
@@ -155,36 +141,21 @@ export default defineComponent({
 }
 
 .slide h1 {
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
 }
 
-.slide-modes .modes {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.mode-card {
-  margin-top: 1rem;
-  background: var(--ion-color-light);
-  border-radius: 1rem;
-  padding: 1rem;
-  box-shadow: var(--neumorphism-out-shadow);
-}
-
-.mode-card img {
+ion-card img {
   width: 48px;
   height: 48px;
   margin-bottom: 8px;
 }
 
-.mode-card h2 {
+ion-card h2 {
   font-size: 1.1rem;
   margin-bottom: 4px;
 }
 
-.mode-card p {
+ion-card p {
   font-size: 0.85rem;
   color: var(--ion-color-medium);
 }
@@ -192,5 +163,53 @@ export default defineComponent({
 .slide img {
   width: 100%;
   max-width: 220px;
+}
+
+.swipe-indicator {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 1.5s ease-in-out infinite;
+  right: 10%;
+}
+
+.slide-animated-logo .swipe-indicator {
+  display: none;
+}
+
+.swipe-indicator p {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--ion-color-primary);
+}
+.swipe-indicator .arrow {
+  width: 24px;
+  height: 24px;
+  border: solid var(--ion-color-primary);
+  border-width: 0 3px 3px 0;
+  transform: rotate(-45deg);
+  margin-bottom: 5px;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: rotate(-45deg) translateX(0);
+  }
+  50% {
+    transform: rotate(-45deg) translateX(10px);
+  }
+}
+
+@keyframes fadeIn {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 </style>

@@ -62,7 +62,6 @@ import {
   IonCol,
   IonText,
   IonInput,
-  IonItem,
   IonIcon
 } from '@ionic/vue'
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons'
@@ -82,7 +81,6 @@ export default defineComponent({
     IonCol,
     IonText,
     IonInput,
-    IonItem,
     IonIcon,
     CustomButton
   },

@@ -35,6 +35,6 @@ export default defineComponent({
 </script>
 <style scoped>
 ion-toast {
-  color: #555555;
+  color: var(--ion-text-color);
 }
 </style>

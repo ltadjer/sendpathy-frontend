@@ -52,16 +52,15 @@
               <ion-row class="ion-justify-content-center">
                 <ion-col size="12">
                   <ion-label>
-                    <h2 class="gradient-text font-bold">Aucun moment partagé pour l’instant</h2>
+                    <h2 class="font-bold">Aucun moment partagé pour l’instant</h2>
                     <p>Capturez un instant, une émotion, un souvenir... et laissez une trace authentique de votre parcours.</p>
                   </ion-label>
                 </ion-col>
               </ion-row>
               <ion-row class="ion-justify-content-center">
                 <ion-col size="12" class="ion-text-center">
-                  <ion-button expand="block" @click="openLifeMomentForm">
-                    Ajouter un moment
-                  </ion-button>
+                  <custom-button expand="block" @click="openLifeMomentForm" text="Ajouter un moment">
+                  </custom-button>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -76,10 +75,12 @@ import { useLifeMomentStore } from '@/stores/life-moment';
 import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
 import { formatDate } from '@/utils/date';
+import CustomButton from "@/components/Commun/CustomButton.vue";
 
 export default defineComponent({
   name: 'LifeMomentList',
   components: {
+    CustomButton,
     IonList,
     IonItem,
     IonGrid,
@@ -178,7 +179,7 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--ion-color-primary);
+  background: var(--ion-background-color);
   box-shadow: var(--neumorphism-out-shadow);
   font-size: 1.5rem;
   border-radius: 8px;

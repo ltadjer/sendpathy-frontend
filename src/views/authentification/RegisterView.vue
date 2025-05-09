@@ -11,12 +11,16 @@
       <ion-grid>
         <ion-row>
           <ion-col class="ion-text-center">
-            <img alt="Logo" src="/img/logo-with-shadow.svg" width="120px" />
+            <img
+                alt="Logo"
+                :src="getLogo"
+                width="120px"
+            />
             <ion-text>
               <h1 class="gradient-text ion-input-spacing">Hâte de te connaître !</h1>
             </ion-text>
             <form @submit.prevent="register" class="ion-text-left form-container">
-              <ion-button expand="block" @click.prevent="generateAvatars" class="ion-margin-bottom">Générer un avatar</ion-button>
+              <custom-button expand="block" :text="'Générer un avatar'" @click.prevent="generateAvatars" class="ion-margin-bottom"></custom-button>
               <div class="avatar-selection">
                 <div v-for="(avatar, index) in avatars" :key="index" class="avatar-container"
                      :class="{ 'selected': avatar === selectedAvatar }"
@@ -96,7 +100,7 @@
                 </ion-item>
               </ion-list>
 
-              <custom-button expand="block" color="primary" type="submit" text="S'inscrire"></custom-button>
+              <custom-button expand="block"  type="submit" text="S'inscrire"></custom-button>
             </form>
           </ion-col>
         </ion-row>
@@ -139,6 +143,8 @@ import CustomButton from '@/components/Commun/CustomButton.vue';
 import ToastMessage from '@/components/Commun/ToastMessage.vue';
 import { useAccountStore } from '@/stores/account';
 import { useToastStore } from '@/stores/toast';
+import lightLogo from '@/assets/logo-light.svg';
+import darkLogo from '@/assets/logo-dark.svg';
 
 export default defineComponent({
   name: 'RegisterView',
@@ -166,6 +172,7 @@ export default defineComponent({
   },
   data() {
     return {
+      isDarkMode: false,
       email: '',
       username: '',
       password: '',
@@ -186,7 +193,22 @@ export default defineComponent({
       ],
     };
   },
+  computed: {
+    getLogo() {
+      return this.isDarkMode ? darkLogo : lightLogo;
+    },
+  },
   created() {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.isDarkMode = darkModeMediaQuery.matches;
+
+    console.log('Dark mode:', this.isDarkMode);
+
+    // Écoute les changements de mode
+    darkModeMediaQuery.addEventListener('change', (e) => {
+      this.isDarkMode = e.matches;
+    });
+
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 18;
     for (let year = startYear; year >= startYear - 82; year--) {

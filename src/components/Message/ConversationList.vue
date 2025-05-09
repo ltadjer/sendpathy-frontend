@@ -44,9 +44,8 @@
             </ion-row>
             <ion-row class="ion-justify-content-center">
               <ion-col size="12" class="ion-text-center">
-          <ion-button expand="block" @click="openFriendshipsModal">
-            Créer une conversation
-          </ion-button>
+          <custom-button expand="block" @click="openFriendshipsModal" text="Créer une conversation">
+          </custom-button>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -74,6 +73,7 @@ import {
 } from '@ionic/vue';
 import { timeSince } from '@/utils/date';
 import { useConversationStore } from '@/stores/conversation';
+import CustomButton from "@/components/Commun/CustomButton.vue";
 
 export default defineComponent({
   name: 'ConversationList',
@@ -92,6 +92,7 @@ export default defineComponent({
     },
   },
   components: {
+    CustomButton,
     IonGrid, IonRow, IonCol,
     IonAvatar, IonLabel, IonNote, IonBadge,
     IonContent, IonList, IonItem,
@@ -146,5 +147,9 @@ ion-list {
 .avatar-container {
   margin-bottom: 0;
   margin: 0.6rem;
+}
+
+.time {
+  color: var(--ion-text-color);
 }
 </style>

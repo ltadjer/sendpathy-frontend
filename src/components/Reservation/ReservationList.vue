@@ -188,7 +188,7 @@ ion-card {
 }
 
 ion-card-title {
-  --color: #333 !important;
+  --color: var(--ion-text-color) !important;
 }
 
 ion-card-content {

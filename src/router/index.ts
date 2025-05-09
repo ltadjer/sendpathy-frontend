@@ -7,7 +7,7 @@ import MessageView from '@/views/MessageView.vue';
 import ConversationView from '@/views/ConversationView.vue';
 import FeedView from '@/views/FeedView.vue';
 import LifeMomentView from '@/views/LifeMomentView.vue';
-import MainHeader from '@/components/Commun/MainHeader.vue';
+import MainNav from '@/components/Commun/MainNav.vue';
 import ReservationView from '@/views/reservation/ReservationView.vue';
 import NewReservationView from '@/views/reservation/NewReservationView.vue';
 import ReservationSummaryView from '@/views/reservation/ReservationSummaryView.vue';
@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/connexion', component: LoginView, meta: { requiresGuest: true } },
   {
     path: '/',
-    component: MainHeader,
+    component: MainNav,
     children: [
       { path: '/conversations', component: ConversationView },
       { path: '/feed', component: FeedView },

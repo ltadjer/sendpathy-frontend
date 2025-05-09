@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true" class="ion-padding header-page">
+    <ion-header :translucent="true" class="ion-padding-start ion-padding-end header-page">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
           <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" />
@@ -297,6 +297,7 @@ export default defineComponent({
 ion-item-divider {
   margin-top: 1rem;
   border-bottom: 1px solid #FD7DFB20;
+  border-radius: 1rem 1rem 0 0;
 }
 
 ion-item-group {

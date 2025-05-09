@@ -328,7 +328,6 @@ ion-grid {
 
 .sub-header {
   font-size: 0.9rem;
-  color: gray;
   font-weight: 400;
 }
 
@@ -396,7 +395,6 @@ ion-grid {
 }
 
 ion-header {
-  background: var(--ion-color-primary);
   padding: 0 1rem;
 }
 

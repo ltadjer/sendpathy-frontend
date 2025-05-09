@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true" class="ion-padding header-page">
+    <ion-header :translucent="true" class="ion-padding-start ion-padding-end header-page">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" />
+          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" :animated="false" />
         </ion-buttons>
         <ion-title>Notifications</ion-title>
       </ion-toolbar>
@@ -20,11 +20,11 @@
             <p>{{ formatDate(notification.createdAt) }}</p>
           </ion-label>
           <div v-if="notification.type === 'FRIEND_REQUEST' && !isFriendshipAccepted(notification.sender.id)" class="notification-actions">
-            <ion-button @click="acceptFriendRequest(notification)">Accepter</ion-button>
-            <ion-button @click="ignoreFriendRequest(notification)">Ignorer</ion-button>
+            <custom-button @click="acceptFriendRequest(notification)" text="Accepter"></custom-button>
+            <custom-button @click="ignoreFriendRequest(notification)" text="Ignorer"></custom-button>
           </div>
           <div v-else-if="notification.type === 'FRIEND_REQUEST' && isFriendshipAccepted(notification.sender.id) && !isFriend(notification.sender.id) && !isFriendshipPending(notification.sender.id) && isSent" class="notification-actions">
-            <ion-button @click="inviteBack(notification.sender.id)">Inviter en retour</ion-button>
+            <custom-button @click="inviteBack(notification.sender.id)" text="Inviter en retour"></custom-button>
           </div>
         </ion-item>
           <ion-item-options side="end">
@@ -53,14 +53,18 @@ import {
   IonAvatar,
   IonBackButton,
   IonButtons,
-  IonButton,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
 } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useFriendshipStore } from '@/stores/friendship';
 import { useAccountStore } from '@/stores/account'
+import CustomButton from "@/components/Commun/CustomButton.vue";
 
 export default defineComponent({
   components: {
+    CustomButton,
     IonBackButton,
     IonButtons,
     IonPage,
@@ -72,7 +76,9 @@ export default defineComponent({
     IonItem,
     IonLabel,
     IonAvatar,
-    IonButton,
+    IonItemSliding,
+    IonItemOptions,
+    IonItemOption,
   },
   data() {
     return {

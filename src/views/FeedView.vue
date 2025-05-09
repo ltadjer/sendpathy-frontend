@@ -1,21 +1,16 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true" class="ion-padding header-page">
-      <ion-toolbar>
-        <ion-item lines="none" class="ion-no-shadow ion-align-items-center">
-          <div class="avatar-container" @click="showUserProfile(currentUser)">
-            <ion-avatar slot="start">
-              <img alt="User Avatar" :src="currentUser?.avatar" />
-            </ion-avatar>
-          </div>
-          <ion-title>Feed</ion-title>
-        </ion-item>
-        <ion-buttons slot="end">
-            <ion-icon class="custom-icon ion-margin-end" :icon="notificationsOutline" @click="goToNotifications"></ion-icon>
-            <img alt="Logo" src="@/assets/logo.svg" width="70px" />
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+    <MainHeader
+        title="Feed"
+        :showAvatar="true"
+        :avatarSrc="currentUser?.avatar"
+        @avatar-click="showUserProfile(currentUser)"
+        :showEndButtons="true"
+    >
+      <template #end-buttons>
+        <ion-icon class="custom-icon ion-margin-end" :icon="notificationsOutline" @click="goToNotifications"></ion-icon>
+      </template>
+    </MainHeader>
     <ion-content>
       <post-list :posts="posts" :current-user="currentUser"/>
     </ion-content>
@@ -27,22 +22,17 @@ import { defineComponent } from 'vue';
 import PostList from '@/components/Feed/PostList.vue';
 import { usePostStore } from '@/stores/post';
 import { useAccountStore } from '@/stores/account';
-import { IonPage, IonAvatar, IonHeader, IonToolbar, IonItem, IonTitle, IonButtons, IonContent, IonIcon } from '@ionic/vue';
+import { IonPage, IonContent, IonIcon } from '@ionic/vue';
 import { notificationsOutline } from 'ionicons/icons';
-
+import MainHeader from '@/components/Commun/MainHeader.vue';
 export default defineComponent({
   name: 'FeedView',
   components: {
     IonIcon,
-    IonAvatar,
-    IonHeader,
-    IonToolbar,
-    IonItem,
-    IonTitle,
-    IonButtons,
     PostList,
     IonPage,
     IonContent,
+    MainHeader
   },
   data() {
     return {
