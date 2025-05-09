@@ -29,7 +29,6 @@
               </ion-input>
               <custom-button
                 expand="block"
-                color="primary"
                 type="submit"
                 text="Se connecter"
               ></custom-button>

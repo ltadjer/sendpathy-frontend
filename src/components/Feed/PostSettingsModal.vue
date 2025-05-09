@@ -29,7 +29,6 @@
                 :class="{'selected': Array.from(localSelectedTags).includes(tag.id)}"
                 @click="toggleSelection('tag', tag.id)"
                 expand="block"
-                color="primary"
               >
           <span :class="{'gradient-text': Array.from(localSelectedTags).includes(tag.id)}">
               {{ tag.name }}
@@ -49,7 +48,6 @@
                 :class="{'selected gradient-text': localSelectedTriggers.includes(trigger.id)}"
                 @click="toggleSelection('trigger', trigger.id)"
                 expand="block"
-                color="primary"
               >
                 <span :class="{'gradient-text': localSelectedTriggers.includes(trigger.id)}">
                 {{ trigger.name }}

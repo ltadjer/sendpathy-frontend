@@ -19,7 +19,7 @@
 
         <div class="rounded-buttons">
           <custom-button class="ion-margin-end" :icon="settingsOutline" href="/parametres" />
-          <custom-button color="primary" @click="logout" :icon="logOutOutline" />
+          <custom-button @click="logout" :icon="logOutOutline" />
         </div>
 
 
