@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
+    <ion-header :translucent="true" class="ion-padding-start ion-padding-end header-page">
+      <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
           <ion-back-button :defaultHref="true" :icon="arrowBackOutline" @click="navigateToLogin" text="" />
         </ion-buttons>
