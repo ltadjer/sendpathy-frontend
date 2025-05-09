@@ -9,7 +9,12 @@
           class="onboarding-swiper"
       >
         <swiper-slide class="slide slide-animated-logo">
-          <img src="@/assets/logo-light.svg" alt="Sendpathy Logo" class="logo-animate" />
+          <img
+              alt="Logo"
+              :src="getLogo"
+              width="120px"
+              class="logo-animate"
+          />
         </swiper-slide>
         <swiper-slide class="slide slide-welcome">
           <img src="@/assets/onboarding1.png" alt="Communauté empathique" />
@@ -65,20 +70,39 @@
   </ion-page>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue'
 import { IonPage, IonContent } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/swiper-bundle.css'
 import CustomButton from '@/components/Commun/CustomButton.vue'
+import darkLogo from "@/assets/logo-dark.svg";
+import lightLogo from "@/assets/logo-light.svg";
 
 export default defineComponent({
   name: 'OnboardingView',
   components: { IonPage, IonContent, Swiper, SwiperSlide, CustomButton },
   data() {
     return {
-      swiperInstance: null // Stocke l'instance de Swiper
+      swiperInstance: null, // Stocke l'instance de Swiper
+      isDarkMode: false as boolean,
     }
+  },
+  computed: {
+    getLogo() {
+      return this.isDarkMode ? darkLogo : lightLogo;
+    },
+  },
+  created() {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.isDarkMode = darkModeMediaQuery.matches;
+
+    console.log('Dark mode:', this.isDarkMode);
+
+    // Écoute les changements de mode
+    darkModeMediaQuery.addEventListener('change', (e) => {
+      this.isDarkMode = e.matches;
+    });
   },
   methods: {
     goToLogin() {
@@ -150,7 +174,7 @@ ion-card img {
   margin-bottom: 8px;
 }
 
-ion-card h2 {
+ion-card ion-card-title {
   font-size: 1.1rem;
   margin-bottom: 4px;
 }

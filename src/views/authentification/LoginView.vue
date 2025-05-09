@@ -4,7 +4,11 @@
       <ion-grid class="flex-center">
         <ion-row>
           <ion-col class="ion-text-center">
-            <img alt="Logo" src="/img/logo-with-shadow.svg" width="140px" />
+            <img
+                alt="Logo"
+                :src="getLogo"
+                width="120px"
+            />
             <form @submit.prevent="login" class="ion-text-start form-container">
               <ion-input
                 class="ion-input-spacing"
@@ -51,7 +55,7 @@
   </ion-page>
 </template>
 
-<script>
+<script lang="ts">
 import { useAccountStore } from '@/stores/account.ts'
 import {
   IonPage,
@@ -68,6 +72,8 @@ import CustomButton from '@/components/Commun/CustomButton.vue'
 import { defineComponent } from 'vue'
 import ToastMessage from '@/components/Commun/ToastMessage.vue'
 import { useToastStore } from '@/stores/toast'
+import darkLogo from "@/assets/logo-dark.svg";
+import lightLogo from "@/assets/logo-light.svg";
 
 export default defineComponent({
   name: 'LoginView',
@@ -85,17 +91,33 @@ export default defineComponent({
   },
   data() {
     return {
-      email: '',
-      password: '',
-      message: '',
-      passwordType: 'password'
+      isDarkMode: false as boolean,
+      email: '' as string,
+      password: '' as string,
+      message: '' as string,
+      passwordType: 'password' as string,
     }
   },
   setup() {
     const toastStore = useToastStore()
     return { toastStore, eyeOutline, eyeOffOutline }
   },
+  computed: {
+    getLogo() {
+      return this.isDarkMode ? darkLogo : lightLogo;
+    },
+  },
   created() {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.isDarkMode = darkModeMediaQuery.matches;
+
+    console.log('Dark mode:', this.isDarkMode);
+
+    // Écoute les changements de mode
+    darkModeMediaQuery.addEventListener('change', (e) => {
+      this.isDarkMode = e.matches;
+    });
+
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.has('message')) {
       this.message =
@@ -104,7 +126,7 @@ export default defineComponent({
     }
   },
   methods: {
-    togglePassword() {
+    togglePassword(): void {
       this.passwordType = this.passwordType === 'password' ? 'text' : 'password'
     },
     async login() {
@@ -119,10 +141,10 @@ export default defineComponent({
         console.error('Login failed:', error)
       }
     },
-    navigateToForgotPassword() {
+    navigateToForgotPassword(): void {
       this.$router.push('/request-password-reset')
     },
-    navigateToRegister() {
+    navigateToRegister(): void {
       this.$router.push('/inscription')
     }
   }
