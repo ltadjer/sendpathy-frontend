@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8">
     <link rel="icon" href="./public/logo.ico">
@@ -8,7 +8,33 @@
       <link rel="manifest" crossorigin="use-credentials" href="/manifest.json"/>
   </head>
   <body>
-    <div id="app"></div>
+  <div id="google_translate_element"
+       style="display: none">
+  </div>
+  <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+  <script>
+
+      function updateHtmlLang(langCode) {
+          document.documentElement.lang = langCode; // Met à jour la balise <html lang="">
+      }
+
+      function googleTranslateElementInit() {
+          const userLang = localStorage.getItem('userLang') || 'fr'; // Langue choisie ou par défaut
+          console.log('userLang', userLang);
+
+          // Met à jour la balise <html lang="">
+          updateHtmlLang(userLang);
+
+          new google.translate.TranslateElement({
+              pageLanguage: 'fr', // Langue de base de la page
+              layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+          }, 'google_translate_element');
+
+          // Forcer la mise à jour de la langue
+          changeGoogleTranslate(userLang);
+      }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>

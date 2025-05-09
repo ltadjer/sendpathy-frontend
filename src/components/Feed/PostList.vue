@@ -31,12 +31,12 @@
                       <span>{{ post.emotion }}</span>
                     </ion-text>
                     <p>
-                      <ion-textarea
-                        class="ion-margin-top"
+                      <ion-text
+                        class="ion-margin-top post-content"
                         :auto-grow="true"
-                        :value="post.content"
                       >
-                      </ion-textarea>
+                        {{ post.content }}
+                      </ion-text>
                     </p>
                   </div>
                 </ion-item>
@@ -107,7 +107,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonList, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonTextarea, IonPopover, IonChip, IonLabel,IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
+import { IonList, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonPopover, IonChip, IonLabel,IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
 import PostFormModal from '@/components/Feed/PostFormModal.vue';
 import PostCommentModal from '@/components/Feed/PostCommentModal.vue';
 import { chatbubbleOutline, heart, heartOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
@@ -132,7 +132,6 @@ export default defineComponent({
     IonCol,
     IonRow,
     IonText,
-    IonTextarea,
     IonPopover,
     IonChip,
     IonLabel,

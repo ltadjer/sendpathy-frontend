@@ -91,7 +91,7 @@ export default defineComponent({
   data() {
     return {
       content: '',
-      originalLanguage: 'en',
+      originalLanguage: 'fr',
       emotion: '',
       isSettingsModalOpen: false,
       isEmojiModalOpen: false,
@@ -129,6 +129,7 @@ export default defineComponent({
         content: this.content,
         originalLanguage: this.originalLanguage,
         emotion: this.emotion,
+        slug: '',
       };
 
       let postId;
@@ -148,7 +149,7 @@ export default defineComponent({
     },
     resetForm() {
       this.content = '';
-      this.originalLanguage = 'en';
+      this.originalLanguage = 'fr';
       this.emotion = '';
       this.slug = '';
       this.selectedTags = [];

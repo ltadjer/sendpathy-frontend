@@ -66,7 +66,7 @@
           </ion-item-divider>
           <ion-item lines="none">
             <ion-label>Language</ion-label>
-            <ion-select v-model="currentUser.nativeLanguage" interface="popover">
+            <ion-select v-model="currentUser.nativeLanguage" interface="popover" @ionChange="saveField('nativeLanguage')">
               <ion-select-option v-for="language in languages" :key="language" :value="language">
                 {{ language }}
               </ion-select-option>
@@ -146,7 +146,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, watch } from 'vue';
 import { pencilOutline, arrowBackOutline } from 'ionicons/icons';
 import { useTagStore } from '@/stores/tag';
 import { useTriggerStore } from '@/stores/trigger';
@@ -161,7 +161,6 @@ import {
   IonItem,
   IonLabel,
   IonItemDivider,
-  IonButton,
   IonList,
   IonInput,
   IonSelect,
@@ -173,6 +172,7 @@ import {
   IonItemGroup,
 } from '@ionic/vue';
 import ToastMessage from '@/components/Commun/ToastMessage.vue'
+import { googleLangMap, changeGoogleTranslate } from '@/utils/translateMapping'
 
 export default defineComponent({
   name: 'SettingsView',
@@ -189,7 +189,6 @@ export default defineComponent({
     IonItem,
     IonLabel,
     IonItemDivider,
-    IonButton,
     IonList,
     IonInput,
     IonSelect,
@@ -221,7 +220,28 @@ export default defineComponent({
       editingField: '',
     };
   },
-  setup() {
+      setup() {
+        const account = useAccountStore();
+
+        // 1) détecter navigateur si pas de préférence
+        onMounted(() => {
+          if (!account.user.nativeLanguage) {
+            const code = navigator.language.split('-')[0]; // ex "fr"
+            const label = ({ fr:'Français', en:'Anglais' })[code] || 'Français';
+            account.updateUser({ nativeLanguage: label });
+          }
+        });
+
+        // 2) à chaque changement dans Settings, piloter le widget
+        watch(
+            () => account.user.nativeLanguage,
+            (label) => {
+              const code = googleLangMap[label] || 'fr';
+              localStorage.setItem('userLang', code); // Stocke la langue choisie
+              console.log('code', code);
+              changeGoogleTranslate(code); // Applique la traduction
+            }
+        );
     return {
       pencilOutline,
       arrowBackOutline

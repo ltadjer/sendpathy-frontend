@@ -18,13 +18,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watch, nextTick } from 'vue';
 import PostList from '@/components/Feed/PostList.vue';
 import { usePostStore } from '@/stores/post';
 import { useAccountStore } from '@/stores/account';
 import { IonPage, IonContent, IonIcon } from '@ionic/vue';
 import { notificationsOutline } from 'ionicons/icons';
 import MainHeader from '@/components/Commun/MainHeader.vue';
+import { googleLangMap, changeGoogleTranslate } from '@/utils/translateMapping';
+
 export default defineComponent({
   name: 'FeedView',
   components: {
@@ -53,7 +55,31 @@ export default defineComponent({
     },
     currentUser() {
       return useAccountStore().user;
-    }
+    },
+    userLangCode() {
+      return localStorage.getItem('userLang')
+          ? googleLangMap[localStorage.getItem('userLang')] || 'fr'
+          : 'fr';
+    },
+  },
+  watch: {
+    posts: {
+      handler: async function () {
+        await this.$nextTick(); // Attendre que le DOM soit mis à jour
+        const postContents = document.querySelectorAll('.post-content'); // Ciblez les contenus des posts
+        console.log('postContents', postContents);
+        postContents.forEach((content) => {
+          console.log('content', content);
+          const textarea = content.querySelector('textarea');
+          console.log('textarea', textarea);
+          if(textarea) {
+            textarea.setAttribute('translate', 'yes'); // Indique que cet élément doit être traduit
+            console.log('textarea', textarea);
+          }
+        });
+      },
+      deep: true,
+    },
   },
   methods: {
     showUserProfile(user) {

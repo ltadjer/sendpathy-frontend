@@ -26,6 +26,11 @@ import '@ionic/vue/css/display.css';
 
 
 import './theme/variables.css'; // Import the variables.css file
+import { changeGoogleTranslate } from '@/utils/translateMapping';
+
+const saved = localStorage.getItem('userLang') || navigator.language.split('-')[0];
+console.log('Saved language:', saved);
+changeGoogleTranslate(saved);
 
 const app = createApp(App)
   .use(IonicVue)
