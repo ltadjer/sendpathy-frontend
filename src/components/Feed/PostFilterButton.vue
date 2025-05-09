@@ -1,9 +1,14 @@
 <template>
-  <div>
+  <div v-if="hasFilters">
     <ion-button @click="openModal">
       <ion-icon :icon="filterOutline"></ion-icon>
     </ion-button>
-    <post-filter-modal :is-open="isModalOpen" @close="closeModal" @update:selectedTags="updateSelectedTags" @update:selectedTriggers="updateSelectedTriggers"></post-filter-modal>
+    <post-filter-modal
+        :is-open="isModalOpen"
+        @close="closeModal"
+        @update:selectedTags="updateSelectedTags"
+        @update:selectedTriggers="updateSelectedTriggers">
+    </post-filter-modal>
   </div>
 </template>
 
@@ -12,6 +17,8 @@ import { defineComponent } from 'vue';
 import { IonButton, IonIcon } from '@ionic/vue';
 import { filterOutline } from 'ionicons/icons';
 import PostFilterModal from './PostFilterModal.vue';
+import { useTagStore } from '@/stores/tag';
+import { useTriggerStore } from '@/stores/trigger';
 
 export default defineComponent({
   name: 'FilterButton',
@@ -20,15 +27,24 @@ export default defineComponent({
     IonIcon,
     PostFilterModal
   },
+  computed: {
+    hasFilters() {
+      return this.tagStore.tags.length > 0 || this.triggerStore.triggers.length > 0;
+    }
+  },
+  setup() {
+    const tagStore = useTagStore();
+    const triggerStore = useTriggerStore();
+
+
+    return { filterOutline, tagStore, triggerStore };
+  },
   data() {
     return {
       isModalOpen: false,
       selectedTags: [] as number[],
       selectedTriggers: [] as number[]
     };
-  },
-  setup() {
-    return { filterOutline };
   },
   methods: {
     openModal() {
@@ -48,7 +64,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-/* Add any custom styles here */
-</style>

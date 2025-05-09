@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonList, IonItem, IonLabel, IonChip, IonIcon } from '@ionic/vue';
+import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonList, IonIcon } from '@ionic/vue';
 import { checkmarkCircle, ellipseOutline, closeOutline } from 'ionicons/icons';
 import { useTagStore } from '@/stores/tag';
 import { useTriggerStore } from '@/stores/trigger';
@@ -55,9 +55,6 @@ export default defineComponent({
     IonButton,
     IonContent,
     IonList,
-    IonItem,
-    IonLabel,
-    IonChip,
     IonIcon
   },
   props: {

@@ -19,7 +19,7 @@
           <ion-row>
             <ion-col size="8">
               <custom-button :icon="happyOutline" @click="openEmojiModal"></custom-button>
-              <custom-button :icon="optionsOutline" @click="openSettingsModal"></custom-button>
+              <custom-button v-if="tags && tags.length > 0 || triggers && triggers.length > 0"  :icon="optionsOutline" @click="openSettingsModal"></custom-button>
             </ion-col>
             <ion-col size="4" class="ion-text-right">
               <custom-button text="Publier" type="submit"></custom-button>
@@ -49,28 +49,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonTextarea, IonInput, IonButton, IonIcon, IonGrid, IonCol, IonRow, IonAvatar } from '@ionic/vue';
+import { defineComponent } from 'vue';
+import { IonCard, IonCardContent, IonItem, IonTextarea, IonGrid, IonCol, IonRow, IonAvatar } from '@ionic/vue';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import PostSettingsModal from '@/components/Feed/PostSettingsModal.vue';
 import EmotionsModal from '@/components/Commun/EmotionsModal.vue';
 import { happyOutline, optionsOutline, paperPlaneOutline } from 'ionicons/icons';
 import { usePostStore } from '@/stores/post';
+import {useTagStore} from "@/stores/tag";
+import {useTriggerStore} from "@/stores/trigger";
 
 export default defineComponent({
   name: 'PostForm',
   components: {
     IonAvatar,
     IonCard,
-    IonCardHeader,
-    IonCardTitle,
     IonCardContent,
     IonItem,
-    IonLabel,
     IonTextarea,
-    IonInput,
-    IonButton,
-    IonIcon,
     IonGrid,
     IonCol,
     IonRow,
@@ -118,6 +114,14 @@ export default defineComponent({
         }
       }
     }
+  },
+  computed: {
+    tags() {
+      return useTagStore().tags;
+    },
+    triggers() {
+      return useTriggerStore().triggers;
+    },
   },
   methods: {
     async submitPost() {

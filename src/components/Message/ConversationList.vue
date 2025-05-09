@@ -1,7 +1,7 @@
 <template>
   <ion-content>
     <ion-list class="ion-padding">
-      <template v-if="filteredConversations.length > 0">
+      <template v-if="filteredConversations && filteredConversations.length > 0">
         <ion-item-sliding
             v-for="conversation in filteredConversations"
             :key="conversation.id"
@@ -100,7 +100,12 @@ export default defineComponent({
   computed: {
     filteredConversations() {
       return this.conversations
-          .filter(conversation => conversation.user?.username.toLowerCase().includes(this.searchTerm.toLowerCase()))
+          .filter(conversation => {
+            if (this.searchTerm.trim() === '') {
+              return true;
+            }
+            return conversation.user?.username.toLowerCase().includes(this.searchTerm.toLowerCase());
+          })
           .filter(conversation => conversation.lastMessage?.deletedBy !== this.currentUser.id);
     },
   },

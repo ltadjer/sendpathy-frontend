@@ -350,8 +350,6 @@ ion-thumbnail {
 }
 
 .avatar-selection {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;

@@ -155,7 +155,6 @@ ion-item {
 
 .avatar-container {
   padding: 0.4rem;
-  margin: 2rem;
 }
 
 ion-grid {

@@ -1,13 +1,13 @@
 <template>
       <post-form-modal v-if="isPostFormModalOpen" @close="closePostFormModal" :post="selectedPost" :current-user="currentUser" />
       <ion-list class="ion-padding">
-        <template v-if="filteredPosts.length > 0">
+        <template v-if="paginatedPosts && paginatedPosts.length > 0">
         <post-filter-button v-if="$route.fullPath.includes('feed')" class="ion-margin-bottom ion-text-end" @update:selectedTags="updateSelectedTags" @update:selectedTriggers="updateSelectedTriggers"></post-filter-button>
 
         <ion-item
           class="ion-margin-bottom"
           lines="none"
-          v-for="post in filteredPosts"
+          v-for="post in paginatedPosts"
           :key="post.id"
           @click.stop="editPost(post)"
         >
@@ -75,6 +75,10 @@
             </ion-row>
           </ion-grid>
         </ion-item>
+          <ion-infinite-scroll threshold="100px" @ionInfinite="loadMorePosts">
+            <ion-infinite-scroll-content loading-spinner="bubbles">
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
         <post-comment-modal v-if="isCommentModalOpen" :comments="comments" @close="closeCommentModal" :post-id="selectedPostId" :current-user="currentUser"></post-comment-modal>
         </template>
         <template v-else>
@@ -104,7 +108,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonList, IonButton, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonTextarea, IonPopover, IonChip, IonLabel } from '@ionic/vue';
+import { IonList, IonButton, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonTextarea, IonPopover, IonChip, IonLabel,IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
 import PostFormModal from '@/components/Feed/PostFormModal.vue';
 import PostCommentModal from '@/components/Feed/PostCommentModal.vue';
 import { chatbubbleOutline, heart, heartOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
@@ -132,8 +136,9 @@ export default defineComponent({
     IonPopover,
     IonChip,
     IonLabel,
-    IonButton,
-    PostCommentModal
+    PostCommentModal,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent
   },
   setup() {
     return { chatbubbleOutline, heart, heartOutline, trashOutline, ellipsisVerticalOutline };
@@ -144,7 +149,9 @@ export default defineComponent({
       isCommentModalOpen: false,
       isPostFormModalOpen: false,
       selectedTags: [],
-      selectedTriggers: []
+      selectedTriggers: [],
+      currentPage: 1,
+      postsPerPage: 10,
     };
   },
   props: {
@@ -171,7 +178,10 @@ export default defineComponent({
         const hasSelectedTriggers = this.selectedTriggers.length === 0 || post.triggers.some(trigger => this.selectedTriggers.includes(trigger.id));
         return hasSelectedTags && hasSelectedTriggers;
       });
-    }
+    },
+    paginatedPosts() {
+      return this.posts.slice(0, this.currentPage * this.postsPerPage);
+    },
   },
   methods: {
     timeSince,
@@ -219,6 +229,20 @@ export default defineComponent({
     showUserProfile(user) {
       this.$router.push({ name: 'UserProfile', params: { userId: user.id } });
     },
+    loadMorePosts(event) {
+      setTimeout(() => {
+        // Check if all posts are loaded
+        if (this.paginatedPosts.length >= this.posts.length) {
+          event.target.disabled = true; // Disable infinite scroll
+        }
+        event.target.complete(); // Complete the event
+
+        // Increment the page if more posts are available
+        if (this.paginatedPosts.length < this.posts.length) {
+          this.currentPage++;
+        }
+      }, 1000); // Simulate loading delay
+    }
   },
 });
 </script>

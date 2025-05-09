@@ -23,24 +23,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import PostList from '@/components/Feed/PostList.vue';
 import { usePostStore } from '@/stores/post';
 import { useAccountStore } from '@/stores/account';
-import { IonPage, IonAvatar, IonHeader, IonToolbar, IonItem, IonTitle, IonButtons, IonButton, IonModal, IonContent, IonIcon } from '@ionic/vue';
-import ProfileView from '@/views/ProfileView.vue';
+import { IonPage, IonAvatar, IonHeader, IonToolbar, IonItem, IonTitle, IonButtons, IonContent, IonIcon } from '@ionic/vue';
 import { notificationsOutline } from 'ionicons/icons';
 
 export default defineComponent({
   name: 'FeedView',
   components: {
     IonIcon,
-    IonAvatar, IonHeader, IonToolbar, IonItem, IonTitle, IonButtons, IonButton,
+    IonAvatar,
+    IonHeader,
+    IonToolbar,
+    IonItem,
+    IonTitle,
+    IonButtons,
     PostList,
     IonPage,
-    IonModal,
     IonContent,
-    ProfileView
   },
   data() {
     return {

@@ -3,14 +3,14 @@
     <ion-content class="ion-padding onboarding-content">
       <swiper
           :pagination="{ clickable: true }"
-          class="onboarding-swiper"
           :loop="false"
+          :autoplay="{ delay: 3000, disableOnInteraction: false }"
+          class="onboarding-swiper"
       >
         <swiper-slide class="slide slide-animated-logo">
           <img src="@/assets/logo.svg" alt="Sendpathy Logo" class="logo-animate" />
         </swiper-slide>
         <swiper-slide class="slide slide-welcome">
-          <div class="shape"></div>
           <img src="@/assets/onboarding1.png" alt="Communauté empathique" />
           <h1><span class="gradient-text">Bienvenue sur Sendpathy</span></h1>
           <p>
@@ -19,7 +19,6 @@
           </p>
         </swiper-slide>
         <swiper-slide class="slide slide-modes">
-          <div class="shape"></div>
           <img src="@/assets/onboarding2.png" alt="Fonctionnalités" />
           <h1><span class="gradient-text">Deux façons de vous exprimer</span></h1>
           <div class="modes">
@@ -39,9 +38,8 @@
           </div>
         </swiper-slide>
         <swiper-slide class="slide slide-psy">
-          <div class="shape"></div>
           <img src="@/assets/onboarding3.png" alt="Fonctionnalités" />
-          <h1> <span class="gradient-text">Accompagnement Psy </span></h1>
+          <h1><span class="gradient-text">Accompagnement Psy</span></h1>
           <p>
             Besoin de parler à un professionnel ?
             Réservez facilement une séance en visio et prenez soin de vous.
@@ -74,9 +72,18 @@ export default defineComponent({
 
 <style scoped>
 @keyframes pulse {
-  0%   { transform: scale(1);   opacity: 1; }
-  50%  { transform: scale(1.1); opacity: .8; }
-  100% { transform: scale(1);   opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: .8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .logo-animate {
@@ -85,18 +92,52 @@ export default defineComponent({
   animation: pulse 2s ease-in-out infinite;
 }
 
-.slide-animated-logo h1 {
-  font-size: 2rem;
-}
-
-.slide-animated-logo p {
-  max-width: 90%;
-  text-align: center;
-}
 .onboarding-content {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+}
+
+/* Cloud group container */
+.cloud {
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
+.cloud .circle {
+  background: var(--ion-color-light);
+  border-radius: 50%;
+  box-shadow: -8px -8px 16px #ffffff, 8px 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.cloud .c1 {
+  width: 80px;
+  height: 80px;
+}
+
+.cloud .c2 {
+  width: 60px;
+  height: 60px;
+  margin-left: -20px;
+}
+
+.cloud .c3 {
+  width: 100px;
+  height: 100px;
+  margin-left: -20px;
+}
+
+.cloud1 {
+  top: 10%;
+  left: 10%;
+}
+
+.cloud2 {
+  bottom: 10%;
+  right: 10%;
 }
 
 .onboarding-swiper {
@@ -151,58 +192,5 @@ export default defineComponent({
 .slide img {
   width: 100%;
   max-width: 220px;
-}
-
-.background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('@/assets/background1.png');
-  background-size: cover;
-  background-position: center;
-  z-index: -1;
-}
-
-.onboarding-content {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.slide img {
-  position: relative;
-  z-index: 1;
-}
-
-.shape {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  box-shadow: var(--neumorphism-in-shadow);
-  z-index: 0;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.2;
-  background: var(--ion-color-tertiary);
-}
-
-.slide {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 20px;
-}
-
-.slide img {
-  position: relative;
-  z-index: 1;
 }
 </style>

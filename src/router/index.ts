@@ -66,6 +66,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/inscription', component: RegisterView, meta: { requiresGuest: true } },
   { path: '/request-password-reset', component: RequestPasswordResetView, meta: { requiresGuest: true } },
   { path: '/reset-password', component: ResetPasswordView, meta: { requiresGuest: true } },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('@/views/NotFoundView.vue') }
 ];
 
 const router = createRouter({

@@ -16,7 +16,7 @@
               <h1 class="gradient-text ion-input-spacing">Hâte de te connaître !</h1>
             </ion-text>
             <form @submit.prevent="register" class="ion-text-left form-container">
-              <ion-button expand="block" @click.prevent="generateAvatars">Générer un avatar</ion-button>
+              <ion-button expand="block" @click.prevent="generateAvatars" class="ion-margin-bottom">Générer un avatar</ion-button>
               <div class="avatar-selection">
                 <div v-for="(avatar, index) in avatars" :key="index" class="avatar-container"
                      :class="{ 'selected': avatar === selectedAvatar }"
@@ -265,5 +265,8 @@ export default defineComponent({
 }
 .password-toggle-icon {
   cursor: pointer;
+}
+.password-list ion-label {
+  font-size: 0.8rem;
 }
 </style>
