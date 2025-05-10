@@ -102,7 +102,6 @@
           </ion-item>
         </template>
       </ion-list>
-      <ToastMessage />
 </template>
 
 <script lang="ts">
@@ -113,7 +112,6 @@ import PostCommentModal from '@/components/Feed/PostCommentModal.vue';
 import { chatbubbleOutline, heart, heartOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
 import { usePostStore } from '@/stores/post';
 import PostFilterButton from '@/components/Feed/PostFilterButton.vue';
-import ToastMessage from '@/components/Commun/ToastMessage.vue'
 import { timeSince } from '@/utils/date';
 import CustomButton from "@/components/Commun/CustomButton.vue";
 
@@ -121,7 +119,6 @@ export default defineComponent({
   name: 'PostList',
   components: {
     CustomButton,
-    ToastMessage,
     PostFormModal,
     PostFilterButton,
     IonList,

@@ -26,7 +26,6 @@
         :reservation-id="reservationId"
         @reservation-submitted="handleReservationSubmitted"
       />
-      <ToastMessage/>
     </ion-content>
   </ion-page>
 </template>
@@ -37,7 +36,6 @@ import availableSlotService from '@/services/available-slot.service';
 import authService from '@/services/auth.service';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonAvatar, IonButtons, IonButton } from '@ionic/vue';
 import { useAccountStore } from '@/stores/account';
-import ToastMessage from '@/components/Commun/ToastMessage.vue';
 import ReservationForm from '@/components/Reservation/ReservationForm.vue';
 import { useReservationStore } from '@/stores/reservation';
 import { formatDate } from '@/utils/date';
@@ -53,7 +51,6 @@ export default defineComponent({
     };
   },
   components: {
-    ToastMessage,
     ReservationForm,
     IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonAvatar, IonButtons, IonButton
   },

@@ -24,9 +24,3 @@ export function changeGoogleTranslate(langCode: string) {
     };
     tryCombo();
 }
-
-export function watchAndTranslate(root: Element, langCode: string) {
-    const obs = new MutationObserver(() => changeGoogleTranslate(langCode));
-    obs.observe(root, { childList: true, subtree: true });
-    return () => obs.disconnect();
-}

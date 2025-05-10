@@ -3,21 +3,23 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+    --app-background:  #e9e9f7;
+    --ion-background-color: #e9e9f7 !important;
     /** primary **/
     --ion-color-primary: #9747FF;
     --ion-color-primary-rgb: 35, 152, 158;
     --ion-color-primary-contrast: #e9e9f7;
     --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #1e868a;
-    --ion-color-primary-tint: #38a2a7;
+    --ion-color-primary-shade: #933cff;
+    --ion-color-primary-tint: #933cff;
 
     /** secondary **/
     --ion-color-secondary: #FD7DFB;
     --ion-color-secondary-rgb: 101, 183, 187;
     --ion-color-secondary-contrast:#333333;
     --ion-color-secondary-contrast-rgb: 0, 0, 0;
-    --ion-color-secondary-shade: #59a1a5;
-    --ion-color-secondary-tint: #74bec2;
+    --ion-color-secondary-shade: #933cff;
+    --ion-color-secondary-tint: #933cff;
 
     /** tertiary **/
     --ion-color-tertiary: #FD7DFB;
@@ -91,7 +93,6 @@ http://ionicframework.com/docs/theming/ */
     --ion-item-background: #e9e9f7;
     --ion-item-color: linear-gradient(-119.774deg, rgba(151, 71, 255, 60%) 0%, #FD7DFB 82%);
 
-    --ion-background-color: #e9e9f7;
     --ion-text-color: #555555;
     --ion-toolbar-background: transparent;
 
@@ -129,15 +130,15 @@ http://ionicframework.com/docs/theming/ */
         --ion-color-primary-rgb: 35, 152, 158;
         --ion-color-primary-contrast: linear-gradient(-119.774deg, rgba(151, 71, 255, 60%) 0%, #FD7DFB 82%);
         --ion-color-primary-contrast-rgb: 0, 0, 0;
-        --ion-color-primary-shade: #1e868a;
-        --ion-color-primary-tint: #38a2a7;
+        --ion-color-primary-shade: #933cff;
+        --ion-color-primary-tint: #933cff;
 
         --ion-color-secondary: #FD7DFB;
         --ion-color-secondary-rgb: 25, 106, 111;
         --ion-color-secondary-contrast: #e9e9f7;
         --ion-color-secondary-contrast-rgb: 255, 255, 255;
-        --ion-color-secondary-shade: #165d62;
-        --ion-color-secondary-tint: #30797d;
+        --ion-color-secondary-shade: #933cff;
+        --ion-color-secondary-tint: #933cff;
 
         --ion-color-tertiary: #FD7DFB;
         --ion-color-tertiary-rgb: 106, 100, 255;

@@ -13,9 +13,9 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/assets/img/icon.png",
+      "src": "/public/img/icon.svg",
       "sizes": "500x500",
-      "type": "image/png"
+      "type": "image/svg"
     }
   ]
 }

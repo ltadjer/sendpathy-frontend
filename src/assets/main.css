@@ -385,9 +385,9 @@ ion-tab-bar {
 }
 
 ion-back-button {
-    --icon-font-size: 1rem;
-    min-width: 24px;
-    min-height: 24px;
+    --icon-font-size: 1.2rem;
+    min-width: 30px;
+    min-height: 30px;
     margin-bottom: 1rem;
     margin-top: 1rem;
 }
@@ -490,6 +490,14 @@ ion-item-sliding {
 
 ion-item-option:hover {
     box-shadow: var(--neumorphism-in-shadow);
+}
+
+.skiptranslate {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
 }
 
 

@@ -139,7 +139,6 @@ import {
   eyeOffOutline
 } from 'ionicons/icons';
 import CustomButton from '@/components/Commun/CustomButton.vue';
-import ToastMessage from '@/components/Commun/ToastMessage.vue';
 import { useAccountStore } from '@/stores/account';
 import { useToastStore } from '@/stores/toast';
 import lightLogo from '@/assets/logo-light.svg';
@@ -148,7 +147,6 @@ import darkLogo from '@/assets/logo-dark.svg';
 export default defineComponent({
   name: 'RegisterView',
   components: {
-    ToastMessage,
     CustomButton,
     IonContent,
     IonPage,

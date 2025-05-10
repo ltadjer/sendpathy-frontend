@@ -20,7 +20,6 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ToastMessage />
     </ion-content>
   </ion-page>
 </template>
@@ -30,7 +29,6 @@ import { defineComponent } from 'vue';
 import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonInput, IonButton, IonIcon, IonHeader, IonToolbar, IonTitle, IonBackButton, IonButtons } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useAccountStore } from '@/stores/account';
-import ToastMessage from '@/components/Commun/ToastMessage.vue';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 
 export default defineComponent({
@@ -44,7 +42,6 @@ export default defineComponent({
   },
   components: {
     CustomButton,
-    ToastMessage,
     IonPage,
     IonContent,
     IonGrid,

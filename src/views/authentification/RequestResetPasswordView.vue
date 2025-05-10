@@ -20,17 +20,15 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <Toast-message />
     </ion-content>
   </ion-page>
   </template>
   
   <script>
   import { defineComponent } from 'vue';
-  import { IonPage, IonContent, IonInput, IonButton, IonGrid, IonRow, IonCol, IonText, IonHeader, IonToolbar, IonTitle, IonBackButton, IonButtons  } from '@ionic/vue';
+  import { IonPage, IonContent, IonInput, IonGrid, IonRow, IonCol, IonHeader, IonToolbar, IonTitle, IonBackButton, IonButtons  } from '@ionic/vue';
   import { arrowBackOutline } from 'ionicons/icons';
   import { useAccountStore } from '@/stores/account'
-  import ToastMessage from '@/components/Commun/ToastMessage.vue'
   import CustomButton from '@/components/Commun/CustomButton.vue'
   
   export default defineComponent( {
@@ -43,15 +41,12 @@
     },
     components: {
       CustomButton,
-      ToastMessage,
       IonPage,
       IonContent,
       IonInput,
-      IonButton,
       IonGrid,
       IonRow,
       IonCol,
-      IonText,
       IonHeader,
       IonToolbar,
       IonTitle,

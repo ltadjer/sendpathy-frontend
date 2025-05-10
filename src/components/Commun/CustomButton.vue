@@ -39,6 +39,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
 .gradient-text {
  color: var(--ion-text-color);
   font-weight: normal;

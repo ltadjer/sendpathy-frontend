@@ -33,9 +33,9 @@ console.log('Saved language:', saved);
 changeGoogleTranslate(saved);
 
 const app = createApp(App)
+    .use(router)
   .use(IonicVue)
   .use(createPinia())
-  .use(router);
 
 router.isReady().then(() => {
   app.mount('#app');

@@ -49,17 +49,21 @@ export const useAccountStore = defineStore('account', {
         const response = await AuthService.login(user);
         this.isAuthenticated = true;
         this.user = response.data;
-        if (response) {
-          if (response.status === 200 || response.status === 201) {
+        console.log('User data:', this.user);
+
+        if (response.status === 200 || response.status === 201) {
+          setTimeout(() => {
             toastStore.showToast('Connexion réussie', 'primary');
-            this.scheduleRefresh(15 * 60 * 1000);
-          } else if (response.status === 401) {
-            toastStore.showToast('Échec de la connexion, vérifiez vos identifiants ou confirmez votre email', 'danger');
-          }
+          }, 500);
+          this.scheduleRefresh(15 * 60 * 1000);
         }
-      } catch (error) {
-        toastStore.showToast('Une erreur est survenue, veuillez réessayez.', 'danger');
+      } catch (error: any) {
         console.error('Login failed:', error);
+        if (error.response?.status === 401) {
+          toastStore.showToast('Échec de la connexion, vérifiez vos identifiants ou confirmez votre email', 'primary');
+        } else {
+          toastStore.showToast('Une erreur est survenue, veuillez réessayer.', 'danger');
+        }
       }
     },
 
@@ -77,6 +81,7 @@ export const useAccountStore = defineStore('account', {
     async logout() {
       const toastStore = useToastStore();
       await AuthService.logout();
+      localStorage.removeItem('accessToken');
       toastStore.showToast('Déconnexion réussie', 'primary');
       this.isAuthenticated = false;
       this.user = null;

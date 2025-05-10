@@ -27,10 +27,8 @@
         <swiper-slide class="slide slide-modes">
           <img src="@/assets/onboarding2.png" alt="Fonctionnalités" />
           <h1><span class="gradient-text">Deux façons de vous exprimer</span></h1>
-          <ion-grid>
-            <ion-row>
-              <ion-col size="12" size-md="6">
-                <ion-card>
+          <div class="cards">
+                <ion-card class="ion-no-margin ion-margin-bottom">
                   <ion-card-header>
                     <ion-card-title><span class="gradient-text">Fil d’actualité</span></ion-card-title>
                   </ion-card-header>
@@ -38,9 +36,8 @@
                     Découvrez et réagissez aux émotions de la communauté, anonymement.
                   </ion-card-content>
                 </ion-card>
-              </ion-col>
-              <ion-col size="12" size-md="6">
-                <ion-card>
+
+                <ion-card class="ion-no-margin">
                   <ion-card-header>
                     <ion-card-title><span class="gradient-text">Journal intime</span></ion-card-title>
                   </ion-card-header>
@@ -48,9 +45,7 @@
                     Écrivez vos pensées et ressentez l’apaisement d’un espace perso.
                   </ion-card-content>
                 </ion-card>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
+          </div>
         </swiper-slide>
         <swiper-slide class="slide slide-psy">
           <img src="@/assets/onboarding3.png" alt="Fonctionnalités" />
@@ -59,11 +54,12 @@
             Besoin de parler à un professionnel ?
             Réservez facilement une séance en visio et prenez soin de vous.
           </p>
-          <custom-button text="Commencer" @click="goToLogin" />
+            <custom-button text="Commencer" @click="goToLogin" :icon="arrowForwardOutline" />
+
         </swiper-slide>
       </swiper>
-      <div class="swipe-indicator">
-        <p>Swipe</p>
+      <div class="swipe-indicator" @click="goToNextSlide()">
+        <span class="arrow"></span>
         <span class="arrow"></span>
       </div>
     </ion-content>
@@ -72,16 +68,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { IonPage, IonContent } from '@ionic/vue'
+import { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/swiper-bundle.css'
 import CustomButton from '@/components/Commun/CustomButton.vue'
 import darkLogo from "@/assets/logo-dark.svg";
 import lightLogo from "@/assets/logo-light.svg";
+import {arrowForwardOutline} from "ionicons/icons";
 
 export default defineComponent({
   name: 'OnboardingView',
-  components: { IonPage, IonContent, Swiper, SwiperSlide, CustomButton },
+  components: { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle, Swiper, SwiperSlide, CustomButton },
   data() {
     return {
       swiperInstance: null, // Stocke l'instance de Swiper
@@ -92,6 +89,11 @@ export default defineComponent({
     getLogo() {
       return this.isDarkMode ? darkLogo : lightLogo;
     },
+  },
+  setup() {
+    return {
+      arrowForwardOutline
+    }
   },
   created() {
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -105,6 +107,9 @@ export default defineComponent({
     });
   },
   methods: {
+    arrowForwardOutline() {
+      return arrowForwardOutline
+    },
     goToLogin() {
       localStorage.setItem('onboardingCompleted', 'true')
       this.$router.push('/connexion')
@@ -114,7 +119,7 @@ export default defineComponent({
       setTimeout(() => {
         this.swiperInstance.slideTo(1) // Passe au deuxième slide (index 1)
       }, 3000)
-    }
+    },
   },
 })
 </script>
@@ -189,6 +194,25 @@ ion-card p {
   max-width: 220px;
 }
 
+.cards {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.cards ion-card {
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .cards {
+    flex-direction: row;
+  }
+}
+
 .swipe-indicator {
   position: absolute;
   bottom: 20px;
@@ -202,12 +226,6 @@ ion-card p {
 
 .slide-animated-logo .swipe-indicator {
   display: none;
-}
-
-.swipe-indicator p {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: var(--ion-color-primary);
 }
 .swipe-indicator .arrow {
   width: 24px;

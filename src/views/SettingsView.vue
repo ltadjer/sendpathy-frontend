@@ -140,7 +140,6 @@
           </ion-item>
         </ion-item-group>
       </ion-list>
-      <ToastMessage />
     </ion-content>
   </ion-page>
 </template>
@@ -171,13 +170,11 @@ import {
   IonBackButton,
   IonItemGroup,
 } from '@ionic/vue';
-import ToastMessage from '@/components/Commun/ToastMessage.vue'
 import { googleLangMap, changeGoogleTranslate } from '@/utils/translateMapping'
 
 export default defineComponent({
   name: 'SettingsView',
   components: {
-    ToastMessage,
     CustomButton,
     IonButtons,
     IonBackButton,

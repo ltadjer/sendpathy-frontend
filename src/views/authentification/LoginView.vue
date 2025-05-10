@@ -50,12 +50,12 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ToastMessage />
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
 import { useAccountStore } from '@/stores/account.ts'
 import {
   IonPage,
@@ -69,16 +69,12 @@ import {
 } from '@ionic/vue'
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons'
 import CustomButton from '@/components/Commun/CustomButton.vue'
-import { defineComponent } from 'vue'
-import ToastMessage from '@/components/Commun/ToastMessage.vue'
-import { useToastStore } from '@/stores/toast'
 import darkLogo from "@/assets/logo-dark.svg";
 import lightLogo from "@/assets/logo-light.svg";
 
 export default defineComponent({
   name: 'LoginView',
   components: {
-    ToastMessage,
     IonPage,
     IonContent,
     IonGrid,
@@ -99,8 +95,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const toastStore = useToastStore()
-    return { toastStore, eyeOutline, eyeOffOutline }
+    return { eyeOutline, eyeOffOutline }
   },
   computed: {
     getLogo() {
@@ -136,7 +131,7 @@ export default defineComponent({
           password: this.password
         }
         await useAccountStore().login(user)
-        this.$router.push('/feed')
+        this.$router.push('/')
       } catch (error) {
         console.error('Login failed:', error)
       }
