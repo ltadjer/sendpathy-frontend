@@ -47,6 +47,11 @@ h6 {
     height: 4px;
 }
 
+html.ios ion-content {
+    --padding-bottom: var(--ion-safe-area-bottom) !important;
+}
+
+
 .full-width {
     width: 100%;
 }
