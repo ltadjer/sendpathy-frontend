@@ -12,7 +12,7 @@
       <ion-grid class="flex-center">
         <ion-row>
           <ion-col class="ion-text-center">
-            <img alt="Logo" src="/img/logo-with-shadow.svg" width="140px"/>
+            <img alt="Logo" src="@/assets/logo-light.svg" width="140px"/>
             <form @submit.prevent="resetPassword" class="ion-text-start form-container">
               <ion-input placeholder="Mot de passe" type="password" v-model="newPassword" required></ion-input>
               <custom-button expand="block" color="primary" type="submit" text="Envoyer"></custom-button>
