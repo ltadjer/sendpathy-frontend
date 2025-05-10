@@ -49,22 +49,23 @@ const routes: Array<RouteRecordRaw> = [
         component: NewReservationView,
         props: true
       },
+      { path: '/conversations/:conversationId', name: 'ConversationList', component: MessageView, props: true,   meta: { requiresAuth: true, hideMainNav: true }
+      },
+      {
+        path: '/notifications',
+        name: 'Notifications',
+        component: NotificationView,
+        meta: { requiresAuth: true, hideMainNav: true }
+      },
+      {
+        path: '/parametres',
+        name: 'Settings',
+        component: SettingsView,
+        meta: { requiresAuth: true, hideMainNav: true }
+      },
     ],
     meta: { requiresAuth: true }
   },
-  {
-    path: '/notifications',
-    name: 'Notifications',
-    component: NotificationView,
-   meta: { requiresAuth: true }
-  },
-  {
-    path: '/parametres',
-    name: 'Settings',
-    component: SettingsView,
-    meta: { requiresAuth: true }
-  },
-  { path: '/conversations/:conversationId', name: 'ConversationList', component: MessageView, props: true, meta: { requiresAuth: true }},
 
   { path: '/inscription', component: RegisterView, meta: { requiresGuest: true } },
   { path: '/request-password-reset', component: RequestPasswordResetView, meta: { requiresGuest: true } },

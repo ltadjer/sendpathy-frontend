@@ -1,87 +1,105 @@
 <template>
   <ion-page>
-    <div class="container" v-if="isDesktop">
-      <aside class="sidebar" :class="{ 'hidden': isSidebarHidden }">
-        <ion-item lines="none" class="ion-no-shadow">
-          <div class="avatar-container" @click="showUserProfile(currentUser)">
-            <ion-avatar slot="start">
-              <img alt="User Avatar" :src="currentUser?.avatar" />
-            </ion-avatar>
-          </div>
-        </ion-item>
+    <ion-split-pane when="(min-width: 1200px)" content-id="main">
+      <ion-menu content-id="main" class="sidebar-menu">
+        <ion-header>
+          <ion-toolbar>
+            <div class="avatar-container" @click="showUserProfile(currentUser)">
+              <ion-avatar slot="center">
+                <img :src="currentUser?.avatar" alt="User Avatar" />
+              </ion-avatar>
+            </div>
+          </ion-toolbar>
+        </ion-header>
+          <ion-list class="link-list">
+            <custom-button :class="{ 'ion-shadow-in': isActiveTab('/feed') }" text="Feed" href="/feed" />
+            <custom-button text="Moments de vie" :class="{ 'ion-shadow-in': isActiveTab('/journal') }"  href="/journal" />
+            <custom-button text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
+            <custom-button text="Consultations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }"  href="/reservations" />
+            <ion-list class="button-list">
+              <custom-button :icon="settingsOutline" href="/parametres" />
+              <custom-button @click="logout" :icon="logOutOutline" />
+            </ion-list>
+          </ion-list>
+      </ion-menu>
 
-        <nav>
-          <custom-button :class="{ 'ion-shadow-in': isActiveTab('/feed') }" text="Feed" href="/feed" />
-          <custom-button text="Moments de vie" href="/journal" />
-          <custom-button text="Messages" href="/conversations" />
-          <custom-button text="Consultations" href="/reservations" />
-        </nav>
+      <div class="main-content" id="main">
+        <ion-router-outlet />
+      </div>
+    </ion-split-pane>
 
-        <div class="rounded-buttons">
-          <custom-button class="ion-margin-end" :icon="settingsOutline" href="/parametres" />
-          <custom-button @click="logout" :icon="logOutOutline" />
-        </div>
-
-
-      </aside>
-
-      <ion-router-outlet></ion-router-outlet>
-    </div>
-    <div v-else class="mobile-nav">
+    <div v-if="!isDesktop && shouldHideMainNav" class="mobile-nav">
       <ion-fab horizontal="center" vertical="bottom">
         <ion-fab-button @click="openFormModal">
-          <ion-icon :icon="add"></ion-icon>
+          <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
+
       <ion-tabs>
-        <ion-router-outlet></ion-router-outlet>
+        <ion-router-outlet />
         <ion-tab-bar slot="bottom" class="ion-margin">
-          <ion-tab-button :class="{ 'ion-shadow-in': isActiveTab('/feed') }" tab="feed" href="/feed">
-            <ion-icon :icon="homeOutline"></ion-icon>
+          <ion-tab-button tab="feed" href="/feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }">
+            <ion-icon :icon="homeOutline" />
           </ion-tab-button>
-          <ion-tab-button :class="{ 'ion-shadow-in': isActiveTab('/journal') }" tab="libray" href="/journal">
+          <ion-tab-button tab="journal" href="/journal" :class="{ 'ion-shadow-in': isActiveTab('/journal') }">
             <ion-icon :icon="journalOutline" />
           </ion-tab-button>
-          <ion-tab-button :class="{ 'ion-shadow-in': isActiveTab('/conversations') }" tab="chatbubblesOutline" href="/conversations">
+          <ion-tab-button tab="conversations" href="/conversations" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }">
             <ion-icon :icon="chatbubblesOutline" />
           </ion-tab-button>
-          <ion-tab-button :class="{ 'ion-shadow-in': isActiveTab('/reservations') }" tab="reservations" href="/reservations">
+          <ion-tab-button tab="reservations" href="/reservations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }">
             <ion-icon :icon="todayOutline" />
           </ion-tab-button>
-          <ion-tab-button :class="{ 'ion-shadow-in': isActiveTab('/parametres') }" tab="settings" href="/parametres">
+          <ion-tab-button tab="parametres" href="/parametres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
             <ion-icon :icon="settingsOutline" />
           </ion-tab-button>
-          <ion-tab-button @click="logout">
+          <ion-tab-button @click="logout" shape="round">
             <ion-icon :icon="logOutOutline" />
           </ion-tab-button>
         </ion-tab-bar>
-        <post-form-modal v-if="isPostFormModalOpen" @close="closePostFormModal" :current-user="currentUser"/>
-        <life-moment-form-modal v-if="isLifeMomentModalOpen" @close="closeLifeMomentModal"/>
-        <friendships-modal
+      </ion-tabs>
+
+      <post-form-modal v-if="isPostFormModalOpen" @close="closePostFormModal" :current-user="currentUser"/>
+      <life-moment-form-modal v-if="isLifeMomentModalOpen" @close="closeLifeMomentModal"/>
+      <friendships-modal
           :is-open="isFriendshipsModalOpen"
           :friends-list="friendsList"
           @close="closeFriendshipsModal"
           @select="handleFriendSelection"
-        />
-      </ion-tabs>
+      />
     </div>
   </ion-page>
 </template>
+
 <script lang="ts">
-import { IonPage, IonAvatar, IonItem, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonFab, IonFabButton } from '@ionic/vue';
-import { settingsOutline, homeOutline, chatbubblesOutline, journalOutline, todayOutline, add, logOutOutline } from 'ionicons/icons';
+import {
+  IonPage, IonSplitPane, IonMenu, IonHeader, IonToolbar,
+  IonAvatar, IonList, IonRouterOutlet, IonTabs, IonTabBar, IonTabButton,
+  IonIcon, IonFab, IonFabButton
+} from '@ionic/vue';
+
+import { defineComponent } from 'vue';
+import { useAccountStore } from '@/stores/account';
+import { useConversationStore } from '@/stores/conversation';
+
+import {
+  settingsOutline, homeOutline, chatbubblesOutline,
+  journalOutline, todayOutline, add, logOutOutline
+} from 'ionicons/icons';
+
+import CustomButton from '@/components/Commun/CustomButton.vue';
 import PostFormModal from '@/components/Feed/PostFormModal.vue';
 import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue';
-import { useAccountStore } from '@/stores/account';
-import { defineComponent } from 'vue';
-import CustomButton from '@/components/Commun/CustomButton.vue'
-import { useConversationStore } from '@/stores/conversation';
-import FriendshipsModal from '@/components/Message/FriendshipsModal.vue'
+import FriendshipsModal from '@/components/Message/FriendshipsModal.vue';
 
 export default defineComponent({
   name: 'MainNav',
   components: {
-    FriendshipsModal, CustomButton, IonPage, IonAvatar, IonItem, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonFab, IonFabButton, PostFormModal, LifeMomentFormModal},
+    IonPage, IonSplitPane, IonMenu, IonHeader, IonToolbar,
+    IonAvatar, IonList, IonRouterOutlet, IonTabs, IonTabBar, IonTabButton,
+    IonIcon, IonFab, IonFabButton,
+    CustomButton, PostFormModal, LifeMomentFormModal, FriendshipsModal
+  },
   data() {
     return {
       homeOutline,
@@ -97,6 +115,9 @@ export default defineComponent({
     };
   },
   computed: {
+    shouldHideMainNav() {
+      return this.$route.meta.hideMainNav && !this.isDesktop;
+    },
     currentUser() {
       return useAccountStore().user;
     },
@@ -104,55 +125,36 @@ export default defineComponent({
       return this.$route.path;
     },
     isDesktop() {
-      return window.innerWidth > 992;
+      return window.innerWidth > 1200;
     },
     friendsList() {
       const received = this.currentUser?.friendshipsReceived
-        ?.filter(friendship => friendship.status === 'ACCEPTED')
-        .map(friendship => friendship.requester) || [];
+          ?.filter(f => f.status === 'ACCEPTED')
+          .map(f => f.requester) || [];
 
       const sent = this.currentUser?.friendshipsSent
-        ?.filter(friendship => friendship.status === 'ACCEPTED')
-        .map(friendship => friendship.receiver) || [];
+          ?.filter(f => f.status === 'ACCEPTED')
+          .map(f => f.receiver) || [];
 
-      return received.filter(friend =>
-        sent.some(sentFriend => sentFriend.id === friend.id)
-      );
-    },
+      return received.filter(friend => sent.some(s => s.id === friend.id));
+    }
   },
   methods: {
     openFormModal() {
-      if (this.$route.path === '/journal') {
-        this.isLifeMomentModalOpen = true;
-      } else if (this.$route.path === '/reservations') {
-        this.$router.push('/reservations/nouvelle-reservation/');
-      } else if (this.$route.path === '/feed') {
-        this.isPostFormModalOpen = true;
-      } else if (this.$route.path === '/conversations') {
-        console.log('Opening FriendshipsModal');
-        this.isFriendshipsModalOpen = true;
+      switch (this.$route.path) {
+        case '/journal':
+          this.isLifeMomentModalOpen = true;
+          break;
+        case '/reservations':
+          this.$router.push('/reservations/nouvelle-reservation/');
+          break;
+        case '/feed':
+          this.isPostFormModalOpen = true;
+          break;
+        case '/conversations':
+          this.isFriendshipsModalOpen = true;
+          break;
       }
-    },
-    closeFriendshipsModal() {
-      this.isFriendshipsModalOpen = false;
-    },
-    async handleFriendSelection(friend) {
-      const conversationStore = useConversationStore();
-      const existingConversation = conversationStore.conversations.find(
-        conversation => conversation.user?.id === friend.id
-      );
-
-      if (existingConversation) {
-        this.$router.push(`/conversations/${existingConversation.id}`);
-      } else {
-        const newConversation = await conversationStore.createOneConversation({
-          userIds: [this.currentUser.id, friend.id],
-          conversationType: 'PRIVATE',
-        });
-        this.$router.push(`/conversations/${newConversation.id}`);
-      }
-
-      this.closeFriendshipsModal();
     },
     closePostFormModal() {
       this.isPostFormModalOpen = false;
@@ -160,101 +162,106 @@ export default defineComponent({
     closeLifeMomentModal() {
       this.isLifeMomentModalOpen = false;
     },
+    closeFriendshipsModal() {
+      this.isFriendshipsModalOpen = false;
+    },
+    async handleFriendSelection(friend) {
+      const conversationStore = useConversationStore();
+      const existing = conversationStore.conversations.find(c => c.user?.id === friend.id);
+      if (existing) {
+        this.$router.push(`/conversations/${existing.id}`);
+      } else {
+        const newConv = await conversationStore.createOneConversation({
+          userIds: [this.currentUser.id, friend.id],
+          conversationType: 'PRIVATE',
+        });
+        this.$router.push(`/conversations/${newConv.id}`);
+      }
+      this.closeFriendshipsModal();
+    },
     async logout() {
-      const accountStore = useAccountStore();
-      await accountStore.logout();
+      const store = useAccountStore();
+      await store.logout();
       this.$router.push('/connexion');
     },
-    isActiveTab(tabPath: string): boolean {
-      return this.currentRoute === tabPath;
+    isActiveTab(path: string): boolean {
+      return this.currentRoute === path;
+    },
+    showUserProfile(user) {
+      if (user?.id) {
+        this.$router.push(`/user/${user.id}`);
+      }
     }
   }
 });
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  height: 100vh;
-}
 
-.sidebar {
-  width: 280px;
-  padding: 20px;
-  background: var(--ion-background-color);
-  box-shadow: var(--neumorphism-out-shadow);
-  margin: 1rem;
-  border-radius: 1rem;
-  flex-shrink: 0;
-  z-index: 100000;
-  display: flex
-;
+ion-menu::part(container) {
+  display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-}
-
-
-ion-router-outlet {
-  flex-grow: 1;
-  margin-left: auto;
-  width: calc(100% - 300px);
-}
-
-@media (max-width: 1024px) {
-  .container {
-    flex-direction: column;
-  }
-
-  main {
-    width: 100%;
-  }
-}
-
-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 80%;
+  gap: 2rem;
 }
 
 ion-fab {
   bottom: 59px
 }
 
-.rounded-buttons ion-button {
-  --border-radius: 50% !important;
-}
-
-nav ion-button {
-  display: block;
-  margin: 10px 0;
-  text-align: left;
-  color: var(--ion-text-color);
-}
-
 .avatar-container {
-  padding: 0.4rem;
-  margin-right: 20px;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
 }
-
 ion-avatar {
   width: 80px;
   height: 80px;
 }
 
-main {
-  flex-grow: 1;
+.sidebar-menu {
+  --width: 200px;
   padding: 20px;
+  background: var(--ion-background-color);
+  box-shadow: var(--neumorphism-out-shadow);
+  margin: 1rem;
+  border-radius: 1rem;;
 }
 
-@media (max-width: 1024px) {
-  ion-router-outlet {
-    width: 100%;
-  }
-  ion-tabs {
-    background: var(--ion-background-color);
-  }
+.link-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.link-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 80%;
+}
+.button-list ion-button {
+  --border-radius: 50% !important;
+}
+.link-list ion-button {
+  width: inherit;
+  margin: 10px 0;
+}
+ion-toolbar::part(content) {
+  display: flex;
+  justify-content: center;
+}
+
+.main-content {
+  padding: 1rem;
+}
+ion-tab-bar {
+  background: var(--ion-background-color);
 }
 </style>
-

@@ -12,6 +12,9 @@
       </template>
     </MainHeader>
     <ion-content>
+      <div v-if="isDesktop">
+        <post-form :current-user="currentUser" @post-updated="refreshPosts" />
+      </div>
       <post-list :posts="posts" :current-user="currentUser"/>
     </ion-content>
   </ion-page>
@@ -25,10 +28,12 @@ import { useAccountStore } from '@/stores/account';
 import { IonPage, IonContent, IonIcon } from '@ionic/vue';
 import { notificationsOutline } from 'ionicons/icons';
 import MainHeader from '@/components/Commun/MainHeader.vue';
+import PostForm from "@/components/Feed/PostForm.vue";
 
 export default defineComponent({
   name: 'FeedView',
   components: {
+    PostForm,
     IonIcon,
     PostList,
     IonPage,
@@ -54,6 +59,9 @@ export default defineComponent({
     },
     currentUser() {
       return useAccountStore().user;
+    },
+    isDesktop() {
+      return window.innerWidth > 1200;
     },
   },
   watch: {
