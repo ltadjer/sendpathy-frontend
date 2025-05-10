@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-split-pane when="(min-width: 1200px)" content-id="main">
-      <ion-menu content-id="main" class="sidebar-menu">
+      <ion-menu content-id="main" class="sidebar-menu" v-if="isDesktop">
         <ion-header>
           <ion-toolbar>
             <div class="avatar-container" @click="showUserProfile(currentUser)">
@@ -12,10 +12,10 @@
           </ion-toolbar>
         </ion-header>
           <ion-list class="link-list">
-            <custom-button :class="{ 'ion-shadow-in': isActiveTab('/feed') }" text="Feed" href="/feed" />
-            <custom-button text="Moments de vie" :class="{ 'ion-shadow-in': isActiveTab('/journal') }"  href="/journal" />
-            <custom-button text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
-            <custom-button text="Consultations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }"  href="/reservations" />
+            <custom-button id="tab-feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }" text="Feed" href="/feed" />
+            <custom-button id="tab-journal" text="Moments de vie" :class="{ 'ion-shadow-in': isActiveTab('/journal') }"  href="/journal" />
+            <custom-button id="tab-conservations" text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
+            <custom-button id="tab-reservations" text="Consultations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }"  href="/reservations" />
             <ion-list class="button-list">
               <custom-button :icon="settingsOutline" href="/parametres" />
               <custom-button @click="logout" :icon="logOutOutline" />
@@ -23,12 +23,12 @@
           </ion-list>
       </ion-menu>
 
-      <div class="main-content" id="main">
+      <div  v-if="isDesktop" class="main-content" id="main">
         <ion-router-outlet />
       </div>
     </ion-split-pane>
 
-    <div v-if="!isDesktop && shouldHideMainNav" class="mobile-nav">
+    <div v-if="!isDesktop && !isExcludedRoute" class="mobile-nav">
       <ion-fab horizontal="center" vertical="bottom">
         <ion-fab-button @click="openFormModal">
           <ion-icon :icon="add" />
@@ -38,19 +38,19 @@
       <ion-tabs>
         <ion-router-outlet />
         <ion-tab-bar slot="bottom" class="ion-margin">
-          <ion-tab-button tab="feed" href="/feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }">
+          <ion-tab-button id="tab-feed" tab="feed" href="/feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }">
             <ion-icon :icon="homeOutline" />
           </ion-tab-button>
-          <ion-tab-button tab="journal" href="/journal" :class="{ 'ion-shadow-in': isActiveTab('/journal') }">
+          <ion-tab-button id="tab-journal" tab="journal" href="/journal" :class="{ 'ion-shadow-in': isActiveTab('/journal') }">
             <ion-icon :icon="journalOutline" />
           </ion-tab-button>
-          <ion-tab-button tab="conversations" href="/conversations" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }">
+          <ion-tab-button id="tab-conversations" tab="conversations" href="/conversations" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }">
             <ion-icon :icon="chatbubblesOutline" />
           </ion-tab-button>
-          <ion-tab-button tab="reservations" href="/reservations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }">
+          <ion-tab-button id="tab-reservations" tab="reservations" href="/reservations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }">
             <ion-icon :icon="todayOutline" />
           </ion-tab-button>
-          <ion-tab-button tab="parametres" href="/parametres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
+          <ion-tab-button id="tab-parameters" tab="parametres" href="/parametres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
             <ion-icon :icon="settingsOutline" />
           </ion-tab-button>
           <ion-tab-button @click="logout" shape="round">
@@ -115,11 +115,12 @@ export default defineComponent({
     };
   },
   computed: {
-    shouldHideMainNav() {
-      return this.$route.meta.hideMainNav && !this.isDesktop;
-    },
     currentUser() {
       return useAccountStore().user;
+    },
+    isExcludedRoute() {
+      const excludedRoutes = ['/notifications', '/parametres', '/conversations', '/user'];
+      return excludedRoutes.some(route => this.currentRoute.startsWith(route));
     },
     currentRoute() {
       return this.$route.path;

@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true" class="ion-padding-start ion-padding-end header-page">
+    <ion-header :translucent="true" class="ion-padding-start ion-padding-end">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
           <ion-back-button :defaultHref="true" :icon="arrowBackOutline" @click="navigateToLogin" text="" />
@@ -210,6 +210,10 @@ export default defineComponent({
     for (let year = startYear; year >= startYear - 82; year--) {
       this.years.push(year);
     }
+
+    const browserLanguage = navigator.language || 'fr';
+    console.log('Langue par défaut du navigateur :', browserLanguage);
+    this.nativeLanguage = browserLanguage;
   },
   setup() {
     const toastStore = useToastStore();
@@ -239,18 +243,18 @@ export default defineComponent({
     async register() {
       try {
         if (this.password !== this.confirmPassword) {
-          this.toastStore.showToast('Les mots de passe ne correspondent pas.', 'danger');
+          this.toastStore.showToast('Les mots de passe ne correspondent pas.', 'primary');
           return;
         }
 
         const isValid = this.passwordRules.every((rule) => rule.check(this.password));
         if (!isValid) {
-          this.toastStore.showToast('Veuillez respecter les règles de mot de passe.', 'danger');
+          this.toastStore.showToast('Veuillez respecter les règles de mot de passe.', 'primary');
           return;
         }
         const age = new Date().getFullYear() - this.yearOfBirth;
         if (age < 18) {
-          this.toastStore.showToast('Vous devez avoir au moins 18 ans pour vous inscrire.', 'danger');
+          this.toastStore.showToast('Vous devez avoir au moins 18 ans pour vous inscrire.', 'primary');
           return;
         }
 
@@ -260,6 +264,7 @@ export default defineComponent({
           password: this.password,
           age: age,
           avatar: this.selectedAvatar,
+          nativeLanguage: this.nativeLanguage,
         };
 
         await useAccountStore().register(user);
@@ -286,5 +291,9 @@ export default defineComponent({
 }
 .password-list ion-label {
   font-size: 0.8rem;
+}
+
+.avatar-container.selected {
+  background: var(--ion-color-primary);
 }
 </style>

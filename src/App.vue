@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import ToastMessage from "@/components/Commun/ToastMessage.vue";
 import LoadingScreen from "@/components/Commun/LoadingScreen.vue";
 import { isLoading } from '@/router';

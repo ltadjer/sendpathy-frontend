@@ -16,6 +16,7 @@
         <post-form :current-user="currentUser" @post-updated="refreshPosts" />
       </div>
       <post-list :posts="posts" :current-user="currentUser"/>
+      <custom-button @click="startTour" text="Revoir la visite"></custom-button>
     </ion-content>
   </ion-page>
 </template>
@@ -29,10 +30,14 @@ import { IonPage, IonContent, IonIcon } from '@ionic/vue';
 import { notificationsOutline } from 'ionicons/icons';
 import MainHeader from '@/components/Commun/MainHeader.vue';
 import PostForm from "@/components/Feed/PostForm.vue";
+import { onMounted } from 'vue';
+import { createTour } from '@/utils/tour';
+import CustomButton from "@/components/Commun/CustomButton.vue";
 
 export default defineComponent({
   name: 'FeedView',
   components: {
+    CustomButton,
     PostForm,
     IonIcon,
     PostList,
@@ -46,11 +51,20 @@ export default defineComponent({
     };
   },
   setup() {
+    onMounted(() => {
+      const seen = localStorage.getItem('appTourSeen');
+      if (!seen) {
+        const tour = createTour();
+        tour.start();
+        localStorage.setItem('appTourSeen', 'yes');
+      }
+    });
     return {
       notificationsOutline
     };
   },
   async created() {
+    console.log('FeedView created');
     await usePostStore().fetchAllPosts();
   },
   computed: {
@@ -85,7 +99,11 @@ export default defineComponent({
     },
     goToNotifications() {
       this.$router.push('/notifications');
-    }
+    },
+    startTour() {
+      const tour = createTour();
+      tour.start();
+    },
   }
 });
 </script>

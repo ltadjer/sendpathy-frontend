@@ -505,4 +505,36 @@ body {
     top: 0 !important;
 }
 
+.custom-shepherd-popup {
+    background: var(--ion-background-color);
+    border-radius: 1rem;
+    box-shadow: var(--neumorphism-out-shadow);
+    color: var(--ion-text-color);
+    padding: 1rem;
+    font-family: "Inclusive Sans", serif;
+}
 
+.custom-shepherd-popup .shepherd-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+}
+
+.custom-shepherd-popup .shepherd-text {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.custom-shepherd-popup .shepherd-button {
+    background: var(--ion-color-primary);
+    color: var(--ion-text-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    box-shadow: var(--neumorphism-out-shadow) !important;
+    transition: transform 0.3s ease;
+}
+
+.custom-shepherd-popup .shepherd-button:hover {
+    box-shadow: var(--neumorphism-in-shadow);
+    transform: translateY(-2px);
+}

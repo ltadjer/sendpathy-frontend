@@ -30,16 +30,16 @@ export const useAccountStore = defineStore('account', {
       try {
         const response = await AuthService.register(user);
         if (response) {
-          if (response.status === 409) {
-            toastStore.showToast('Échec de l\'inscription, l\'utilisateur existe déjà', 'danger');
-            return;
-          } else if (response.status === 201) {
+         if (response.status === 201) {
             toastStore.showToast('Inscription réussie, veuillez confirmer votre email', 'primary');
           }
         }
       } catch (error) {
-        toastStore.showToast('Une erreur est survenue, veuillez réessayez.', 'danger');
-        console.error('Registration failed:', error);
+        if (error.response?.status === 409 || error.response?.status === 400) {
+          toastStore.showToast('Échec de l\'inscription, l\'utilisateur existe déjà', 'primary');
+        } else {
+          toastStore.showToast('Une erreur est survenue, veuillez réessayer.', 'danger');
+        }
       }
     },
 
@@ -59,7 +59,10 @@ export const useAccountStore = defineStore('account', {
         }
       } catch (error: any) {
         console.error('Login failed:', error);
-        if (error.response?.status === 401) {
+        if (error.response?.data?.message === 'Username already taken') {
+          this.toastStore.showToast('Ce nom d\'utilisateur est déjà pris.', 'primary');
+        }
+        if (error.response?.status === 401 || error.response?.status === 409) {
           toastStore.showToast('Échec de la connexion, vérifiez vos identifiants ou confirmez votre email', 'primary');
         } else {
           toastStore.showToast('Une erreur est survenue, veuillez réessayer.', 'danger');
