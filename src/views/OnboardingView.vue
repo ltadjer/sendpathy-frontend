@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content class="ion-padding onboarding-content">
+    <ion-content class="ion-padding onboarding-content" :fullscreen="true">
       <swiper
           @swiper="onSwiperReady"
           :pagination="{ clickable: true }"

@@ -49,11 +49,6 @@ const routes: Array<RouteRecordRaw> = [
         component: NewReservationView,
         props: true
       },
-      {
-        path: '/parametres',
-        name: 'Settings',
-        component: SettingsView,
-      }
     ],
     meta: { requiresAuth: true }
   },
@@ -62,6 +57,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Notifications',
     component: NotificationView,
    meta: { requiresAuth: true }
+  },
+  {
+    path: '/parametres',
+    name: 'Settings',
+    component: SettingsView,
+    meta: { requiresAuth: true }
   },
   { path: '/conversations/:conversationId', name: 'ConversationList', component: MessageView, props: true, meta: { requiresAuth: true }},
 
@@ -74,6 +75,10 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior: () => ({ left: 0, top: 0 }),
+  options: {
+    animated: false, // Désactive les animations globalement
+  },
 });
 
 const isLoading = ref(false);

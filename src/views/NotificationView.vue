@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true" class="ion-padding-start ion-padding-end header-page">
+    <ion-header :translucent="true" class="ion-padding-start ion-padding-end">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" :animated="false" />
+          <ion-back-button defaultHref="/feed" :icon="arrowBackOutline" text="" :animated="false" />
         </ion-buttons>
         <ion-title>Notifications</ion-title>
       </ion-toolbar>
