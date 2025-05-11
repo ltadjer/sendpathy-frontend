@@ -20,7 +20,6 @@ export const useAccountStore = defineStore('account', {
           await this.refreshToken();
           this.scheduleRefresh(lifetimeMs);
         } catch {
-          // logout nettoie déjà le timer
           await this.logout();
         }
       }, timeout);
@@ -85,6 +84,7 @@ export const useAccountStore = defineStore('account', {
       const toastStore = useToastStore();
       await AuthService.logout();
       localStorage.removeItem('accessToken');
+        localStorage.removeItem('onboardingCompleted');
       toastStore.showToast('Déconnexion réussie', 'primary');
       this.isAuthenticated = false;
       this.user = null;
@@ -130,11 +130,19 @@ export const useAccountStore = defineStore('account', {
     },
 
     async setAccessCode(code: string) {
+      const toastStore = useToastStore();
       try {
         const response = await AuthService.setAccessCode(code);
-        this.user.accessCode = response;
-        return response;
+        if(response && response.status === 200 || response.status === 201) {
+          this.user.accessCode = response.data;
+            toastStore.showToast('Code d\'accès défini avec succès', 'primary');
+          return response;
+        } else if (response.data.status === 400) {
+          toastStore.showToast('Échec de la définition du code d\'accès', 'danger');
+          return ''
+        }
       } catch (error) {
+        toastStore.showToast('Une erreur est survenu, veillez réessayer.', 'danger');
         console.error('Failed to set access code:', error);
       }
     },

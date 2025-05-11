@@ -72,12 +72,10 @@ export default  {
   async validateAccessCode(accessCode: string) {
       const response = await api.post(`/users/validate-access-code`, { accessCode: accessCode });
       return response.data;
-
   },
 
   async setAccessCode(accessCode: string) {
-      const response = await api.post(`/users/access-code`, { accessCode: accessCode });
-      return response.data;
+      return await api.post(`/users/access-code`, { accessCode: accessCode });
   },
 
   /**

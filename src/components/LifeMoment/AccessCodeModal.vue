@@ -11,32 +11,22 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import {
   IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButton,
-  IonContent,
-  IonItem,
   IonLabel,
   IonInput,
   IonCard,
 } from '@ionic/vue';
 import CustomButton from '@/components/Commun/CustomButton.vue'
 import { useAccountStore } from '@/stores/account.ts'
+import { useToastStore } from "@/stores/toast"
 
-export default {
+export default defineComponent({
   name: 'AccessCodeModal',
   components: {
     CustomButton,
     IonModal,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButton,
-    IonContent,
-    IonItem,
     IonLabel,
     IonInput,
     IonCard,
@@ -56,6 +46,10 @@ export default {
       accessCode: ''
     };
   },
+  setup() {
+    const toastStore = useToastStore();
+    return { toastStore };
+  },
   methods: {
     async handleAccessCode() {
       try {
@@ -63,8 +57,10 @@ export default {
           const isValid = await useAccountStore().validateAccessCode(this.accessCode);
           if (isValid) {
             this.$emit('access-code-validated');
+            this.toastStore.showToast('Code d\'accès validé avec succès', 'primary');
             this.closeModal();
           } else {
+            this.toastStore.showToast('Échec de la validation du code d\'accès', 'primary');
             console.error('Invalid access code');
           }
         } else {
@@ -80,7 +76,7 @@ export default {
       this.$emit('update:isOpen', false);
     }
   }
-};
+});
 </script>
 <style scoped>
 ion-modal {

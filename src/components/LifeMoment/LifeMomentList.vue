@@ -70,7 +70,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {IonList, IonItem, IonGrid, IonRow, IonCol, IonIcon, IonPopover, IonText } from '@ionic/vue';
+import {IonList, IonItem, IonGrid, IonRow, IonCol, IonIcon, IonPopover, IonText, IonLabel } from '@ionic/vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
 import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
@@ -86,6 +86,7 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
+    IonLabel,
     IonIcon,
     IonPopover,
     IonText,

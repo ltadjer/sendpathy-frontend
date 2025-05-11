@@ -9,6 +9,11 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <confirm-delete-popup
+          :show="showDeleteAlert"
+          @close="showDeleteAlert = false"
+          @confirm="confirmDeleteAccount"
+      />
       <ion-list class="ion-padding">
         <!-- Public Information -->
         <ion-item-group>
@@ -140,7 +145,9 @@
           </ion-item>
         </ion-item-group>
       </ion-list>
+
     </ion-content>
+
   </ion-page>
 </template>
 
@@ -171,10 +178,12 @@ import {
   IonItemGroup,
 } from '@ionic/vue';
 import { googleLangMap, changeGoogleTranslate } from '@/utils/translateMapping'
+import ConfirmDeletePopup from "@/components/Commun/ConfirmDeletePopup.vue";
 
 export default defineComponent({
   name: 'SettingsView',
   components: {
+    ConfirmDeletePopup,
     CustomButton,
     IonButtons,
     IonBackButton,
@@ -196,6 +205,7 @@ export default defineComponent({
   },
   data() {
     return {
+      showDeleteAlert: false,
       accessCode: '',
       notifications: {
         posts: true,
@@ -303,8 +313,13 @@ export default defineComponent({
       const selectedTriggers = event.target.value;
       await useAccountStore().updateUserTriggers(this.currentUser.id, selectedTriggers);
     },
-    async deleteAccount() {
+    deleteAccount() {
+      this.showDeleteAlert = true;
+      console.log('delete account', this.showDeleteAlert);
+    },
+    async confirmDeleteAccount() {
       await useAccountStore().deleteUser(this.currentUser.id);
+      this.showDeleteAlert = false;
     },
   },
 });
