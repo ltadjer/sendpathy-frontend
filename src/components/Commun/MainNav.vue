@@ -14,7 +14,7 @@
           <ion-list class="link-list">
             <custom-button id="tab-feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }" text="Feed" href="/feed" />
             <custom-button id="tab-journal" text="Moments de vie" :class="{ 'ion-shadow-in': isActiveTab('/journal') }"  href="/journal" />
-            <custom-button id="tab-conservations" text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
+            <custom-button id="tab-conversations" text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
             <custom-button id="tab-reservations" text="Consultations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }"  href="/reservations" />
             <ion-list class="button-list">
               <custom-button :icon="settingsOutline" href="/parametres" />
@@ -23,7 +23,7 @@
           </ion-list>
       </ion-menu>
 
-      <div  v-if="isDesktop" class="main-content" id="main">
+      <div  v-if="isDesktop || isExcludedRoute" class="main-content" id="main">
         <ion-router-outlet />
       </div>
     </ion-split-pane>
@@ -119,8 +119,12 @@ export default defineComponent({
       return useAccountStore().user;
     },
     isExcludedRoute() {
-      const excludedRoutes = ['/notifications', '/parametres', '/conversations', '/user'];
-      return excludedRoutes.some(route => this.currentRoute.startsWith(route));
+      const excludedRoutes = ['/notifications', '/parametres', '/user'];
+      const currentRoute = this.currentRoute;
+
+      const isConversationRoute = /^\/conversations\/[^/]+$/.test(currentRoute);
+
+      return excludedRoutes.some(route => currentRoute.startsWith(route)) || isConversationRoute;
     },
     currentRoute() {
       return this.$route.path;

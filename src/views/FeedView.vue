@@ -9,6 +9,7 @@
     >
       <template #end-buttons>
         <ion-icon class="custom-icon ion-margin-end" :icon="notificationsOutline" @click="goToNotifications"></ion-icon>
+        <ion-icon class="custom-icon" @click="startTour" :icon="helpOutline"></ion-icon >
       </template>
     </MainHeader>
     <ion-content>
@@ -16,7 +17,6 @@
         <post-form :current-user="currentUser" @post-updated="refreshPosts" />
       </div>
       <post-list :posts="posts" :current-user="currentUser"/>
-      <custom-button @click="startTour" text="Revoir la visite"></custom-button>
     </ion-content>
   </ion-page>
 </template>
@@ -27,7 +27,7 @@ import PostList from '@/components/Feed/PostList.vue';
 import { usePostStore } from '@/stores/post';
 import { useAccountStore } from '@/stores/account';
 import { IonPage, IonContent, IonIcon } from '@ionic/vue';
-import { notificationsOutline } from 'ionicons/icons';
+import { notificationsOutline, helpOutline } from 'ionicons/icons';
 import MainHeader from '@/components/Commun/MainHeader.vue';
 import PostForm from "@/components/Feed/PostForm.vue";
 import { onMounted } from 'vue';
@@ -60,7 +60,8 @@ export default defineComponent({
       }
     });
     return {
-      notificationsOutline
+      notificationsOutline,
+      helpOutline
     };
   },
   async created() {
@@ -117,6 +118,10 @@ export default defineComponent({
   ion-content {
     width: 90%
   }
+}
+
+.custom-icon:nth-child(2) {
+  font-size: 1rem;
 }
 
 </style>

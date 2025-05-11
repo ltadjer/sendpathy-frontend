@@ -47,7 +47,7 @@ h6 {
     height: 4px;
 }
 
-html.ios ion-content {
+html.ios {
     --padding-bottom: var(--ion-safe-area-bottom) !important;
 }
 
@@ -535,6 +535,7 @@ body {
 }
 
 .custom-shepherd-popup .shepherd-button:hover {
-    box-shadow: var(--neumorphism-in-shadow);
+    box-shadow: var(--neumorphism-in-shadow) !important;
+    background: var(--ion-color-primary) !important;
     transform: translateY(-2px);
 }
