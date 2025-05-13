@@ -18,7 +18,6 @@
             <custom-button id="tab-reservations" text="Consultations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }"  href="/reservations" />
             <ion-list class="button-list">
               <custom-button :icon="settingsOutline" href="/parametres" />
-              <custom-button @click="logout" :icon="logOutOutline" />
             </ion-list>
           </ion-list>
       </ion-menu>
@@ -52,9 +51,6 @@
           </ion-tab-button>
           <ion-tab-button id="tab-parameters" tab="parametres" href="/parametres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
             <ion-icon :icon="settingsOutline" />
-          </ion-tab-button>
-          <ion-tab-button @click="logout" shape="round">
-            <ion-icon :icon="logOutOutline" />
           </ion-tab-button>
         </ion-tab-bar>
       </ion-tabs>
@@ -183,11 +179,6 @@ export default defineComponent({
         this.$router.push(`/conversations/${newConv.id}`);
       }
       this.closeFriendshipsModal();
-    },
-    async logout() {
-      const store = useAccountStore();
-      await store.logout();
-      this.$router.push('/connexion');
     },
     isActiveTab(path: string): boolean {
       return this.currentRoute === path;

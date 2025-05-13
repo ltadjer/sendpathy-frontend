@@ -144,6 +144,14 @@
             <custom-button text="Supprimer tous les posts"></custom-button>
           </ion-item>
         </ion-item-group>
+        <ion-item-group>
+          <ion-item-divider>
+            <ion-label> <span class="gradient-text">Déconnexion</span></ion-label>
+          </ion-item-divider>
+          <ion-item lines="none">
+            <custom-button @click="logout" text="Se déconnecter"></custom-button>
+          </ion-item>
+        </ion-item-group>
       </ion-list>
 
     </ion-content>
@@ -320,6 +328,11 @@ export default defineComponent({
     async confirmDeleteAccount() {
       await useAccountStore().deleteUser(this.currentUser.id);
       this.showDeleteAlert = false;
+    },
+    async logout() {
+      const store = useAccountStore();
+      await store.logout();
+      this.$router.push('/connexion');
     },
   },
 });
