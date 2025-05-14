@@ -26,7 +26,7 @@ import '@ionic/vue/css/display.css';
 import 'shepherd.js/dist/css/shepherd.css';
 
 
-import './theme/variables.css'; // Import the variables.css file
+import './theme/variables.css';
 import { changeGoogleTranslate } from '@/utils/translateMapping';
 
 const saved = localStorage.getItem('userLang') || navigator.language.split('-')[0];

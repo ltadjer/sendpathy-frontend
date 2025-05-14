@@ -16,9 +16,7 @@
             <custom-button id="tab-journal" text="Moments de vie" :class="{ 'ion-shadow-in': isActiveTab('/journal') }"  href="/journal" />
             <custom-button id="tab-conversations" text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
             <custom-button id="tab-reservations" text="Consultations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }"  href="/reservations" />
-            <ion-list class="button-list">
-              <custom-button :icon="settingsOutline" href="/parametres" />
-            </ion-list>
+            <custom-button id="tab-parameters" text="Paramètres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }"  href="/parametres" />
           </ion-list>
       </ion-menu>
 

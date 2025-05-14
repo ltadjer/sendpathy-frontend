@@ -506,11 +506,23 @@ body {
 
 .custom-shepherd-popup {
     background: var(--ion-background-color);
-    border-radius: 1rem;
-    box-shadow: var(--neumorphism-out-shadow);
     color: var(--ion-text-color);
-    padding: 1rem;
     font-family: "Inclusive Sans", serif;
+}
+
+.shepherd-element {
+    box-shadow: var(--neumorphism-out-shadow) !important;
+    border-radius: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .custom-shepherd-popup {
+        background: var(--ion-background-color) !important;
+    }
+
+    .custom-shepherd-popup .shepherd-text {
+        color: var(--ion-text-color) !important;
+    }
 }
 
 .custom-shepherd-popup .shepherd-title {
