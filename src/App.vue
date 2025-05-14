@@ -1,6 +1,6 @@
 <template>
   <ion-app>
-    <LoadingScreen :isLoading="isLoading" />
+    <LoadingScreen :isLoading="isLoading" :logo="getLogo" />
     <ToastMessage />
     <ion-router-outlet></ion-router-outlet>
   </ion-app>
@@ -12,6 +12,8 @@ import { defineComponent, onMounted } from 'vue';
 import ToastMessage from "@/components/Commun/ToastMessage.vue";
 import LoadingScreen from "@/components/Commun/LoadingScreen.vue";
 import { isLoading } from '@/router';
+import darkLogo from "@/assets/logo-dark.svg";
+import lightLogo from "@/assets/logo-light.svg";
 
 export default defineComponent({
   name: 'App',
@@ -20,11 +22,26 @@ export default defineComponent({
 
     onMounted(() => {
       setTimeout(() => {
-        isLoading.value = false; // Simule un chargement
+        isLoading.value = false;
       }, 2000);
     });
 
     return { isLoading };
+  },
+  computed: {
+    getLogo() {
+      return this.isDarkMode ? darkLogo : lightLogo;
+    },
+  },
+  created() {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.isDarkMode = darkModeMediaQuery.matches;
+
+    console.log('Dark mode:', this.isDarkMode);
+
+    darkModeMediaQuery.addEventListener('change', (e) => {
+      this.isDarkMode = e.matches;
+    })
   },
 });
 </script>

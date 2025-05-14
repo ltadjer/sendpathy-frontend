@@ -6,8 +6,6 @@
 
 <script>
 import { defineComponent } from 'vue';
-import logo from '@/assets/logo-light.svg';
-
 export default defineComponent({
   name: 'LoadingScreen',
   props: {
@@ -15,15 +13,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    logo: {
+      type: String,
+    },
   },
-  data() {
-    return {
-      logo,
-    };
-  },
-  mounted() {
-    console.log('LoadingScreen mounted');
-  }
 });
 </script>
 
@@ -42,7 +35,7 @@ export default defineComponent({
 }
 
 .loading-logo {
-  width: 120px;
+  width: 60px;
   animation: spin 2s linear infinite;
 }
 

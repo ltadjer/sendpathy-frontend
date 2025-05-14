@@ -3,6 +3,7 @@
     <ion-content class="ion-padding onboarding-content" :fullscreen="true">
       <swiper
           @swiper="onSwiperReady"
+          @slideChange="onSlideChange"
           :pagination="{ clickable: true }"
           :loop="false"
           :autoplay="{ delay: 3000, disableOnInteraction: false }"
@@ -25,26 +26,25 @@
           </p>
         </swiper-slide>
         <swiper-slide class="slide slide-modes">
-          <img src="@/assets/onboarding2.png" alt="Fonctionnalités" />
           <h1><span class="gradient-text">Deux façons de vous exprimer</span></h1>
           <div class="cards">
-                <ion-card class="ion-no-margin ion-margin-bottom">
-                  <ion-card-header>
-                    <ion-card-title><span class="gradient-text">Fil d’actualité</span></ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content>
-                    Découvrez et réagissez aux émotions de la communauté, anonymement.
-                  </ion-card-content>
-                </ion-card>
+            <ion-card class="ion-no-margin ion-margin-bottom">
+              <ion-card-header>
+                <ion-card-title><span class="gradient-text">Fil d’actualité</span></ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                Découvrez et réagissez aux émotions de la communauté, anonymement.
+              </ion-card-content>
+            </ion-card>
 
-                <ion-card class="ion-no-margin">
-                  <ion-card-header>
-                    <ion-card-title><span class="gradient-text">Journal intime</span></ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content>
-                    Écrivez vos pensées et ressentez l’apaisement d’un espace perso.
-                  </ion-card-content>
-                </ion-card>
+            <ion-card class="ion-no-margin">
+              <ion-card-header>
+                <ion-card-title><span class="gradient-text">Journal intime</span></ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                Écrivez vos pensées et ressentez l’apaisement d’un espace perso.
+              </ion-card-content>
+            </ion-card>
           </div>
         </swiper-slide>
         <swiper-slide class="slide slide-psy">
@@ -54,35 +54,41 @@
             Besoin de parler à un professionnel ?
             Réservez facilement une séance en visio et prenez soin de vous.
           </p>
-            <custom-button text="Commencer" @click="goToLogin" :icon="arrowForwardOutline" />
-
+          <custom-button text="Commencer" @click="goToLogin" :icon="arrowForwardOutline" />
         </swiper-slide>
       </swiper>
-      <div class="swipe-indicator" @click="goToNextSlide()">
-        <span class="arrow"></span>
-        <span class="arrow"></span>
-      </div>
+
+
+      <custom-button
+          v-if="currentSlideIndex > 0"
+          class="nav-button prev-button"
+          @click="goToPreviousSlide"
+          :icon="chevronBackOutline"
+      />
+      <custom-button
+          class="nav-button next-button" @click="goToNextSlide" :icon="chevronForwardOutline" v-if="currentSlideIndex !== 3"></custom-button>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/vue'
+import { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonIcon, IonButton } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/swiper-bundle.css'
 import CustomButton from '@/components/Commun/CustomButton.vue'
 import darkLogo from "@/assets/logo-dark.svg";
 import lightLogo from "@/assets/logo-light.svg";
-import {arrowForwardOutline} from "ionicons/icons";
+import {arrowForwardOutline, chevronForwardOutline, chevronBackOutline} from "ionicons/icons";
 
 export default defineComponent({
   name: 'OnboardingView',
-  components: { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle, Swiper, SwiperSlide, CustomButton },
+  components: { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle, Swiper, SwiperSlide, CustomButton, IonIcon, IonButton },
   data() {
     return {
-      swiperInstance: null, // Stocke l'instance de Swiper
+      swiperInstance: null,
       isDarkMode: false as boolean,
+      currentSlideIndex: 0 as number, // Index actuel de la slide
     }
   },
   computed: {
@@ -92,6 +98,8 @@ export default defineComponent({
   },
   setup() {
     return {
+      chevronForwardOutline,
+      chevronBackOutline,
       arrowForwardOutline
     }
   },
@@ -107,18 +115,27 @@ export default defineComponent({
     });
   },
   methods: {
-    arrowForwardOutline() {
-      return arrowForwardOutline
+    onSwiperReady(swiper) {
+      this.swiperInstance = swiper // Initialise l'instance de Swiper
+    },
+    onSlideChange() {
+      if (this.swiperInstance) {
+        this.currentSlideIndex = this.swiperInstance.activeIndex; // Met à jour l'index actuel
+      }
+    },
+    goToNextSlide() {
+      if (this.swiperInstance) {
+        this.swiperInstance.slideNext(); // Passe à la slide suivante
+      }
+    },
+    goToPreviousSlide() {
+      if (this.swiperInstance) {
+        this.swiperInstance.slidePrev(); // Retourne à la slide précédente
+      }
     },
     goToLogin() {
       localStorage.setItem('onboardingCompleted', 'true')
       this.$router.push('/connexion')
-    },
-    onSwiperReady(swiper) {
-      this.swiperInstance = swiper // Initialise l'instance de Swiper
-      setTimeout(() => {
-        this.swiperInstance.slideTo(1) // Passe au deuxième slide (index 1)
-      }, 3000)
     },
   },
 })
@@ -213,29 +230,6 @@ ion-card p {
   }
 }
 
-.swipe-indicator {
-  position: absolute;
-  bottom: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 1.5s ease-in-out infinite;
-  right: 10%;
-}
-
-.slide-animated-logo .swipe-indicator {
-  display: none;
-}
-.swipe-indicator .arrow {
-  width: 24px;
-  height: 24px;
-  border: solid var(--ion-color-primary);
-  border-width: 0 3px 3px 0;
-  transform: rotate(-45deg);
-  margin-bottom: 5px;
-  animation: bounce 1.5s infinite;
-}
 
 @keyframes bounce {
   0%, 100% {
@@ -245,7 +239,6 @@ ion-card p {
     transform: rotate(-45deg) translateX(10px);
   }
 }
-
 @keyframes fadeIn {
   0%, 100% {
     opacity: 0.5;
@@ -253,5 +246,20 @@ ion-card p {
   50% {
     opacity: 1;
   }
+}
+
+.nav-button {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.prev-button {
+  left: 10px;
+}
+
+.next-button {
+  right: 10px;
 }
 </style>

@@ -28,12 +28,6 @@
     </ion-split-pane>
 
     <div v-if="!isDesktop && !isExcludedRoute" class="mobile-nav">
-      <ion-fab horizontal="center" vertical="bottom">
-        <ion-fab-button @click="openFormModal">
-          <ion-icon :icon="add" />
-        </ion-fab-button>
-      </ion-fab>
-
       <ion-tabs>
         <ion-router-outlet />
         <ion-tab-bar slot="bottom" class="ion-margin">
@@ -43,12 +37,20 @@
           <ion-tab-button id="tab-journal" tab="journal" href="/journal" :class="{ 'ion-shadow-in': isActiveTab('/journal') }">
             <ion-icon :icon="journalOutline" />
           </ion-tab-button>
+          <ion-tab-button>
+            <ion-fab horizontal="center" vertical="center">
+              <ion-fab-button @click="openFormModal">
+                <ion-icon :icon="add" />
+              </ion-fab-button>
+            </ion-fab>
+          </ion-tab-button>
+
           <ion-tab-button id="tab-conversations" tab="conversations" href="/conversations" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }">
             <ion-icon :icon="chatbubblesOutline" />
           </ion-tab-button>
-          <ion-tab-button id="tab-reservations" tab="reservations" href="/reservations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }">
+          <!---<ion-tab-button id="tab-reservations" tab="reservations" href="/reservations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }">
             <ion-icon :icon="todayOutline" />
-          </ion-tab-button>
+          </ion-tab-button>-->
           <ion-tab-button id="tab-parameters" tab="parametres" href="/parametres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
             <ion-icon :icon="settingsOutline" />
           </ion-tab-button>
@@ -200,10 +202,6 @@ ion-menu::part(container) {
   justify-content: center;
   align-items: center;
   gap: 2rem;
-}
-
-ion-fab {
-  bottom: 59px
 }
 
 .avatar-container {
