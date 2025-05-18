@@ -248,9 +248,7 @@ export default defineComponent({
             () => account.user.nativeLanguage,
             (label) => {
               const code = googleLangMap[label] || 'fr';
-              localStorage.setItem('userLang', code); // Stocke la langue choisie
-              console.log('code', code);
-              changeGoogleTranslate(code); // Applique la traduction
+              localStorage.setItem('userLang', code);
             }
         );
     return {

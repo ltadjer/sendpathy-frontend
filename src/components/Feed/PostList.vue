@@ -35,9 +35,14 @@
                         class="ion-margin-top post-content"
                         :auto-grow="true"
                       >
-                        {{ post.content }}
+                        {{ post.translatedContent || post.content }}
                       </ion-text>
+
+                      <span v-if="post.translatedContent" class="toggle-original" @click="toggleOriginal(post)">
+                        Voir l'original
+                      </span>
                     </p>
+
                   </div>
                 </ion-item>
               </ion-col>
@@ -53,6 +58,15 @@
                   side="top"
                   alignment="end">
                   <ion-list>
+                    <ion-item
+                        lines="none"
+                        :button="true"
+                        :detail="false"
+                        @click="translatePost(post)"
+                        v-if="!post.translatedContent"
+                    >
+                      Traduire
+                    </ion-item>
                     <ion-item lines="none" :button="true" :detail="false" v-if="post.user.id === currentUser.id" @click.stop="deleteOnePost(post.id)">Supprimer</ion-item>
                     <ion-item lines="none" :button="true" :detail="false" @click="reportPost(post.id)">Signaler</ion-item>
                   </ion-list>
@@ -114,7 +128,7 @@ import { usePostStore } from '@/stores/post';
 import PostFilterButton from '@/components/Feed/PostFilterButton.vue';
 import { timeSince } from '@/utils/date';
 import CustomButton from "@/components/Commun/CustomButton.vue";
-
+import { translateText } from '@/utils/translateMapping';
 export default defineComponent({
   name: 'PostList',
   components: {
@@ -233,12 +247,24 @@ export default defineComponent({
         }
         event.target.complete(); // Complete the event
 
-        // Increment the page if more posts are available
         if (this.paginatedPosts.length < this.posts.length) {
           this.currentPage++;
         }
-      }, 1000); // Simulate loading delay
-    }
+      }, 1000);
+    },
+    async translatePost(post) {
+      const userLang = this.currentUser.nativeLanguage || navigator.language.split('-')[0];
+
+      const translatedText = await translateText(post.content, userLang);
+      if (translatedText) {
+        post.translatedContent = translatedText;
+      }
+    },
+    toggleOriginal(post) {
+      if (post.translatedContent) {
+        post.translatedContent = null;
+      }
+    },
   },
 });
 </script>

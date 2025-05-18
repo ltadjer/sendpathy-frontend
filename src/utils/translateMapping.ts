@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const googleLangMap: Record<string,string> = {
     Français: 'fr',
     Anglais:  'en',
@@ -11,16 +13,21 @@ export const googleLangMap: Record<string,string> = {
     Italien:  'it',
 };
 
-export function changeGoogleTranslate(langCode: string) {
-    console.log('Changing Google Translate language to:', langCode);
-    const tryCombo = () => {
-        const combo = document.querySelector<HTMLSelectElement>('.goog-te-combo');
-        if (combo && combo.value !== langCode) { // Vérifie si la langue est déjà correcte
-            combo.value = langCode;
-            combo.dispatchEvent(new Event('change'));
-        } else if (!combo) {
-            setTimeout(tryCombo, 100);
-        }
-    };
-    tryCombo();
+export async function translateText(content: string, userLang: string): Promise<string | null> {
+    const targetLang = googleLangMap[userLang] || 'en';
+
+    try {
+        const response = await axios.post('http://localhost:5000/translate', {
+            q: content,
+            source: 'auto',
+            target: targetLang,
+        }, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        return response.data.translatedText;
+    } catch (error) {
+        console.error('Erreur lors de la traduction :', error);
+        return null;
+    }
 }

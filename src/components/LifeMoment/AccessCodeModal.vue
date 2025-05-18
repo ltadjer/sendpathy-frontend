@@ -1,12 +1,18 @@
 <template>
-  <ion-modal :is-open="isOpen" :backdrop-dismiss="false">
-      <ion-card class="ion-padding ion-no-shadow">
-          <ion-label position="stacked">{{ hasAccessCode ? 'Entrer le code d\'accès' : 'Définir un code d\'accès' }}</ion-label>
-          <ion-input v-model="accessCode" type="password"></ion-input>
-          <div class="ion-text-end">
-            <custom-button :text="hasAccessCode ? 'Entrer' : 'Définir'" @click="handleAccessCode"></custom-button>
-          </div>
-      </ion-card>
+  <ion-modal
+      :is-open="isOpen"
+      :backdrop-dismiss="true"
+      :swipe-to-close="true"
+      :presenting-element="'ion-page'"
+      class="non-blocking-modal"
+  >
+    <ion-card class="ion-padding">
+      <ion-label position="stacked">{{ hasAccessCode ? 'Entrer le code d\'accès' : 'Définir un code d\'accès' }}</ion-label>
+      <ion-input class="ion-margin-top" v-model="accessCode" type="password"></ion-input>
+      <div class="ion-text-end">
+        <custom-button :text="hasAccessCode ? 'Entrer' : 'Définir'" @click="handleAccessCode"></custom-button>
+      </div>
+    </ion-card>
   </ion-modal>
 </template>
 
@@ -85,5 +91,14 @@ ion-modal {
   --min-width: 350px;
   --max-width: 350px;
   --border-radius: 1rem;
+  display: flex;
+  align-items: center;
+}
+ion-modal.non-blocking-modal {
+  pointer-events: none; /* Permet de cliquer sur les éléments en arrière-plan */
+}
+
+ion-modal.non-blocking-modal ion-card {
+  pointer-events: auto; /* Permet d'interagir avec le contenu du modal */
 }
 </style>

@@ -27,14 +27,13 @@ import LifeMomentList from '@/components/LifeMoment/LifeMomentList.vue';
 import AccessCodeModal from '@/components/LifeMoment/AccessCodeModal.vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
 import { useAccountStore } from '@/stores/account';
-import { IonPage, IonButton, IonContent } from '@ionic/vue';
+import { IonPage, IonContent } from '@ionic/vue';
 import MainHeader from '@/components/Commun/MainHeader.vue';
 
 export default defineComponent({
   name: 'LifeMomentView',
   components: {
     MainHeader,
-    IonButton,
     AccessCodeModal,
     LifeMomentList,
     IonContent,

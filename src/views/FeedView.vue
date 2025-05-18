@@ -32,12 +32,10 @@ import MainHeader from '@/components/Commun/MainHeader.vue';
 import PostForm from "@/components/Feed/PostForm.vue";
 import { onMounted } from 'vue';
 import { createTour } from '@/utils/tour';
-import CustomButton from "@/components/Commun/CustomButton.vue";
 
 export default defineComponent({
   name: 'FeedView',
   components: {
-    CustomButton,
     PostForm,
     IonIcon,
     PostList,
@@ -77,21 +75,6 @@ export default defineComponent({
     },
     isDesktop() {
       return window.innerWidth > 1200;
-    },
-  },
-  watch: {
-    posts: {
-      handler: async function () {
-        await this.$nextTick(); // Attendre que le DOM soit mis à jour
-        const postContents = document.querySelectorAll('.post-content'); // Ciblez les contenus des posts
-        postContents.forEach((content) => {
-          const textarea = content.querySelector('textarea');
-          if(textarea) {
-            textarea.setAttribute('translate', 'yes'); // Indique que cet élément doit être traduit
-          }
-        });
-      },
-      deep: true,
     },
   },
   methods: {

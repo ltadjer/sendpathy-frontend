@@ -93,7 +93,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-item-background: #e9e9f7;
     --ion-item-color: linear-gradient(-119.774deg, rgba(151, 71, 255, 60%) 0%, #FD7DFB 82%);
 
-    --ion-text-color: #555555;
+    --ion-text-color: #333333;
     --ion-toolbar-background: transparent;
 
 }
