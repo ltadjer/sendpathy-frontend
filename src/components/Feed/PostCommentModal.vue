@@ -203,10 +203,6 @@ ion-grid {
   --border-radius: 1rem 1rem 0 0 !important;
 }
 
-ion-footer {
-  padding-bottom: var(--ion-safe-area-bottom, 1rem) !important;
-}
-
 @media (min-width: 992px) {
   .custom-modal {
     --border-radius: 1rem !important;
