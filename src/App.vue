@@ -37,8 +37,6 @@ export default defineComponent({
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     this.isDarkMode = darkModeMediaQuery.matches;
 
-    console.log('Dark mode:', this.isDarkMode);
-
     darkModeMediaQuery.addEventListener('change', (e) => {
       this.isDarkMode = e.matches;
     })

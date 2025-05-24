@@ -181,7 +181,7 @@ import {
   IonBackButton,
   IonItemGroup,
 } from '@ionic/vue';
-import { googleLangMap, changeGoogleTranslate } from '@/utils/translateMapping'
+import { googleLangMap } from '@/utils/translate'
 import ConfirmDeletePopup from "@/components/Commun/ConfirmDeletePopup.vue";
 
 export default defineComponent({

@@ -63,7 +63,6 @@ export default defineComponent({
     };
   },
   async created() {
-    console.log('FeedView created');
     await usePostStore().fetchAllPosts();
   },
   computed: {

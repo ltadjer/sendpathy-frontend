@@ -47,8 +47,8 @@ h6 {
     height: 4px;
 }
 
-body {
-    --padding-bottom: var(--ion-safe-area-bottom) !important;
+ion-content {
+    padding-bottom: var(--ion-safe-area-bottom) !important;
 }
 
 .full-width {
@@ -549,4 +549,11 @@ body {
     box-shadow: var(--neumorphism-in-shadow) !important;
     background: var(--ion-color-primary) !important;
     transform: translateY(-2px);
+}
+
+
+.toggle-original {
+    color: var(--ion-color-medium);
+    cursor: pointer;
+    font-size: .8rem;
 }

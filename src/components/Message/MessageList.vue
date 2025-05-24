@@ -39,10 +39,14 @@
             <ion-label>
               <p :class="{ 'unread': !message.read }">{{ message.content }}</p>
             </ion-label>
+              <ion-text v-if="message.translatedContent" class="toggle-original" @click.stop="toggleOriginal(message)">
+                Voir l'original
+              </ion-text>
             <ion-note slot="end" class="time">
               <sub>{{ timeSince(message.createdAt) }}</sub>
             </ion-note>
           </div>
+
         </ion-item>
       </template>
     </ion-list>
@@ -66,6 +70,7 @@
   <ion-popover :is-open="popoverOpen" @didDismiss="popoverOpen = false" :event="popoverEvent">
     <ion-list>
       <ion-item lines="none" button v-if="selectedMessage?.isSentByCurrentUser" @click="editSelectedMessage">Modifier</ion-item>
+      <ion-item lines="none" button @click="translateMessage(selectedMessage)">Traduire</ion-item>
       <ion-item lines="none" button @click="deleteMessageForUser">Supprimer pour moi</ion-item>
       <ion-item lines="none" button v-if="selectedMessage?.isSentByCurrentUser" @click="deleteMessageForAll">Supprimer pour tous</ion-item>
     </ion-list>
@@ -80,6 +85,7 @@ import WebSocketService from '@/services/websocket.service';
 import MessageForm from '@/components/Message/MessageForm.vue';
 import { timeSince, formatDate } from '@/utils/date';
 import { useConversationStore } from '@/stores/conversation'
+import { translateText } from '@/utils/translate';
 
 export default defineComponent({
   name: 'MessageList',
@@ -201,6 +207,21 @@ export default defineComponent({
     showUserProfile(user) {
       this.$router.push({ name: 'UserProfile', params: { userId: user.id } });
     },
+    async translateMessage(message) {
+      const userLang = this.currentUser.nativeLanguage || navigator.language.split('-')[0];
+      const translatedText = await translateText(message.content, userLang);
+
+      if (translatedText) {
+        message.translatedContent = translatedText;
+      }
+
+      this.popoverOpen = false;
+    },
+    toggleOriginal(message) {
+      if (message.translatedContent) {
+        message.translatedContent = null;
+      }
+    },
   },
   async mounted() {
     await this.fetchAllMessages();
@@ -243,16 +264,11 @@ ion-note {
   border-radius: 1rem;
 }
 
-/* Séparateur de date */
 .date-separator {
   text-align: center;
   padding: 0.5rem;
   font-size: 0.8rem;
   color: var(--ion-color-medium);
-}
-.blurred {
-  filter: blur(5px);
-  pointer-events: none;
 }
 
 .message-out {
@@ -267,11 +283,6 @@ ion-note {
   border-radius: 1rem;
   padding: 0.8rem;
   box-shadow: var(--neumorphism-in-shadow) !important;
-}
-
-ion-popover::part(content) {
-  --background: transparent !important;
-  --border-radius: 1rem;
 }
 
 .time {

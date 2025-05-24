@@ -5,26 +5,10 @@
     <link rel="icon" href="/logo.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sendpathy</title>
-      <link rel="manifest" crossorigin="use-credentials" href="/manifest.json"/>
+    <link rel="manifest" crossorigin="use-credentials" href="/manifest.json"/>
   </head>
   <body>
-  <div id="google_translate_element"
-       style="display: none">
-  </div>
   <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
-  <script>
-      function googleTranslateElementInit() {
-          const userLang = localStorage.getItem('userLang') || 'fr'; // Langue choisie ou par défaut
-          console.log('userLang', userLang);
-
-          new google.translate.TranslateElement({
-              pageLanguage: 'fr', // Langue de base de la page
-              layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
-          }, 'google_translate_element');
-
-      }
-  </script>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>

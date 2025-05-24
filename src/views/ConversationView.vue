@@ -33,7 +33,7 @@
 import { defineComponent } from 'vue';
 import ConversationList from '@/components/Message/ConversationList.vue';
 import FriendshipsModal from '@/components/Message/FriendshipsModal.vue';
-import { IonPage, IonButton, } from '@ionic/vue';
+import { IonPage, } from '@ionic/vue';
 import { useAccountStore } from '@/stores/account';
 import { useConversationStore } from '@/stores/conversation';
 import MainHeader from '@/components/Commun/MainHeader.vue';
@@ -41,8 +41,9 @@ import MainHeader from '@/components/Commun/MainHeader.vue';
 export default defineComponent({
   name: 'ConversationView',
   components: {
-    IonButton,
-    ConversationList, FriendshipsModal, IonPage,
+    ConversationList,
+    FriendshipsModal,
+    IonPage,
     MainHeader
   },
   data() {

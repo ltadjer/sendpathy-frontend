@@ -37,13 +37,12 @@
                       >
                         {{ post.translatedContent || post.content }}
                       </ion-text>
-
-                      <span v-if="post.translatedContent" class="toggle-original" @click="toggleOriginal(post)">
-                        Voir l'original
-                      </span>
                     </p>
-
+                    <ion-text v-if="post.translatedContent" class="toggle-original" @click.stop="toggleOriginal(post)">
+                        Voir l'original
+                      </ion-text>
                   </div>
+
                 </ion-item>
               </ion-col>
               <ion-col size="2" class="ion-text-end">
@@ -128,7 +127,7 @@ import { usePostStore } from '@/stores/post';
 import PostFilterButton from '@/components/Feed/PostFilterButton.vue';
 import { timeSince } from '@/utils/date';
 import CustomButton from "@/components/Commun/CustomButton.vue";
-import { translateText } from '@/utils/translateMapping';
+import { translateText } from '@/utils/translate';
 export default defineComponent({
   name: 'PostList',
   components: {
@@ -288,4 +287,5 @@ ion-popover ion-item button:hover {
   color: var(--ion-color-primary) !important;
   font-weight: bold;
 }
+
 </style>
