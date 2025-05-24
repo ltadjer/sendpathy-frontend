@@ -271,15 +271,7 @@ ion-fab {
 }
 
 html.ios ion-tab-button {
-  --padding-bottom: var(--ion-safe-area-bottom) !important;
   padding-bottom: var(--ion-safe-area-bottom) !important;
-  --padding-bottom: var(--ion-safe-area-bottom) !important;
-  --padding-start: var(--ion-safe-area-right) !important;
-  --padding-end: var(--ion-safe-area-left) !important;
-  padding-start: var(--ion-safe-area-right) !important;
-  padding-end: var(--ion-safe-area-left) !important;
-  --padding-top: var(--ion-safe-area-top) !important;
-  padding-top: var(--ion-safe-area-top) !important;
 }
 
 </style>
