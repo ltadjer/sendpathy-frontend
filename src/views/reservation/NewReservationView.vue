@@ -12,7 +12,7 @@
         </ion-item>
         <ion-buttons slot="end">
           <ion-button size="small" class="ion-no-shadow">
-            <img alt="Logo" src="@/assets/logo-light.svg" width="70px" />
+            <img alt="Logo" src="../../assets/img/logo-light.svg" width="70px" />
           </ion-button>
         </ion-buttons>
       </ion-toolbar>

@@ -512,7 +512,7 @@ body {
 }
 
 .custom-shepherd-popup {
-    background: var(--ion-background-color);
+    background: var(--ion-background-color, #e9e9f7) !important;
     color: var(--ion-text-color);
     font-family: "Inclusive Sans", serif;
 }
@@ -522,6 +522,24 @@ body {
     border-radius: 1rem;
 }
 
+.custom-shepherd-popup .shepherd-button {
+    background: var(--ion-background-color);
+    color: var(--ion-text-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    box-shadow: var(--neumorphism-out-shadow) !important;
+    transition: transform 0.3s ease;
+}
+
+.custom-shepherd-popup .shepherd-button:hover {
+    box-shadow: var(--neumorphism-in-shadow) !important;
+    transform: translateY(-2px);
+    color: var(--ion-color-primary) !important;
+    background: var(--ion-background-color) !important;
+    font-weight: bold;
+
+}
+
 @media (prefers-color-scheme: dark) {
     .custom-shepherd-popup {
         background: var(--ion-background-color) !important;
@@ -529,6 +547,10 @@ body {
 
     .custom-shepherd-popup .shepherd-text {
         color: var(--ion-text-color) !important;
+    }
+    .custom-shepherd-popup .shepherd-button,
+    .custom-shepherd-popup .shepherd-button:hover {
+        background: var(--ion-color-primary);
     }
 }
 
@@ -541,21 +563,6 @@ body {
 .custom-shepherd-popup .shepherd-text {
     font-size: 1rem;
     line-height: 1.5;
-}
-
-.custom-shepherd-popup .shepherd-button {
-    background: var(--ion-color-primary);
-    color: var(--ion-text-color);
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
-    box-shadow: var(--neumorphism-out-shadow) !important;
-    transition: transform 0.3s ease;
-}
-
-.custom-shepherd-popup .shepherd-button:hover {
-    box-shadow: var(--neumorphism-in-shadow) !important;
-    background: var(--ion-color-primary) !important;
-    transform: translateY(-2px);
 }
 
 

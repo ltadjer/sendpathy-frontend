@@ -9,7 +9,7 @@
     >
       <template #end-buttons>
         <ion-icon class="custom-icon ion-margin-end" :icon="notificationsOutline" @click="goToNotifications"></ion-icon>
-        <ion-icon class="custom-icon" @click="startTour" :icon="helpOutline"></ion-icon >
+        <ion-icon class="custom-icon ion-margin-end" @click="startTour" :icon="helpOutline"></ion-icon >
       </template>
     </MainHeader>
     <ion-content>

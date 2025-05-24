@@ -11,7 +11,7 @@
           </ion-avatar>
         </div>
         <ion-title>{{ title }}</ion-title>
-        <img v-if="showLogo" alt="Logo" src="@/assets/logo-light.svg" class="header-logo" />
+        <img v-if="showLogo" alt="Logo" src="../../assets/img/logo-light.svg" class="header-logo" />
       </ion-item>
       <ion-buttons slot="end" v-if="showEndButtons">
         <slot name="end-buttons"></slot>

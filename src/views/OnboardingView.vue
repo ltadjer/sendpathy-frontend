@@ -18,7 +18,7 @@
           />
         </swiper-slide>
         <swiper-slide class="slide slide-welcome">
-          <img src="@/assets/onboarding1.png" alt="Communauté empathique" />
+          <img src="../assets/img/onboarding1.png" alt="Communauté empathique" />
           <h1><span class="gradient-text">Bienvenue sur Sendpathy</span></h1>
           <p>
             Un espace bienveillant pour partager et comprendre vos émotions,
@@ -48,7 +48,7 @@
           </div>
         </swiper-slide>
         <swiper-slide class="slide slide-psy">
-          <img src="@/assets/onboarding3.png" alt="Fonctionnalités" />
+          <img src="../assets/img/onboarding3.png" alt="Fonctionnalités" />
           <h1><span class="gradient-text">Accompagnement Psy</span></h1>
           <p>
             Besoin de parler à un professionnel ?
@@ -77,8 +77,8 @@ import { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTit
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/swiper-bundle.css'
 import CustomButton from '@/components/Commun/CustomButton.vue'
-import darkLogo from "@/assets/logo-dark.svg";
-import lightLogo from "@/assets/logo-light.svg";
+import darkLogo from "@/assets/img/logo-dark.svg";
+import lightLogo from "@/assets/img/logo-light.svg";
 import {arrowForwardOutline, chevronForwardOutline, chevronBackOutline} from "ionicons/icons";
 
 export default defineComponent({

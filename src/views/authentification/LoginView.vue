@@ -69,8 +69,8 @@ import {
 } from '@ionic/vue'
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons'
 import CustomButton from '@/components/Commun/CustomButton.vue'
-import darkLogo from "@/assets/logo-dark.svg";
-import lightLogo from "@/assets/logo-light.svg";
+import darkLogo from "@/assets/img/logo-dark.svg";
+import lightLogo from "@/assets/img/logo-light.svg";
 
 export default defineComponent({
   name: 'LoginView',

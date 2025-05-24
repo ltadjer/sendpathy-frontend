@@ -204,7 +204,7 @@ ion-grid {
 }
 
 ion-footer {
-  padding-bottom: var(--ion-safe-area-bottom);
+  padding-bottom: var(--ion-safe-area-bottom, 1rem) !important;
 }
 
 @media (min-width: 992px) {
