@@ -13,7 +13,7 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/public/img/icon.svg",
+      "src": "/public/img/icon.png",
       "type": "image/svg"
     }
   ]
