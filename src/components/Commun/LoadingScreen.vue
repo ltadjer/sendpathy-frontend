@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'LoadingScreen',
@@ -15,6 +15,7 @@ export default defineComponent({
     },
     logo: {
       type: String,
+      required: true,
     },
   },
 });

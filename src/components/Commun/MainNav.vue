@@ -105,9 +105,9 @@ export default defineComponent({
       todayOutline,
       add,
       logOutOutline,
-      isPostFormModalOpen: false,
-      isLifeMomentModalOpen: false,
-      isFriendshipsModalOpen: false,
+      isPostFormModalOpen: false as boolean,
+      isLifeMomentModalOpen: false as boolean,
+      isFriendshipsModalOpen: false as boolean,
     };
   },
   computed: {

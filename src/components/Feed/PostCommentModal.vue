@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick } from 'vue';
+import { defineComponent } from 'vue';
 import {
   IonModal,
   IonContent,
@@ -85,7 +85,6 @@ import {
   IonText,
   IonItem,
   IonAvatar,
-  IonLabel,
   IonButton,
   IonIcon,
   IonTitle,
@@ -104,7 +103,6 @@ export default defineComponent({
   components: {
     IonAvatar,
     IonItem,
-    IonLabel,
     IonButton,
     CustomButton,
     IonModal,
@@ -139,8 +137,8 @@ export default defineComponent({
   data() {
     return {
       newComment: '',
-      replyTarget: null, // Gère la cible de la réponse
-      defaultAvatar: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
+      replyTarget: null,
+      defaultAvatar: '',
       isSubmitting: false as boolean,
     };
   },
