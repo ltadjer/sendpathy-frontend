@@ -9,7 +9,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-list class="ion-padding">
+      <ion-list v-if="notifications && notifications.length > 0" class="ion-padding">
         <ion-item-sliding v-for="notification in notifications" :key="notification.id" class="notification-item">
         <ion-item lines="none" v-for="notification in notifications" :key="notification.id" class="notification-item">
           <ion-avatar slot="start">
@@ -34,6 +34,18 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
+      <ion-item v-else lines="none" class="ion-margin">
+        <ion-grid>
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="12">
+              <ion-label>
+                <h2 class="font-bold">Aucune de notification</h2>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+
     </ion-content>
   </ion-page>
 </template>
@@ -55,7 +67,7 @@ import {
   IonButtons,
   IonItemSliding,
   IonItemOptions,
-  IonItemOption,
+  IonItemOption, IonGrid, IonRow, IonCol,
 } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useFriendshipStore } from '@/stores/friendship';
@@ -64,6 +76,7 @@ import CustomButton from "@/components/Commun/CustomButton.vue";
 
 export default defineComponent({
   components: {
+    IonCol, IonRow, IonGrid,
     CustomButton,
     IonBackButton,
     IonButtons,

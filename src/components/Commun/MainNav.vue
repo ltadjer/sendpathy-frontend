@@ -15,7 +15,6 @@
             <custom-button id="tab-feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }" text="Feed" href="/feed" />
             <custom-button id="tab-journal" text="Moments de vie" :class="{ 'ion-shadow-in': isActiveTab('/journal') }"  href="/journal" />
             <custom-button id="tab-conversations" text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
-            <custom-button id="tab-reservations" text="Consultations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }"  href="/reservations" />
             <custom-button id="tab-parameters" text="Paramètres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }"  href="/parametres" />
           </ion-list>
       </ion-menu>
@@ -28,32 +27,42 @@
     <div v-if="!isDesktop && !isExcludedRoute" class="mobile-nav">
       <ion-tabs>
         <ion-router-outlet />
+
         <ion-tab-bar slot="bottom" class="ion-margin">
-          <ion-tab-button id="tab-feed" tab="feed" href="/feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }">
+          <ion-tab-button tab="feed" href="/feed"
+                          :class="{ 'ion-shadow-in': isActiveTab('/feed') }">
             <ion-icon :icon="homeOutline" />
           </ion-tab-button>
-          <ion-tab-button id="tab-journal" tab="journal" href="/journal" :class="{ 'ion-shadow-in': isActiveTab('/journal') }">
+
+          <ion-tab-button tab="journal" href="/journal"
+                          :class="{ 'ion-shadow-in': isActiveTab('/journal') }">
             <ion-icon :icon="journalOutline" />
           </ion-tab-button>
-          <ion-tab-button>
-            <ion-fab horizontal="center" vertical="center">
-              <ion-fab-button @click="openFormModal">
-                <ion-icon :icon="add" />
-              </ion-fab-button>
-            </ion-fab>
+
+          <!-- dummy tab-button to satisfy Ionic, disabled so it never actually switches -->
+          <ion-tab-button tab="dummy" disabled>
+            <ion-icon slot="icon-only" :icon="add" />
           </ion-tab-button>
 
-          <ion-tab-button id="tab-conversations" tab="conversations" href="/conversations" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }">
+          <ion-tab-button tab="conversations" href="/conversations"
+                          :class="{ 'ion-shadow-in': isActiveTab('/conversations') }">
             <ion-icon :icon="chatbubblesOutline" />
           </ion-tab-button>
-          <!---<ion-tab-button id="tab-reservations" tab="reservations" href="/reservations" :class="{ 'ion-shadow-in': isActiveTab('/reservations') }">
-            <ion-icon :icon="todayOutline" />
-          </ion-tab-button>-->
-          <ion-tab-button id="tab-parameters" tab="parametres" href="/parametres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
+
+          <ion-tab-button tab="parametres" href="/parametres"
+                          :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
             <ion-icon :icon="settingsOutline" />
           </ion-tab-button>
         </ion-tab-bar>
+
+
       </ion-tabs>
+      <!-- now render the FAB in its own slot so its click is purely your modal logic -->
+      <ion-fab vertical="bottom" horizontal="center">
+        <ion-fab-button @click="openFormModal">
+          <ion-icon :icon="add" />
+        </ion-fab-button>
+      </ion-fab>
 
       <post-form-modal v-if="isPostFormModalOpen" @close="closePostFormModal" :current-user="currentUser"/>
       <life-moment-form-modal v-if="isLifeMomentModalOpen" @close="closeLifeMomentModal"/>
@@ -256,4 +265,14 @@ ion-toolbar::part(content) {
 ion-tab-bar {
   background: var(--ion-background-color);
 }
+
+ion-fab {
+  bottom: 50px;
+}
+
+html.ios ion-tab-button {
+  --padding-bottom: var(--ion-safe-area-bottom) !important;
+  padding-bottom: var(--ion-safe-area-bottom) !important;
+}
+
 </style>
