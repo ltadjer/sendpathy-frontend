@@ -1,18 +1,12 @@
 <template>
-  <ion-modal
-      :is-open="isOpen"
-      :backdrop-dismiss="true"
-      :swipe-to-close="true"
-      :presenting-element="'ion-page'"
-      class="non-blocking-modal"
-  >
-    <ion-card class="ion-padding">
-      <ion-label position="stacked">{{ hasAccessCode ? 'Entrer le code d\'accès' : 'Définir un code d\'accès' }}</ion-label>
-      <ion-input class="ion-margin-top" v-model="accessCode" type="password"></ion-input>
-      <div class="ion-text-end">
-        <custom-button :text="hasAccessCode ? 'Entrer' : 'Définir'" @click="handleAccessCode"></custom-button>
-      </div>
-    </ion-card>
+  <ion-modal :is-open="isOpen" :backdrop-dismiss="true"  class="non-blocking-modal">
+      <ion-card class="ion-padding ion-no-shadow">
+          <ion-label position="stacked">{{ hasAccessCode ? 'Entrer le code d\'accès' : 'Définir un code d\'accès' }}</ion-label>
+          <ion-input minlength="4" v-model="accessCode" type="password" inputmode="numeric"></ion-input>
+          <div class="ion-text-end">
+            <custom-button :disabled="accessCode.length < 5" :text="hasAccessCode ? 'Entrer' : 'Définir'" @click="handleAccessCode"></custom-button>
+          </div>
+      </ion-card>
   </ion-modal>
 </template>
 
@@ -26,7 +20,6 @@ import {
 } from '@ionic/vue';
 import CustomButton from '@/components/Commun/CustomButton.vue'
 import { useAccountStore } from '@/stores/account.ts'
-import { useToastStore } from "@/stores/toast"
 
 export default defineComponent({
   name: 'AccessCodeModal',
@@ -45,16 +38,12 @@ export default defineComponent({
     hasAccessCode: {
       type: Boolean,
       required: true
-    }
+    },
   },
   data() {
     return {
       accessCode: ''
     };
-  },
-  setup() {
-    const toastStore = useToastStore();
-    return { toastStore };
   },
   methods: {
     async handleAccessCode() {
@@ -63,10 +52,8 @@ export default defineComponent({
           const isValid = await useAccountStore().validateAccessCode(this.accessCode);
           if (isValid) {
             this.$emit('access-code-validated');
-            this.toastStore.showToast('Code d\'accès validé avec succès', 'primary');
             this.closeModal();
           } else {
-            this.toastStore.showToast('Échec de la validation du code d\'accès', 'primary');
             console.error('Invalid access code');
           }
         } else {
@@ -95,10 +82,10 @@ ion-modal {
   align-items: center;
 }
 ion-modal.non-blocking-modal {
-  pointer-events: none; /* Permet de cliquer sur les éléments en arrière-plan */
+  pointer-events: none;
 }
 
 ion-modal.non-blocking-modal ion-card {
-  pointer-events: auto; /* Permet d'interagir avec le contenu du modal */
+  pointer-events: auto;
 }
 </style>

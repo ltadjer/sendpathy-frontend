@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watch } from 'vue';
 import LifeMomentList from '@/components/LifeMoment/LifeMomentList.vue';
 import AccessCodeModal from '@/components/LifeMoment/AccessCodeModal.vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
 import { useAccountStore } from '@/stores/account';
-import { IonPage, IonContent } from '@ionic/vue';
+import { onIonViewDidEnter, IonPage, IonContent } from '@ionic/vue';
 import MainHeader from '@/components/Commun/MainHeader.vue';
 
 export default defineComponent({
@@ -58,23 +58,37 @@ export default defineComponent({
       await useLifeMomentStore().fetchLifeMoments();
     },
     async checkAccessCode() {
+      console.log('isAccessCodeModalOpen:', this.isAccessCodeModalOpen);
       if (this.isAccessCodeModalOpen) {
         console.log('Access code modal is already open');
         return;
       }
       const accessCode = useAccountStore().user?.accessCode;
+      console.log('Checking access code:', accessCode);
       if (!accessCode) {
+        console.log('No access code found, opening modal to set access code');
         this.isAccessCodeModalOpen = true;
         this.hasAccessCode = false;
       } else {
+        console.log('Access code found, validating access code');
         this.isAccessCodeModalOpen = true;
         this.hasAccessCode = true;
         await this.fetchLifeMoments();
       }
     }
   },
-  async mounted() {
-    await this.checkAccessCode();
+  mounted() {
+    onIonViewDidEnter(() => {
+      this.checkAccessCode();
+    });
+
+    // Watch for route changes
+    watch(
+        () => this.$route,
+        () => {
+          this.isAccessCodeModalOpen = false;
+        }
+    );
   }
 });
 </script>
