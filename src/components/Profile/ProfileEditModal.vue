@@ -26,7 +26,8 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-button expand="block" @click="generateAvatars" class="ion-margin-bottom">Changer d'avatar</ion-button>
+              <custom-button expand="block" type="button" :text=" avatarsGenerated ? 'Recharger des avatars' : 'Changer d\'avatar' "@click="generateAvatars" class="ion-margin-bottom"></custom-button>
+
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -61,7 +62,7 @@
           >
           </ion-textarea>
         </ion-item>
-        <custom-button expand="block" color="primary" type="submit" text="Enregistrer" @click="saveChanges()"></custom-button>
+        <custom-button expand="block" type="submit" text="Enregistrer" @click="saveChanges()"></custom-button>
       </ion-list>
     </ion-content>
   </ion-modal>
@@ -93,7 +94,8 @@ export default defineComponent({
       biography: this.currentUser.biography,
       selectedAvatar: this.currentUser.avatar,
       age: this.currentUser.age,
-      avatars: []
+      avatars: [],
+      avatarsGenerated: false
     };
   },
   setup() {
@@ -123,6 +125,7 @@ export default defineComponent({
         newAvatars.push(`https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=${backgroundColor}`);
       }
       this.avatars = newAvatars;
+      this.avatarsGenerated = true;
     },
     selectAvatar(avatar) {
       this.selectedAvatar = avatar;

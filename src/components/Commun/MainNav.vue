@@ -1,5 +1,4 @@
 <template>
-  <ion-page class="safe-area">
     <ion-split-pane when="(min-width: 1200px)" content-id="main">
       <ion-menu content-id="main" class="sidebar-menu" v-if="isDesktop">
         <ion-header>
@@ -28,13 +27,13 @@
       <ion-tabs>
         <ion-router-outlet />
 
-        <ion-tab-bar slot="bottom" class="ion-margin">
+        <ion-tab-bar id="tab-feed" slot="bottom" class="ion-margin">
           <ion-tab-button tab="feed" href="/feed"
                           :class="{ 'ion-shadow-in': isActiveTab('/feed') }">
             <ion-icon :icon="homeOutline" />
           </ion-tab-button>
 
-          <ion-tab-button tab="journal" href="/journal"
+          <ion-tab-button id="tab-journal" tab="journal" href="/journal"
                           :class="{ 'ion-shadow-in': isActiveTab('/journal') }">
             <ion-icon :icon="journalOutline" />
           </ion-tab-button>
@@ -44,12 +43,12 @@
             <ion-icon slot="icon-only" :icon="add" />
           </ion-tab-button>
 
-          <ion-tab-button tab="conversations" href="/conversations"
+          <ion-tab-button id="tab-conversations" tab="conversations" href="/conversations"
                           :class="{ 'ion-shadow-in': isActiveTab('/conversations') }">
             <ion-icon :icon="chatbubblesOutline" />
           </ion-tab-button>
 
-          <ion-tab-button tab="parametres" href="/parametres"
+          <ion-tab-button id="tab-parameters" tab="parametres" href="/parametres"
                           :class="{ 'ion-shadow-in': isActiveTab('/parametres') }">
             <ion-icon :icon="settingsOutline" />
           </ion-tab-button>
@@ -73,7 +72,6 @@
           @select="handleFriendSelection"
       />
     </div>
-  </ion-page>
 </template>
 
 <script lang="ts">
