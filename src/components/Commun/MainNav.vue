@@ -264,14 +264,12 @@ ion-toolbar::part(content) {
 }
 ion-tab-bar {
   background: var(--ion-background-color);
+  padding-bottom: var(--ion-safe-area-bottom) !important;
+  --padding-bottom: var(--ion-safe-area-bottom) !important;
 }
 
 ion-fab {
   bottom: 50px;
-}
-
-html.ios ion-tab-button {
-  padding-bottom: var(--ion-safe-area-bottom) !important;
 }
 
 </style>

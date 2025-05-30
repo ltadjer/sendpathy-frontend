@@ -47,9 +47,6 @@ h6 {
     height: 4px;
 }
 
-html.ios {
-    padding-bottom: var(--ion-safe-area-bottom);
-}
 html.ios ion-content {
     --padding-bottom: var(--ion-safe-area-bottom) !important;
     --padding-start: var(--ion-safe-area-right) !important;
@@ -476,8 +473,8 @@ ion-modal ion-grid {
 .header-page ion-toolbar,
 .footer-page ion-toolbar {
     box-shadow: var(--neumorphism-out-shadow);
-    background: var(--ion-background-color) !important;
-    --background: var(--ion-background-color) !important;
+    background: transparent !important;
+    --background: transparent !important;
     border-radius: 1rem;
 }
 
