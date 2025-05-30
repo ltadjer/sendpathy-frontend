@@ -1,9 +1,9 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" },
     { "source": "/service-worker.js", "destination": "/public/service-worker.js" },
-    { "source": "/manifest.json", "destination": "/public/manifest.json" }
+    { "source": "/manifest.json", "destination": "/public/manifest.json" },
+    { "source": "/(.*)", "destination": "/" }
   ],
   "headers": [
     {
