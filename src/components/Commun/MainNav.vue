@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page class="safe-area">
     <ion-split-pane when="(min-width: 1200px)" content-id="main">
       <ion-menu content-id="main" class="sidebar-menu" v-if="isDesktop">
         <ion-header>

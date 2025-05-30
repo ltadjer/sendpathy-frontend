@@ -47,14 +47,19 @@ h6 {
     height: 4px;
 }
 
-html.ios ion-content {
+.safe-area {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+
+ion-content {
     --padding-bottom: var(--ion-safe-area-bottom) !important;
     --padding-start: var(--ion-safe-area-right) !important;
     --padding-end: var(--ion-safe-area-left) !important;
     padding-bottom: var(--ion-safe-area-bottom);
 }
 
-html.ios .add-comment-fixed {
+.add-comment-fixed {
     padding-bottom: var(--ion-safe-area-bottom, 1rem) !important;
     padding-right: var(--ion-safe-area-right, 1rem) !important;
     padding-left: var(--ion-safe-area-left, 1rem) !important;
