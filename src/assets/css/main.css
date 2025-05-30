@@ -47,17 +47,6 @@ h6 {
     height: 4px;
 }
 
-.safe-area {
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
-
-
-.add-comment-fixed {
-    padding-bottom: var(--ion-safe-area-bottom, 1rem) !important;
-    padding-right: var(--ion-safe-area-right, 1rem) !important;
-    padding-left: var(--ion-safe-area-left, 1rem) !important;
-}
-
 
 .full-width {
     width: 100%;
