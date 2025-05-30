@@ -52,13 +52,6 @@ h6 {
 }
 
 
-ion-content {
-    --padding-bottom: var(--ion-safe-area-bottom) !important;
-    --padding-start: var(--ion-safe-area-right) !important;
-    --padding-end: var(--ion-safe-area-left) !important;
-    padding-bottom: var(--ion-safe-area-bottom);
-}
-
 .add-comment-fixed {
     padding-bottom: var(--ion-safe-area-bottom, 1rem) !important;
     padding-right: var(--ion-safe-area-right, 1rem) !important;
