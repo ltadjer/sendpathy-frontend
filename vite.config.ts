@@ -13,6 +13,7 @@ export default defineConfig({
     json(),
     VitePWA({
       registerType: 'autoUpdate',
+      filename: 'manifest.webmanifest',
       includeAssets: ['logo.ico', 'img/icon.png'],
       manifest: {
         name: 'Sendpathy App',
