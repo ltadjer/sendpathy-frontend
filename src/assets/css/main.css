@@ -47,7 +47,7 @@ h6 {
     height: 4px;
 }
 
-ion-page {
+ion-content {
     padding: var(--ion-safe-area-top) var(--ion-safe-area-right) var(--ion-safe-area-bottom) var(--ion-safe-area-left) !important;
 }
 
@@ -57,6 +57,9 @@ ion-page {
     --padding-end: var(--ion-safe-area-left) !important;
 }
 
+ion-tabs {
+    padding: var(--ion-safe-area-top) var(--ion-safe-area-right) var(--ion-safe-area-bottom) var(--ion-safe-area-left) !important;
+}
 
 .full-width {
     width: 100%;
