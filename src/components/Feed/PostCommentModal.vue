@@ -200,7 +200,7 @@ ion-grid {
 }
 .custom-modal {
   --height: 75%;
-  --border-radius: 1rem 1rem 0 0 !important;
+  //--border-radius: 1rem 1rem 0 0 !important;
 }
 
 @media (min-width: 992px) {

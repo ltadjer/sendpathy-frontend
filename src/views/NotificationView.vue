@@ -11,7 +11,7 @@
     <ion-content :fullscreen="true">
       <ion-list v-if="notifications && notifications.length > 0" class="ion-padding">
         <ion-item-sliding v-for="notification in notifications" :key="notification.id" class="notification-item">
-        <ion-item lines="none" v-for="notification in notifications" :key="notification.id" class="notification-item">
+        <ion-item lines="none" class="notification-item">
           <ion-avatar slot="start">
             <img :src="notification.sender.avatar" alt="Sender Avatar" />
           </ion-avatar>
@@ -23,7 +23,7 @@
             <custom-button @click="acceptFriendRequest(notification)" text="Accepter"></custom-button>
             <custom-button @click="ignoreFriendRequest(notification)" text="Ignorer"></custom-button>
           </div>
-          <div v-else-if="notification.type === 'FRIEND_REQUEST' && isFriendshipAccepted(notification.sender.id) && !isFriend(notification.sender.id) && !isFriendshipPending(notification.sender.id) && isSent" class="notification-actions">
+          <div v-else-if="notification.type === 'FRIEND_REQUEST_ACCEPTED' && isFriendshipAccepted(notification.sender.id) && !isFriend(notification.sender.id) && !isFriendshipPending(notification.sender.id) && isSent" class="notification-actions">
             <custom-button @click="inviteBack(notification.sender.id)" text="Inviter en retour"></custom-button>
           </div>
         </ion-item>
