@@ -59,19 +59,14 @@ export default defineComponent({
       await useLifeMomentStore().fetchLifeMoments();
     },
     async checkAccessCode() {
-      console.log('isAccessCodeModalOpen:', this.isAccessCodeModalOpen);
       if (this.isAccessCodeModalOpen) {
-        console.log('Access code modal is already open');
         return;
       }
       const accessCode = useAccountStore().user?.accessCode;
-      console.log('Checking access code:', accessCode);
       if (!accessCode) {
-        console.log('No access code found, opening modal to set access code');
         this.isAccessCodeModalOpen = true;
         this.hasAccessCode = false;
       } else {
-        console.log('Access code found, validating access code');
         this.isAccessCodeModalOpen = true;
         this.hasAccessCode = true;
         await this.fetchLifeMoments();
@@ -82,8 +77,6 @@ export default defineComponent({
     onIonViewDidEnter(() => {
       this.checkAccessCode();
     });
-
-    // Watch for route changes
     watch(
         () => this.$route,
         () => {
