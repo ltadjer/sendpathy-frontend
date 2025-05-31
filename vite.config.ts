@@ -23,7 +23,7 @@ export default defineConfig({
         categories: ['mental health', 'social', 'lifestyle'],
         theme_color: '#e9e9f7',
         background_color: '#e9e9f7',
-        display: 'fullscreen',
+        display: 'standalone',
         start_url: '/',
         scope: '/',
         orientation: 'portrait',
