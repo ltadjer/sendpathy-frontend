@@ -47,17 +47,16 @@ h6 {
     height: 4px;
 }
 
-ion-tab-bar {
-    --padding-bottom: var(--ion-safe-area-bottom) !important;
-    --padding-start: var(--ion-safe-area-right) !important;
-    --padding-end: var(--ion-safe-area-left) !important;
-    padding-bottom: var(--ion-safe-area-bottom);
+.mobile-nav {
+    padding-bottom: var(--ion-safe-area-bottom) !important;
+    padding-right: var(--ion-safe-area-right) !important;
+    padding-left: var(--ion-safe-area-left) !important;
 }
 
 .add-comment-fixed {
-    padding-bottom: var(--ion-safe-area-bottom, 1rem) !important;
-    padding-right: var(--ion-safe-area-right, 1rem) !important;
-    padding-left: var(--ion-safe-area-left, 1rem) !important;
+    --padding-bottom: var(--ion-safe-area-bottom) !important;
+    --padding-start: var(--ion-safe-area-right) !important;
+    --padding-end: var(--ion-safe-area-left) !important;
 }
 
 
