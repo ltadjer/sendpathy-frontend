@@ -1,5 +1,5 @@
 <template>
-  <ion-modal :is-open="isOpen" :backdrop-dismiss="true"  class="non-blocking-modal">
+  <ion-modal :is-open="isOpen"  class="non-blocking-modal">
       <ion-card class="ion-padding ion-no-shadow">
           <ion-label position="stacked">{{ hasAccessCode ? 'Entrer le code d\'accès' : 'Définir un code d\'accès' }}</ion-label>
           <ion-input minlength="4" v-model="accessCode" type="password" inputmode="numeric"></ion-input>
@@ -80,12 +80,5 @@ ion-modal {
   --border-radius: 1rem;
   display: flex;
   align-items: center;
-}
-ion-modal.non-blocking-modal {
-  pointer-events: none;
-}
-
-ion-modal.non-blocking-modal ion-card {
-  pointer-events: auto;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
       <life-moment-form-modal v-if="isLifeMomentFormModalOpen" :lifeMoment="selectedLifeMoment" @close="closeLifeMomentFormModal" />
       <ion-list class="ion-padding">
-        <template v-if="lifeMoments.length > 0">
-        <ion-item class="ion-margin-bottom" lines="none" v-for="lifeMoment in lifeMoments" :key="lifeMoment.id" @click="editLifeMoment(lifeMoment)">
+        <template v-if="lifeMoments && lifeMoments.length > 0">
+        <ion-item class="ion-margin-bottom" lines="none" v-for="lifeMoment in lifeMoments" :key="lifeMoment.id" @click.stop="editLifeMoment(lifeMoment)">
           <ion-grid>
             <ion-row>
               <ion-col>
@@ -35,7 +35,7 @@
                       <ion-icon class="custom-icon" :id="'popover-button-' + lifeMoment.id" @click.stop :icon="ellipsisHorizontalOutline"></ion-icon>
                       <ion-popover :trigger="'popover-button-' + lifeMoment.id" :dismiss-on-select="true" side="top" alignment="end">
                         <ion-list>
-                          <ion-item class="ion-input-spacing" lines="none" :button="true" :detail="false" @click.stop="deleteOneLifeMoment(lifeMoment.id)">Supprimer</ion-item>
+                          <ion-item lines="none" :button="true" :detail="false" @click.stop="deleteOneLifeMoment(lifeMoment.id)">Supprimer</ion-item>
                         </ion-list>
                       </ion-popover>
                     </ion-col>

@@ -2,24 +2,40 @@
   <ion-card class="ion-no-padding">
     <ion-card-content>
       <form @submit.prevent="submitPost">
+        <ion-list v-if="selectedTags.length > 0 || selectedTriggers.length > 0" class="ion-padding-bottom">
+          <ion-chip v-for="tag in selectedTags" :key="tag.id" class="ion-margin-top">
+            <span class="gradient-text">{{ tag.name }}</span>
+          </ion-chip>
+          <ion-chip v-for="trigger in selectedTriggers" :key="trigger.id" class="ion-margin-top">
+            <span class="gradient-text">{{ trigger.name }}</span>
+          </ion-chip>
+        </ion-list>
         <ion-item class="ion-no-shadow ion-align-items-start" lines="none">
           <div class="avatar-container">
             <ion-avatar slot="start">
               <img alt="User Avatar" :src="currentUser?.avatar" class="avatar-option" />
             </ion-avatar>
           </div>
+          <div class="ion-padding-top">
+          <ion-text>
+            {{ currentUser?.username }}
+            <span>{{ emotion }}</span>
+          </ion-text>
+          </div>
+        </ion-item>
+        <ion-item lines="none" class="ion-no-shadow ion-align-items-start ion-padding-start">
           <ion-textarea
-            v-model="content"
-            placeholder="Qu'est-ce qui te tracasse ?"
-            class="custom-textarea"
-            rows="5"
+              v-model="content"
+              placeholder="Qu'est-ce qui te tracasse ?"
+              class="custom-textarea"
+              rows="5"
           ></ion-textarea>
         </ion-item>
         <ion-grid>
           <ion-row>
             <ion-col size="8">
               <custom-button :icon="happyOutline" @click="openEmojiModal"></custom-button>
-              <custom-button v-if="tags && tags.length > 0 || triggers && triggers.length > 0"  :icon="optionsOutline" @click="openSettingsModal"></custom-button>
+              <custom-button v-if="tags && tags.length > 0 || triggers && triggers.length > 0" :icon="optionsOutline" @click="openSettingsModal"></custom-button>
             </ion-col>
             <ion-col size="4" class="ion-text-right">
               <custom-button text="Publier" type="submit"></custom-button>
@@ -31,26 +47,26 @@
   </ion-card>
 
   <post-settings-modal
-    :isOpen="isSettingsModalOpen"
-    @update:isOpen="isSettingsModalOpen = $event"
-    @update:selectedTags="updateSelectedTags"
-    @update:selectedTriggers="updateSelectedTriggers"
-    :selectedTags="selectedTags"
-    :selectedTriggers="selectedTriggers"
-    :post-id="post?.id || ''"
+      :isOpen="isSettingsModalOpen"
+      @update:isOpen="isSettingsModalOpen = $event"
+      @update:selectedTags="updateSelectedTags"
+      @update:selectedTriggers="updateSelectedTriggers"
+      :selectedTags="selectedTags"
+      :selectedTriggers="selectedTriggers"
+      :post-id="post?.id || ''"
   ></post-settings-modal>
 
   <emotions-modal
-    :isOpen="isEmojiModalOpen"
-    @update:isOpen="isEmojiModalOpen = $event"
-    @emoji-selected="updateEmotion"
-    :selected-emoji="emotion"
+      :isOpen="isEmojiModalOpen"
+      @update:isOpen="isEmojiModalOpen = $event"
+      @emoji-selected="updateEmotion"
+      :selected-emoji="emotion"
   ></emotions-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonCard, IonCardContent, IonItem, IonTextarea, IonGrid, IonCol, IonRow, IonAvatar } from '@ionic/vue';
+import {IonCard, IonCardContent, IonItem, IonTextarea, IonGrid, IonCol, IonRow, IonAvatar, IonText, IonList, IonChip} from '@ionic/vue';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import PostSettingsModal from '@/components/Feed/PostSettingsModal.vue';
 import EmotionsModal from '@/components/Commun/EmotionsModal.vue';
@@ -62,6 +78,7 @@ import {useTriggerStore} from "@/stores/trigger";
 export default defineComponent({
   name: 'PostForm',
   components: {
+    IonText,
     IonAvatar,
     IonCard,
     IonCardContent,
@@ -70,6 +87,8 @@ export default defineComponent({
     IonGrid,
     IonCol,
     IonRow,
+    IonList,
+    IonChip,
     PostSettingsModal,
     EmotionsModal,
     CustomButton
@@ -77,7 +96,6 @@ export default defineComponent({
   props: {
     post: {
       type: Object,
-      required: true
     },
     currentUser: {
       type: Object,
@@ -162,6 +180,7 @@ export default defineComponent({
       this.isSettingsModalOpen = false;
     },
     updateSelectedTags(tags) {
+      console.log('Selected tags:', tags);
       this.selectedTags = tags;
     },
     updateSelectedTriggers(triggers) {

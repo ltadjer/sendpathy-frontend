@@ -2,33 +2,93 @@
   <ion-card>
     <ion-card-content>
       <form @submit.prevent="submitLifeMoment">
-        <div v-if="contents.length" :class="`media-grid media-count-${contents.length}`">
-          <div v-for="(content, index) in contents" :key="index" class="media-item">
+        <span style="font-size: 2rem;">{{emotion}}</span>
+        <div
+            v-if="contents.length"
+            :class="`media-grid media-count-${contents.length}`"
+        >
+          <div
+              v-for="(content, index) in displayedContents"
+              :key="index"
+              class="media-item"
+          >
             <div v-if="content.type.startsWith('image/')">
-              <img :src="getImageUrl(content)" alt="Image" class="media-content" />
+              <img
+                  :src="`${content.fileUrl}`"
+                  alt="Image"
+                  class="media-content"
+              />
               <ion-buttons class="delete-icon">
-                <custom-button @button-click="deleteOneContent(content, index)" :icon="closeOutline"></custom-button>
+                <custom-button
+                    @button-click="deleteOneContent(content, index)"
+                    :icon="closeOutline"
+                ></custom-button>
               </ion-buttons>
             </div>
             <div v-else-if="content.type.startsWith('video/')">
-              <video :src="`${content.fileUrl}`" controls class="media-content"></video>              <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
+              <video
+                  :src="`${content.fileUrl}`"
+                  controls
+                  class="media-content"
+              ></video>
+              <ion-icon
+                  name="close-circle"
+                  class="delete-icon"
+                  @click="deleteOneContent(index)"
+              ></ion-icon>
             </div>
             <div v-else-if="content.type.startsWith('audio/')">
-              <video :src="`${content.fileUrl}`" controls class="media-content"></video>
-              <ion-icon name="close-circle" class="delete-icon" @click="deleteOneContent(index)"></ion-icon>
+              <video
+                  :src="`${content.fileUrl}`"
+                  controls
+                  class="media-content"
+              ></video>
+              <ion-icon
+                  name="close-circle"
+                  class="delete-icon"
+                  @click="deleteOneContent(index)"
+              ></ion-icon>
             </div>
           </div>
         </div>
+        <div v-if="contents.length > 2" class="see-more-container">
+          <custom-button
+              :text="showAllMedia ? 'Voir moins' : 'Voir plus'"
+              @click="toggleShowAll"
+              class="see-more-button"
+          ></custom-button>
+        </div>
         <ion-item class="ion-no-shadow" lines="none">
-          <ion-textarea v-model="content" placeholder="Comment te sens-tu aujourd'hui?" class="custom-textarea" rows="5"></ion-textarea>
+          <ion-textarea
+              v-model="content"
+              placeholder="Comment te sens-tu aujourd'hui?"
+              class="custom-textarea"
+              rows="5"
+          ></ion-textarea>
         </ion-item>
         <ion-grid>
           <ion-row>
             <ion-col size="8">
-              <custom-button :icon="happyOutline" @click="openEmojiModal"></custom-button>
-              <custom-button :icon="imageOutline" @click="triggerFileInput"></custom-button>
-              <input type="file" ref="fileInput" @change="onFileChange" accept="image/*,video/*" style="display: none;" />
-              <custom-button :icon="isRecording ? stopOutline : micOutline" @click="toggleRecording"></custom-button>
+              <custom-button
+                  :icon="happyOutline"
+                  @click="openEmojiModal"
+              ></custom-button>
+              <custom-button
+                  :icon="imageOutline"
+                  @click="triggerFileInput"
+              ></custom-button>
+              <input
+                  type="file"
+                  ref="fileInput"
+                  @change="onFileChange"
+                  accept="image/*,video/*,audio/*"
+                  multiple
+                  style="display: none;"
+              />
+              <custom-button
+                  :icon="isRecording ? stopOutline : micOutline"
+                  @click="toggleRecording"
+              ></custom-button>
             </ion-col>
             <ion-col size="4" class="ion-text-end">
               <custom-button text="Partager" type="submit"></custom-button>
@@ -38,13 +98,35 @@
       </form>
     </ion-card-content>
   </ion-card>
-  <emotions-modal :isOpen="isEmojiModalOpen" @update:isOpen="isEmojiModalOpen = $event" @emoji-selected="updateEmotion" :selected-emoji="emotion"></emotions-modal>
+
+  <emotions-modal
+      :isOpen="isEmojiModalOpen"
+      @update:isOpen="isEmojiModalOpen = $event"
+      @emoji-selected="updateEmotion"
+      :selected-emoji="emotion"
+  ></emotions-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { IonCard, IonCardContent, IonItem, IonTextarea, IonGrid, IonRow, IonCol, IonIcon } from '@ionic/vue';
-import { happyOutline, imageOutline, micOutline, stopOutline, closeOutline } from 'ionicons/icons';
+import {
+  IonCard,
+  IonCardContent,
+  IonItem,
+  IonTextarea,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonButtons
+} from '@ionic/vue';
+import {
+  happyOutline,
+  imageOutline,
+  micOutline,
+  stopOutline,
+  closeOutline
+} from 'ionicons/icons';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import EmotionsModal from '@/components/Commun/EmotionsModal.vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
@@ -61,7 +143,8 @@ export default defineComponent({
     EmotionsModal,
     IonGrid,
     IonRow,
-    IonIcon
+    IonIcon,
+    IonButtons
   },
   props: {
     lifeMoment: Object
@@ -79,21 +162,30 @@ export default defineComponent({
       contents: [],
       isFileInputTriggered: false,
       apiUrl: import.meta.env.VITE_API_URL,
+      showAllMedia: false, // Contrôle l’affichage de toutes les images ou juste 2
     };
+  },
+  computed: {
+    displayedContents() {
+      if (this.showAllMedia || this.contents.length <= 2) {
+        return this.contents;
+      }
+      return this.contents.slice(0, 2);
+    }
   },
   watch: {
     lifeMoment: {
       immediate: true,
       handler(newVal) {
-        if(newVal) {
+        if (newVal) {
           this.content = newVal.content;
           this.emotion = newVal.emotion;
           this.contents = newVal.contents || [];
         } else {
           this.resetForm();
         }
-      },
-    },
+      }
+    }
   },
   setup() {
     return { happyOutline, imageOutline, micOutline, stopOutline, closeOutline };
@@ -108,43 +200,43 @@ export default defineComponent({
     },
     onFileChange(event) {
       this.isFileInputTriggered = false;
-      const file = event.target.files[0];
-      if (this.validateFile(file)) {
-        this.file = file;
-        this.getFileBase64(this.file).then(base64 => {
-          this.base64Image = base64;
-          this.contents.push({
-            type: file.type,
-            content: '',
-            base64Content: base64,
-            originalName: file.name,
-            size: file.size,
-            order: this.contents.length + 1
+      const files = Array.from(event.target.files);
+      files.forEach(file => {
+        if (this.validateFile(file)) {
+          this.getFileBase64(file).then(base64 => {
+            this.contents.push({
+              type: file.type,
+              content: '',
+              base64Content: base64,
+              originalName: file.name,
+              size: file.size,
+              order: this.contents.length + 1
+            });
           });
-        });
-      }
+        }
+      });
+      // Pour permettre de re-sélectionner les mêmes fichiers
+      event.target.value = null;
     },
     validateFile(file) {
       const allowedTypes = ['image/png', 'image/jpeg', 'video/mp4', 'audio/mpeg'];
       const maxSize = 10 * 1024 * 1024; // 10 MB
 
       if (!allowedTypes.includes(file.type)) {
-        alert('Invalid file type');
+        alert('Type de fichier invalide');
         return false;
       }
-
       if (file.size > maxSize) {
-        alert('File size exceeds the maximum limit of 10 MB');
+        alert('Le fichier dépasse la taille maximale de 10 MB');
         return false;
       }
-
       return true;
     },
     getFileBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64Content = reader.result.split(',')[1]; // Get the base64 part of the result
+          const base64Content = (reader.result as string).split(',')[1];
           resolve(base64Content);
         };
         reader.onerror = reject;
@@ -165,24 +257,22 @@ export default defineComponent({
       }
     },
     startRecording() {
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-          this.mediaRecorder = new MediaRecorder(stream);
-          this.mediaRecorder.start();
-          this.isRecording = true;
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        this.mediaRecorder = new MediaRecorder(stream);
+        this.mediaRecorder.start();
+        this.isRecording = true;
 
-          const audioChunks = [];
-          this.mediaRecorder.addEventListener('dataavailable', event => {
-            audioChunks.push(event.data);
-          });
-
-          this.mediaRecorder.addEventListener('stop', () => {
-            this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-          });
+        const audioChunks: BlobPart[] = [];
+        this.mediaRecorder.addEventListener('dataavailable', event => {
+          audioChunks.push(event.data);
         });
+        this.mediaRecorder.addEventListener('stop', () => {
+          this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        });
+      });
     },
     stopRecording() {
-      this.mediaRecorder.stop();
+      this.mediaRecorder?.stop();
       this.isRecording = false;
     },
     updateEmotion(emoji) {
@@ -191,20 +281,22 @@ export default defineComponent({
     openEmojiModal() {
       this.isEmojiModalOpen = true;
     },
-    async deleteOneContent(content, index) {
-      if (content.id) {
-        await useLifeMomentStore().deleteOneContent(content.id);
-        const updatedLifeMoment = await useLifeMomentStore().fetchOneLifeMomentById(this.lifeMoment.id);
-        this.contents = updatedLifeMoment.contents;
+    async deleteOneContent(contentOrIndex: any, maybeIndex?: number) {
+      // Si contentOrIndex est un objet avec un id, on appelle l’API
+      if (contentOrIndex.id) {
+        await useLifeMomentStore().deleteOneContent(contentOrIndex.id);
+        const updated = await useLifeMomentStore().fetchOneLifeMomentById(this.lifeMoment.id);
+        this.contents = updated.contents;
       } else {
-        this.contents.splice(index, 1);
+        // Sinon, suppression locale
+        this.contents.splice(maybeIndex!, 1);
       }
     },
     async submitLifeMoment() {
       const formData = {
         content: this.content,
-        emotion: this.emotion ? this.emotion : '',
-        contents: this.contents ? this.contents : [],
+        emotion: this.emotion || '',
+        contents: this.contents || []
       };
 
       if (this.lifeMoment && this.lifeMoment.id) {
@@ -225,8 +317,12 @@ export default defineComponent({
       this.mediaRecorder = null;
       this.emotion = '';
       this.contents = [];
+      this.showAllMedia = false;
+    },
+    toggleShowAll() {
+      this.showAllMedia = !this.showAllMedia;
     }
-  },
+  }
 });
 </script>
 
@@ -254,8 +350,15 @@ ion-item {
   grid-template-columns: 1fr;
 }
 
-.media-count-2, .media-count-3, .media-count-4, .media-count-5,
-.media-count-6, .media-count-7, .media-count-8, .media-count-9, .media-count-10 {
+.media-count-2,
+.media-count-3,
+.media-count-4,
+.media-count-5,
+.media-count-6,
+.media-count-7,
+.media-count-8,
+.media-count-9,
+.media-count-10 {
   grid-template-columns: repeat(2, 1fr);
 }
 
@@ -263,7 +366,8 @@ ion-item {
   grid-template-rows: auto auto;
 }
 
-.media-count-4, .media-count-5 {
+.media-count-4,
+.media-count-5 {
   grid-template-rows: 1fr 1fr;
 }
 
@@ -287,5 +391,14 @@ ion-item {
   position: absolute;
   top: 1rem;
   right: 1rem;
+}
+
+/* Styles pour le bouton « Voir plus » */
+.see-more-container {
+  margin-top: 8px;
+  text-align: center;
+}
+.see-more-button {
+  /* Ajoutez ici vos styles si besoin (padding, couleur de fond, etc.) */
 }
 </style>

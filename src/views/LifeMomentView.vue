@@ -10,6 +10,7 @@
     </MainHeader>
     <ion-content>
       <access-code-modal
+        v-if="isAccessCodeModalOpen"
         :is-open="isAccessCodeModalOpen"
         :has-access-code="hasAccessCode"
         @update:isOpen="(value) => isAccessCodeModalOpen = value"

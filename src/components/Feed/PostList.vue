@@ -189,6 +189,7 @@ export default defineComponent({
       });
     },
     paginatedPosts() {
+      console.log('posts:', this.posts);
       return this.posts.slice(0, this.currentPage * this.postsPerPage);
     },
   },

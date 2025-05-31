@@ -1,4 +1,5 @@
 <template>
+  <ion-page>
     <ion-split-pane when="(min-width: 1200px)" content-id="main">
       <ion-menu content-id="main" class="sidebar-menu" v-if="isDesktop">
         <ion-header>
@@ -11,10 +12,32 @@
           </ion-toolbar>
         </ion-header>
           <ion-list class="link-list">
-            <custom-button id="tab-feed" :class="{ 'ion-shadow-in': isActiveTab('/feed') }" text="Feed" href="/feed" />
-            <custom-button id="tab-journal" text="Moments de vie" :class="{ 'ion-shadow-in': isActiveTab('/journal') }"  href="/journal" />
-            <custom-button id="tab-conversations" text="Messages" :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"  href="/conversations" />
-            <custom-button id="tab-parameters" text="Paramètres" :class="{ 'ion-shadow-in': isActiveTab('/parametres') }"  href="/parametres" />
+            <ion-list class="link-list">
+              <custom-button
+                  id="tab-feed"
+                  :class="{ 'ion-shadow-in': isActiveTab('/feed') }"
+                  text="Feed"
+                  @click="$router.push('/feed')"
+              />
+              <custom-button
+                  id="tab-journal"
+                  text="Moments de vie"
+                  :class="{ 'ion-shadow-in': isActiveTab('/journal') }"
+                  @click="$router.push('/journal')"
+              />
+              <custom-button
+                  id="tab-conversations"
+                  text="Messages"
+                  :class="{ 'ion-shadow-in': isActiveTab('/conversations') }"
+                  @click="$router.push('/conversations')"
+              />
+              <custom-button
+                  id="tab-parameters"
+                  text="Paramètres"
+                  :class="{ 'ion-shadow-in': isActiveTab('/parametres') }"
+                  @click="$router.push('/parametres')"
+              />
+            </ion-list>
           </ion-list>
       </ion-menu>
 
@@ -72,6 +95,7 @@
           @select="handleFriendSelection"
       />
     </div>
+  </ion-page>
 </template>
 
 <script lang="ts">
@@ -262,6 +286,8 @@ ion-toolbar::part(content) {
 }
 ion-tab-bar {
   background: var(--ion-background-color);
+  padding-bottom: 0 !important;
+  --padding-bottom: 0 !important;
 }
 
 ion-fab {

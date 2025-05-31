@@ -13,7 +13,7 @@
           <img
               alt="Logo"
               :src="getLogo"
-              width="120px"
+              width="80px"
               class="logo-animate"
           />
         </swiper-slide>
@@ -63,27 +63,27 @@
           v-if="currentSlideIndex > 0"
           class="nav-button prev-button"
           @click="goToPreviousSlide"
-          :icon="chevronBackOutline"
+          :icon="arrowBackOutline"
       />
       <custom-button
-          class="nav-button next-button" @click="goToNextSlide" :icon="chevronForwardOutline" v-if="currentSlideIndex !== 3"></custom-button>
+          class="nav-button next-button" @click="goToNextSlide" :icon="arrowForwardOutline" v-if="currentSlideIndex !== 3"></custom-button>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonIcon, IonButton } from '@ionic/vue'
+import { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/swiper-bundle.css'
 import CustomButton from '@/components/Commun/CustomButton.vue'
 import darkLogo from "@/assets/img/logo-dark.svg";
 import lightLogo from "@/assets/img/logo-light.svg";
-import {arrowForwardOutline, chevronForwardOutline, chevronBackOutline} from "ionicons/icons";
+import {arrowForwardOutline, arrowBackOutline} from "ionicons/icons";
 
 export default defineComponent({
   name: 'OnboardingView',
-  components: { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle, Swiper, SwiperSlide, CustomButton, IonIcon, IonButton },
+  components: { IonPage, IonContent, IonCard, IonCardHeader, IonCardContent, IonCardTitle, Swiper, SwiperSlide, CustomButton, },
   data() {
     return {
       swiperInstance: null,
@@ -98,8 +98,7 @@ export default defineComponent({
   },
   setup() {
     return {
-      chevronForwardOutline,
-      chevronBackOutline,
+      arrowBackOutline,
       arrowForwardOutline
     }
   },
@@ -253,6 +252,11 @@ ion-card p {
   bottom: 0;
   transform: translateY(-50%);
   z-index: 10;
+}
+
+.nav-button::part(native),
+ion-button {
+  border-radius: 50%;
 }
 
 .prev-button {
