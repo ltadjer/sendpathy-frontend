@@ -1,6 +1,6 @@
 <template>
   <ion-modal :is-open="isOpen" @ionModalDidDismiss="closeModal">
-    <ion-header :translucent="true" class="ion-padding">
+    <ion-header class="ion-padding">
       <ion-toolbar>
         <ion-title>Créer une bulle à deux</ion-title>
         <ion-buttons slot="end">

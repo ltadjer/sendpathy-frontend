@@ -1,5 +1,5 @@
 <template>
-  <ion-header :translucent="true" class="ion-padding header-page">
+  <ion-header class="ion-padding header-page">
     <ion-toolbar>
       <ion-item lines="none" class="ion-no-shadow">
         <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" />

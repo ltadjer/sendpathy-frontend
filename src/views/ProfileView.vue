@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true" class="ion-padding" v-if="!isDesktop">
+    <ion-header class="ion-padding" v-if="!isDesktop">
       <ion-toolbar class="ion-no-shadow">
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/feed" :icon="arrowBackOutline" text="" />
