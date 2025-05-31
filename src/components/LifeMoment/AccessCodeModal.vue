@@ -1,5 +1,5 @@
 <template>
-  <ion-modal :is-open="isOpen"  class="non-blocking-modal">
+  <ion-modal :is-open="isOpen" :backdrop-dismiss="true">
       <ion-card class="ion-padding ion-no-shadow">
           <ion-label position="stacked">{{ hasAccessCode ? 'Entrer le code d\'accès' : 'Définir un code d\'accès' }}</ion-label>
           <ion-input minlength="4" v-model="accessCode" type="password" inputmode="numeric"></ion-input>
@@ -18,8 +18,9 @@ import {
   IonInput,
   IonCard,
 } from '@ionic/vue';
-import CustomButton from '@/components/Commun/CustomButton.vue'
-import { useAccountStore } from '@/stores/account.ts'
+import { Keyboard } from '@capacitor/keyboard'; // ⬅️ ici
+import CustomButton from '@/components/Commun/CustomButton.vue';
+import { useAccountStore } from '@/stores/account.ts';
 
 export default defineComponent({
   name: 'AccessCodeModal',
@@ -57,7 +58,7 @@ export default defineComponent({
             console.error('Invalid access code');
           }
         } else {
-         this.accessCode =  await useAccountStore().setAccessCode(this.accessCode);
+          this.accessCode = await useAccountStore().setAccessCode(this.accessCode);
           this.$emit('access-code-set');
           this.closeModal();
         }
@@ -68,8 +69,12 @@ export default defineComponent({
     closeModal() {
       this.$emit('update:isOpen', false);
     }
+  },
+  mounted() {
+    Keyboard.setScroll({ isDisabled: false });
   }
 });
+
 </script>
 <style scoped>
 ion-modal {

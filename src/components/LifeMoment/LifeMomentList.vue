@@ -7,23 +7,26 @@
             <ion-row>
               <ion-col>
                 <ion-grid>
-                  <ion-row>
-                    <ion-col class="ion-align-items-start">
-                        <span style="font-size: 2rem">{{ lifeMoment.emotion }}</span><br />
-                        <ion-text class="ion-margin-top">{{ lifeMoment.content }}</ion-text>
+                  <ion-row class="content-row ion-align-items-start">
+                    <ion-col size="12" size-lg="6" class="text-column">
+                      <div style="font-size: 2rem">{{ lifeMoment.emotion }}</div><br />
+                      <ion-text class="ion-margin-top">{{ lifeMoment.content }}</ion-text>
                     </ion-col>
-                  </ion-row>
-                  <ion-row v-if="lifeMoment.contents && lifeMoment.contents.length > 0" class="media-grid" :class="`media-count-${lifeMoment.contents.length}`">
-                    <template v-for="(content, index) in lifeMoment.contents" :key="content.id">
-                      <ion-col v-if="index < 4" class="media-item">
-                        <img v-if="content.type.startsWith('image/')" :src="`${content.fileUrl}`" class="media-content" alt="img" />
-                        <video v-else-if="content.type.startsWith('video/')" :src="`${content.fileUrl}`"  controls class="media-content"></video>
-                      </ion-col>
-                    </template>
-                    <ion-col v-if="lifeMoment.contents.length > 4" class="overlay-more">
-                      <span class="gradient-text">
-                        +{{ lifeMoment.contents.length - 4 }}
-                      </span>
+                    <ion-col size="12" size-lg="6" class="carousel-column">
+                      <ion-row v-if="lifeMoment.contents && lifeMoment.contents.length > 0"   class="media-grid"
+                               :class="`media-count-${lifeMoment.contents?.length || 0}`">
+                        <template v-for="(content, index) in lifeMoment.contents" :key="content.id">
+                          <ion-col v-if="index < 4" class="media-item">
+                            <img v-if="content.type.startsWith('image/')" :src="`${content.fileUrl}`" class="media-content" alt="img" />
+                            <video v-else-if="content.type.startsWith('video/')" :src="`${content.fileUrl}`" controls class="media-content"></video>
+                          </ion-col>
+                        </template>
+                        <ion-col v-if="lifeMoment.contents.length > 4" class="overlay-more">
+        <span class="gradient-text">
+          +{{ lifeMoment.contents.length - 4 }}
+        </span>
+                        </ion-col>
+                      </ion-row>
                     </ion-col>
                   </ion-row>
                   <ion-row class="separator ion-margin-top"></ion-row>
@@ -154,6 +157,29 @@ export default defineComponent({
   grid-template-rows: 1fr 1fr;
 }
 
+.content-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.text-column {
+  text-align: left;
+}
+
+.carousel-column {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 992px) {
+  .text-column {
+    text-align: left;
+  }
+  .carousel-column {
+    justify-content: flex-end;
+  }
+}
 .media-item {
   position: relative;
 }
@@ -173,7 +199,7 @@ export default defineComponent({
 
 @media (min-width: 768px) {
   .media-content {
-    max-width: 350px;
+    max-width: fit-content;
   }
 }
 .overlay-more {
@@ -183,7 +209,7 @@ export default defineComponent({
   background: var(--ion-background-color);
   box-shadow: var(--neumorphism-out-shadow);
   font-size: 1.5rem;
-  border-radius: 8px;
+  border-radius: 1rem;
   grid-column: 1 / -1;
 }
 

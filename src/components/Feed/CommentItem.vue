@@ -20,15 +20,22 @@
               <span v-if="comment.likes" class="likes-count">{{ comment.likes.length }}</span>
             </span>
             </div>
-            <p class="comment-text">{{ comment.content }}</p>
+            <p class="comment-text">
+              {{ comment.translatedContent || comment.content }}
+            </p>
             <div class="comment-actions">
+              <ion-text v-if="!comment.translatedContent" @click.stop="translateComment(comment)" class="translate-text">
+                Traduire
+              </ion-text>
+              <ion-text v-if="comment.translatedContent" @click.stop="toggleOriginal(comment)" class="toggle-original">
+                Voir l'original
+              </ion-text>
               <ion-text v-if="comment.replies && comment.replies.length > 0" @click="toggleReplies(comment)">
                 {{ comment.showReplies ? 'Masquer les réponses' : 'Afficher les réponses' }}
               </ion-text>
               <ion-text @click="$emit('reply', comment)" class="reply-text">Répondre</ion-text>
               <ion-text v-if="comment.user.id === currentUser.id" @click="deleteComment(comment)" class="delete-text">Supprimer</ion-text>
             </div>
-            <!-- Replies section -->
             <div v-if="comment.showReplies && comment.replies && comment.replies.length > 0" class="replies">
               <comment-item
                 v-for="reply in comment.replies"
@@ -111,6 +118,16 @@ export default defineComponent({
         await usePostStore().likeComment(comment.id);
         comment.isLiked = true;
       }
+    },
+    async translateComment(comment) {
+      const userLang = this.currentUser.nativeLanguage || navigator.language.split('-')[0];
+      const translatedText = await translateText(comment.content, userLang);
+      if (translatedText) {
+        comment.translatedContent = translatedText;
+      }
+    },
+    toggleOriginal(comment) {
+      comment.translatedContent = comment.translatedContent ? null : comment.content;
     },
   },
   created() {
