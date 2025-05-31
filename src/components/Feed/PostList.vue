@@ -46,31 +46,20 @@
                 </ion-item>
               </ion-col>
               <ion-col size="2" class="ion-text-end">
-                <ion-icon class="custom-icon"
-                          :id="'popover-button-' + post.id"
-                          @click.stop
-                          :icon="ellipsisVerticalOutline">
-                </ion-icon>
-                <ion-popover
-                  :trigger="'popover-button-' + post.id"
-                  :dismiss-on-select="true"
-                  side="top"
-                  alignment="end">
-                  <ion-list>
-                    <ion-item
-                        lines="none"
-                        :button="true"
-                        :detail="false"
-                        @click="translatePost(post)"
-                        v-if="!post.translatedContent"
-                    >
-                      Traduire
-                    </ion-item>
-                    <ion-item lines="none" :button="true" :detail="false" v-if="post.user.id === currentUser.id" @click.stop="deleteOnePost(post.id)">Supprimer</ion-item>
-                    <ion-item lines="none" :button="true" :detail="false" @click="reportPost(post.id)">Signaler</ion-item>
-                  </ion-list>
-                </ion-popover>
-
+                <ion-icon
+                    class="custom-icon"
+                    :id="'popover-button-' + post.id"
+                    :icon="ellipsisVerticalOutline"
+                    @click.stop
+                ></ion-icon>
+                <ActionPopover
+                    :trigger-id="'popover-button-' + post.id"
+                    :actions="[
+                      { label: 'Traduire', handler: () => translatePost(post) },
+                      { label: 'Supprimer', handler: () => deleteOnePost(post.id) },
+                      { label: 'Signaler', handler: () => reportPost(post.id) }
+                    ]"
+                />
               </ion-col>
             </ion-row>
             <ion-row>
@@ -119,7 +108,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonList, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonPopover, IonChip, IonLabel,IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
+import { IonList, IonItem, IonIcon, IonAvatar, IonGrid, IonCol, IonRow, IonText, IonChip, IonLabel,IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
 import PostFormModal from '@/components/Feed/PostFormModal.vue';
 import PostCommentModal from '@/components/Feed/PostCommentModal.vue';
 import { chatbubbleOutline, heart, heartOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
@@ -128,9 +117,11 @@ import PostFilterButton from '@/components/Feed/PostFilterButton.vue';
 import { timeSince } from '@/utils/date';
 import CustomButton from "@/components/Commun/CustomButton.vue";
 import { translateText } from '@/utils/translate';
+import ActionPopover from "@/components/Commun/ActionPopover.vue";
 export default defineComponent({
   name: 'PostList',
   components: {
+    ActionPopover,
     CustomButton,
     PostFormModal,
     PostFilterButton,
@@ -142,7 +133,6 @@ export default defineComponent({
     IonCol,
     IonRow,
     IonText,
-    IonPopover,
     IonChip,
     IonLabel,
     PostCommentModal,

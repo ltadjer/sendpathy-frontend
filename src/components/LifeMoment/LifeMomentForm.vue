@@ -134,6 +134,7 @@ import {
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import EmotionsModal from '@/components/Commun/EmotionsModal.vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
+import { useToastStore } from '@/stores/toast';
 
 export default defineComponent({
   name: 'LifeMomentForm',
@@ -157,13 +158,16 @@ export default defineComponent({
     return {
       content: '',
       emotion: '',
+      file: null,
+      base64Image: '',
       isRecording: false,
       audioBlob: null,
       mediaRecorder: null,
       isEmojiModalOpen: false,
       contents: [],
-      showAllMedia: false, // Contrôle l’affichage
-      apiUrl: import.meta.env.VITE_API_URL
+      isFileInputTriggered: false,
+      apiUrl: import.meta.env.VITE_API_URL,
+      showAllMedia: false,
     };
   },
   computed: {
@@ -194,16 +198,20 @@ export default defineComponent({
   emits: ['close', 'button-click'],
   methods: {
     triggerFileInput() {
-      (this.$refs.fileInput as HTMLInputElement).click();
+      if (!this.isFileInputTriggered && this.$refs.fileInput) {
+        this.isFileInputTriggered = true;
+        this.$refs.fileInput.click();
+      }
     },
-    onFileChange(event: Event) {
-      const input = event.target as HTMLInputElement;
-      const files = Array.from(input.files || []);
+    onFileChange(event) {
+      this.isFileInputTriggered = false;
+      const files = Array.from(event.target.files);
       files.forEach(file => {
         if (this.validateFile(file)) {
           this.getFileBase64(file).then(base64 => {
             this.contents.push({
               type: file.type,
+              content: '',
               base64Content: base64,
               originalName: file.name,
               size: file.size,
@@ -212,7 +220,10 @@ export default defineComponent({
           });
         }
       });
-      input.value = ''; // autoriser la re-sélection
+      const toastStore = useToastStore();
+      toastStore.showToast('N\'oubliez pas de cliquer sur "Partager" pour sauvegarder vos modifications.', 'primary');
+      // Pour permettre de re-sélectionner les mêmes fichiers
+      event.target.value = null;
     },
     validateFile(file: File) {
       const allowedTypes = ['image/png', 'image/jpeg', 'video/mp4', 'audio/mpeg'];
@@ -238,34 +249,43 @@ export default defineComponent({
         reader.readAsDataURL(file);
       });
     },
-    getImageUrl(content: any) {
+    getImageUrl(content) {
       if (content.fileUrl && content.fileUrl.startsWith('/uploads')) {
-        return `${this.apiUrl}${content.fileUrl}`;
+        return `${import.meta.env.VITE_API_URL}${content.fileUrl}`;
       }
       return `data:${content.type};base64,${content.base64Content}`;
     },
     toggleRecording() {
       if (this.isRecording) {
-        this.mediaRecorder?.stop();
-        this.isRecording = false;
+        this.stopRecording();
       } else {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-          this.mediaRecorder = new MediaRecorder(stream);
-          this.mediaRecorder.start();
-          this.isRecording = true;
-
-          const audioChunks: BlobPart[] = [];
-          this.mediaRecorder.addEventListener('dataavailable', event => {
-            audioChunks.push(event.data);
-          });
-          this.mediaRecorder.addEventListener('stop', () => {
-            this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-          });
-        });
+        this.startRecording();
       }
     },
-    updateEmotion(emoji: string) {
+    startRecording() {
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        this.mediaRecorder = new MediaRecorder(stream);
+        this.mediaRecorder.start();
+        this.isRecording = true;
+
+        const audioChunks: BlobPart[] = [];
+        this.mediaRecorder.addEventListener('dataavailable', event => {
+          audioChunks.push(event.data);
+        });
+        this.mediaRecorder.addEventListener('stop', () => {
+          this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        });
+      });
+    },
+    stopRecording() {
+      this.mediaRecorder?.stop();
+      this.isRecording = false;
+    },
+    updateEmotion(emoji) {
       this.emotion = emoji;
+    },
+    openEmojiModal() {
+      this.isEmojiModalOpen = true;
     },
     async deleteOneContent(contentOrIndex: any, maybeIndex?: number) {
       if (contentOrIndex.id) {
@@ -292,6 +312,8 @@ export default defineComponent({
     },
     resetForm() {
       this.content = '';
+      this.file = null;
+      this.base64Image = '';
       this.isRecording = false;
       this.audioBlob = null;
       this.mediaRecorder = null;

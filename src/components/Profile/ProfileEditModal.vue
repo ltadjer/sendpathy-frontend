@@ -141,10 +141,6 @@ ion-textarea {
   padding-left: 1rem;
 }
 
-ion-item {
-  --inner-padding-end: 0;
-}
-
 .large-avatar {
   width: 100px;
   height: 100px;

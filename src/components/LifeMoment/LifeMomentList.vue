@@ -35,12 +35,18 @@
                       <ion-text>{{ formatDate(lifeMoment.createdAt) }}</ion-text>
                     </ion-col>
                     <ion-col size="2" class="ion-text-end">
-                      <ion-icon class="custom-icon" :id="'popover-button-' + lifeMoment.id" @click.stop :icon="ellipsisHorizontalOutline"></ion-icon>
-                      <ion-popover :trigger="'popover-button-' + lifeMoment.id" :dismiss-on-select="true" side="top" alignment="end">
-                        <ion-list>
-                          <ion-item lines="none" :button="true" :detail="false" @click.stop="deleteOneLifeMoment(lifeMoment.id)">Supprimer</ion-item>
-                        </ion-list>
-                      </ion-popover>
+                      <ion-icon
+                          class="custom-icon"
+                          :id="'popover-button-' + lifeMoment.id"
+                          :icon="ellipsisHorizontalOutline"
+                          @click.stop
+                      ></ion-icon>
+                      <ActionPopover
+                          :trigger-id="'popover-button-' + lifeMoment.id"
+                          :actions="[
+                    { label: 'Supprimer', handler: () => deleteOneLifeMoment(lifeMoment.id) }
+                  ]"
+                      />
                     </ion-col>
                 </ion-row>
                 </ion-grid>
@@ -73,12 +79,13 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {IonList, IonItem, IonGrid, IonRow, IonCol, IonIcon, IonPopover, IonText, IonLabel } from '@ionic/vue';
+import {IonList, IonItem, IonGrid, IonRow, IonCol, IonIcon, IonText, IonLabel } from '@ionic/vue';
 import { useLifeMomentStore } from '@/stores/life-moment';
 import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
 import { formatDate } from '@/utils/date';
 import CustomButton from "@/components/Commun/CustomButton.vue";
+import ActionPopover from '@/components/Commun/ActionPopover.vue';
 
 export default defineComponent({
   name: 'LifeMomentList',
@@ -91,9 +98,9 @@ export default defineComponent({
     IonCol,
     IonLabel,
     IonIcon,
-    IonPopover,
     IonText,
-    LifeMomentFormModal
+    LifeMomentFormModal,
+    ActionPopover,
   },
   data() {
     return {

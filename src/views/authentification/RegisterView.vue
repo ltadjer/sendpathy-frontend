@@ -105,7 +105,6 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ToastMessage/>
     </ion-content>
   </ion-page>
 </template>

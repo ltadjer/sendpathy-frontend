@@ -1,8 +1,8 @@
 <template>
-  <ion-header class="ion-padding header-page">
+  <ion-header :translucent="true" class="ion-padding header-page">
     <ion-toolbar>
       <ion-item lines="none" class="ion-no-shadow">
-        <ion-back-button :defaultHref="true" :icon="arrowBackOutline" text="" />
+        <ion-back-button :defaultHref="''" :icon="arrowBackOutline" text="" />
         <div class="avatar-container" @click.stop="showUserProfile(receiver)">
           <ion-avatar slot="start">
             <img alt="User Avatar" :src="receiver?.avatar" />
@@ -14,7 +14,6 @@
   </ion-header>
 
   <ion-content
-      :fullscreen="true"
     class="message-content"
     forceOverscroll="true"
     scrollEvents="true"
@@ -80,7 +79,7 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted } from 'vue';
-import { IonToolbar, IonHeader, IonBackButton, IonTitle, IonContent, IonAvatar, IonItem, IonLabel, IonNote, IonList, IonPopover } from '@ionic/vue';
+import { IonToolbar, IonHeader, IonBackButton, IonTitle, IonContent, IonAvatar, IonItem, IonLabel, IonNote, IonList, IonPopover, IonText } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import WebSocketService from '@/services/websocket.service';
 import MessageForm from '@/components/Message/MessageForm.vue';
@@ -90,11 +89,11 @@ import { translateText } from '@/utils/translate';
 
 export default defineComponent({
   name: 'MessageList',
-  components: { IonToolbar, IonHeader, IonBackButton, IonTitle, MessageForm, IonContent, IonAvatar, IonItem, IonLabel, IonNote, IonList, IonPopover },
+  components: { IonToolbar, IonHeader, IonBackButton, IonTitle, MessageForm, IonContent, IonAvatar, IonItem, IonLabel, IonNote, IonList, IonPopover, IonText },
   props: {
     currentUser: { type: Object, required: true },
     conversationId: { type: String, required: true },
-    conversation: { type: Object, required: true },
+    conversation: { type: Object,},
   },
   data() {
     return {
