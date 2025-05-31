@@ -37,15 +37,15 @@ export default defineComponent({
 
 .loading-logo {
   width: 60px;
-  animation: spin 2s linear infinite;
+  animation: bounce 1.5s infinite;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
   }
-  100% {
-    transform: rotate(360deg);
+  50% {
+    transform: translateY(-20px);
   }
 }
 </style>
