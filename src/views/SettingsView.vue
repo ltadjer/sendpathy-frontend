@@ -8,7 +8,7 @@
         <ion-title>Paramètres</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content :fullscreen="true">
       <confirm-delete-popup
           :show="showDeleteAlert"
           @close="showDeleteAlert = false"

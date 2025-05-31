@@ -14,6 +14,7 @@
   </ion-header>
 
   <ion-content
+      :fullscreen="true"
     class="message-content"
     forceOverscroll="true"
     scrollEvents="true"
