@@ -186,6 +186,7 @@ export default defineComponent({
 .media-content {
   width: 100%;
   height: 100%;
+  max-height: 140px;
   object-fit: cover;
   border-radius: 1rem;
   box-shadow: var(--neumorphism-out-shadow);
@@ -199,7 +200,7 @@ export default defineComponent({
 
 @media (min-width: 768px) {
   .media-content {
-    max-width: fit-content;
+    max-height: 200px;
   }
 }
 .overlay-more {

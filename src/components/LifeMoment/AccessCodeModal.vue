@@ -18,7 +18,7 @@ import {
   IonInput,
   IonCard,
 } from '@ionic/vue';
-import { Keyboard } from '@capacitor/keyboard'; // ⬅️ ici
+import { Keyboard } from '@capacitor/keyboard';
 import CustomButton from '@/components/Commun/CustomButton.vue';
 import { useAccountStore } from '@/stores/account.ts';
 
