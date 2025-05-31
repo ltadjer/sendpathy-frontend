@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" class="ion-padding ion-text-center">
+    <ion-content :fullscreen="true" class="ion-text-center">
       <div class="error-container">
         <h1 class="gradient-text">404</h1>
         <p>Oups ! La page que vous cherchez n'existe pas.</p>

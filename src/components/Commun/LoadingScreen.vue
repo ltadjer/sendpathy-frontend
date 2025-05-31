@@ -36,7 +36,7 @@ export default defineComponent({
 }
 
 .loading-logo {
-  width: 180px;
+  width: 120px;
   animation: bounce 1.5s infinite;
 }
 

@@ -286,8 +286,6 @@ ion-toolbar::part(content) {
 }
 ion-tab-bar {
   background: var(--ion-background-color);
-  padding-bottom: 0 !important;
-  --padding-bottom: 0 !important;
 }
 
 ion-fab {
