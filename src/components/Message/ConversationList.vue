@@ -1,5 +1,5 @@
 <template>
-  <ion-content :fullscreen="true">
+  <ion-content>
     <ion-list class="ion-padding">
       <template v-if="filteredConversations && filteredConversations.length > 0">
         <ion-item-sliding

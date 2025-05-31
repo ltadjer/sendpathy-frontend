@@ -8,7 +8,7 @@
         <ion-title>Notifications</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
+    <ion-content>
       <ion-list v-if="notifications && notifications.length > 0" class="ion-padding">
         <ion-item-sliding v-for="notification in notifications" :key="notification.id" class="notification-item">
         <ion-item lines="none" class="notification-item">

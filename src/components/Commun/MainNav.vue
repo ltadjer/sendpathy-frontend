@@ -50,8 +50,8 @@
       <ion-tabs>
         <ion-router-outlet />
 
-        <ion-tab-bar id="tab-feed" slot="bottom" class="ion-margin">
-          <ion-tab-button tab="feed" href="/feed"
+        <ion-tab-bar slot="bottom" class="ion-margin">
+          <ion-tab-button id="tab-feed" tab="feed" href="/feed"
                           :class="{ 'ion-shadow-in': isActiveTab('/feed') }">
             <ion-icon :icon="homeOutline" />
           </ion-tab-button>
@@ -290,6 +290,11 @@ ion-tab-bar {
 
 ion-fab {
   bottom: 50px;
+}
+
+ion-split-pane {
+  --side-width: 350px;
+  --side-max-width: 350px;
 }
 
 </style>

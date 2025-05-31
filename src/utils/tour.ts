@@ -38,15 +38,6 @@ export function createTour() {
         ]
     });
 
-    tour.addStep({
-        id: 'step-reservations',
-        text: 'Besoin d’un coup de pouce pro ? Retrouvez ici vos rendez-vous avec les psychologues partenaires de Sendpathy.',
-        attachTo: { element: '#tab-reservations', on: 'top' },
-        buttons: [
-            { text: 'Précédent', action: tour.back },
-            { text: 'Suivant', action: tour.next }
-        ]
-    });
 
     tour.addStep({
         id: 'step-parameters',

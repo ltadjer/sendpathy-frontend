@@ -12,7 +12,7 @@
         <ion-icon class="custom-icon ion-margin-end" @click="startTour" :icon="helpOutline"></ion-icon >
       </template>
     </MainHeader>
-    <ion-content :fullscreen="true">
+    <ion-content>
       <div v-if="isDesktop">
         <post-form :current-user="currentUser" @post-updated="refreshPosts" />
       </div>

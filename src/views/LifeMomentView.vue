@@ -8,7 +8,7 @@
         :showLogo="false"
     >
     </MainHeader>
-    <ion-content :fullscreen="true">
+    <ion-content>
       <access-code-modal
         v-if="isAccessCodeModalOpen"
         :is-open="isAccessCodeModalOpen"

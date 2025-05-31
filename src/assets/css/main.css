@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital,wght@0,300..700;1,300..700&family=Quicksand:wght@300..700&display=swap');
+@import url(https://fonts.bunny.net/css?family=alkatra:400,700|inclusive-sans:400,400i);
 * {
     font-family: "Inclusive Sans", serif;
 }
@@ -47,7 +47,8 @@ h6 {
     height: 4px;
 }
 
-.mobile-nav {
+.mobile-nav,
+ion-content {
     padding-bottom: var(--ion-safe-area-bottom) !important;
     padding-right: var(--ion-safe-area-right) !important;
     padding-left: var(--ion-safe-area-left) !important;
@@ -517,6 +518,8 @@ body {
     background: var(--ion-background-color, #e9e9f7) !important;
     color: var(--ion-text-color);
     font-family: "Inclusive Sans", serif;
+    border-radius: 1rem !important;
+    width: 90% !important;
 }
 
 .shepherd-element {

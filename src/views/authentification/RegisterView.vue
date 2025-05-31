@@ -7,7 +7,7 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true" class="ion-padding">
+    <ion-content class="ion-padding">
       <ion-grid>
         <ion-row>
           <ion-col class="ion-text-center">

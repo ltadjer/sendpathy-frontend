@@ -7,7 +7,7 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true" v-if="user">
+    <ion-content v-if="user">
       <ion-item lines="none" class="ion-margin">
         <ion-grid class="ion-padding">
           <ion-row>
