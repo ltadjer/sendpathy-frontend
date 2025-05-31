@@ -15,14 +15,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent } from '@ionic/vue';
+import { IonModal, IonHeader, IonToolbar, IonButtons, IonContent } from '@ionic/vue';
 import { closeOutline } from 'ionicons/icons';
 import LifeMomentForm from '@/components/LifeMoment/LifeMomentForm.vue';
 import CustomButton from '@/components/Commun/CustomButton.vue'
 
 export default defineComponent({
   name: 'LifeMomentFormModal',
-  components: { CustomButton, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, LifeMomentForm },
+  components: { CustomButton, IonModal, IonHeader, IonToolbar, IonButtons, IonContent, LifeMomentForm },
   props: {
     lifeMoment: {
       type: Object,

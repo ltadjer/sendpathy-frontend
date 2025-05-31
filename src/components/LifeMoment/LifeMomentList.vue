@@ -186,7 +186,7 @@ export default defineComponent({
 .media-content {
   width: 100%;
   height: 100%;
-  max-height: 140px;
+  max-height: 120px;
   object-fit: cover;
   border-radius: 1rem;
   box-shadow: var(--neumorphism-out-shadow);
@@ -195,7 +195,6 @@ export default defineComponent({
 
 .media-content img {
   border-radius: 1rem;
-  box-shadow: var(--neumorphism-out-shadow);
 }
 
 @media (min-width: 768px) {

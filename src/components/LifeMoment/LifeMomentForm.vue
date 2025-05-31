@@ -2,10 +2,11 @@
   <ion-card>
     <ion-card-content>
       <form @submit.prevent="submitLifeMoment">
-        <span style="font-size: 2rem;">{{emotion}}</span>
+        <span style="font-size: 2rem;">{{ emotion }}</span>
+
         <div
             v-if="contents.length"
-            :class="`media-grid media-count-${contents.length}`"
+            :class="`media-grid media-count-${displayedContents.length}`"
         >
           <div
               v-for="(content, index) in displayedContents"
@@ -34,7 +35,7 @@
               <ion-icon
                   name="close-circle"
                   class="delete-icon"
-                  @click="deleteOneContent(index)"
+                  @click="deleteOneContent(content, index)"
               ></ion-icon>
             </div>
             <div v-else-if="content.type.startsWith('audio/')">
@@ -46,11 +47,12 @@
               <ion-icon
                   name="close-circle"
                   class="delete-icon"
-                  @click="deleteOneContent(index)"
+                  @click="deleteOneContent(content, index)"
               ></ion-icon>
             </div>
           </div>
         </div>
+
         <div v-if="contents.length > 2" class="see-more-container">
           <custom-button
               :text="showAllMedia ? 'Voir moins' : 'Voir plus'"
@@ -58,6 +60,7 @@
               class="see-more-button"
           ></custom-button>
         </div>
+
         <ion-item class="ion-no-shadow" lines="none">
           <ion-textarea
               v-model="content"
@@ -66,6 +69,7 @@
               rows="5"
           ></ion-textarea>
         </ion-item>
+
         <ion-grid>
           <ion-row>
             <ion-col size="8">
@@ -108,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import {
   IonCard,
   IonCardContent,
@@ -153,16 +157,13 @@ export default defineComponent({
     return {
       content: '',
       emotion: '',
-      file: null,
-      base64Image: '',
       isRecording: false,
       audioBlob: null,
       mediaRecorder: null,
       isEmojiModalOpen: false,
       contents: [],
-      isFileInputTriggered: false,
-      apiUrl: import.meta.env.VITE_API_URL,
-      showAllMedia: false, // Contrôle l’affichage de toutes les images ou juste 2
+      showAllMedia: false, // Contrôle l’affichage
+      apiUrl: import.meta.env.VITE_API_URL
     };
   },
   computed: {
@@ -193,20 +194,16 @@ export default defineComponent({
   emits: ['close', 'button-click'],
   methods: {
     triggerFileInput() {
-      if (!this.isFileInputTriggered && this.$refs.fileInput) {
-        this.isFileInputTriggered = true;
-        this.$refs.fileInput.click();
-      }
+      (this.$refs.fileInput as HTMLInputElement).click();
     },
-    onFileChange(event) {
-      this.isFileInputTriggered = false;
-      const files = Array.from(event.target.files);
+    onFileChange(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const files = Array.from(input.files || []);
       files.forEach(file => {
         if (this.validateFile(file)) {
           this.getFileBase64(file).then(base64 => {
             this.contents.push({
               type: file.type,
-              content: '',
               base64Content: base64,
               originalName: file.name,
               size: file.size,
@@ -215,25 +212,23 @@ export default defineComponent({
           });
         }
       });
-      // Pour permettre de re-sélectionner les mêmes fichiers
-      event.target.value = null;
+      input.value = ''; // autoriser la re-sélection
     },
-    validateFile(file) {
+    validateFile(file: File) {
       const allowedTypes = ['image/png', 'image/jpeg', 'video/mp4', 'audio/mpeg'];
-      const maxSize = 10 * 1024 * 1024; // 10 MB
-
+      const maxSize = 10 * 1024 * 1024; // 10 Mo
       if (!allowedTypes.includes(file.type)) {
         alert('Type de fichier invalide');
         return false;
       }
       if (file.size > maxSize) {
-        alert('Le fichier dépasse la taille maximale de 10 MB');
+        alert('Le fichier dépasse 10 MB');
         return false;
       }
       return true;
     },
-    getFileBase64(file) {
-      return new Promise((resolve, reject) => {
+    getFileBase64(file: File) {
+      return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
           const base64Content = (reader.result as string).split(',')[1];
@@ -243,52 +238,41 @@ export default defineComponent({
         reader.readAsDataURL(file);
       });
     },
-    getImageUrl(content) {
+    getImageUrl(content: any) {
       if (content.fileUrl && content.fileUrl.startsWith('/uploads')) {
-        return `${import.meta.env.VITE_API_URL}${content.fileUrl}`;
+        return `${this.apiUrl}${content.fileUrl}`;
       }
       return `data:${content.type};base64,${content.base64Content}`;
     },
     toggleRecording() {
       if (this.isRecording) {
-        this.stopRecording();
+        this.mediaRecorder?.stop();
+        this.isRecording = false;
       } else {
-        this.startRecording();
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+          this.mediaRecorder = new MediaRecorder(stream);
+          this.mediaRecorder.start();
+          this.isRecording = true;
+
+          const audioChunks: BlobPart[] = [];
+          this.mediaRecorder.addEventListener('dataavailable', event => {
+            audioChunks.push(event.data);
+          });
+          this.mediaRecorder.addEventListener('stop', () => {
+            this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          });
+        });
       }
     },
-    startRecording() {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        this.mediaRecorder = new MediaRecorder(stream);
-        this.mediaRecorder.start();
-        this.isRecording = true;
-
-        const audioChunks: BlobPart[] = [];
-        this.mediaRecorder.addEventListener('dataavailable', event => {
-          audioChunks.push(event.data);
-        });
-        this.mediaRecorder.addEventListener('stop', () => {
-          this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        });
-      });
-    },
-    stopRecording() {
-      this.mediaRecorder?.stop();
-      this.isRecording = false;
-    },
-    updateEmotion(emoji) {
+    updateEmotion(emoji: string) {
       this.emotion = emoji;
     },
-    openEmojiModal() {
-      this.isEmojiModalOpen = true;
-    },
     async deleteOneContent(contentOrIndex: any, maybeIndex?: number) {
-      // Si contentOrIndex est un objet avec un id, on appelle l’API
       if (contentOrIndex.id) {
         await useLifeMomentStore().deleteOneContent(contentOrIndex.id);
         const updated = await useLifeMomentStore().fetchOneLifeMomentById(this.lifeMoment.id);
         this.contents = updated.contents;
       } else {
-        // Sinon, suppression locale
         this.contents.splice(maybeIndex!, 1);
       }
     },
@@ -298,20 +282,16 @@ export default defineComponent({
         emotion: this.emotion || '',
         contents: this.contents || []
       };
-
       if (this.lifeMoment && this.lifeMoment.id) {
         await useLifeMomentStore().updateOneLifeMoment(this.lifeMoment.id, formData);
       } else {
         await useLifeMomentStore().createOneLifeMoment(formData);
       }
-
       this.resetForm();
       this.$emit('close');
     },
     resetForm() {
       this.content = '';
-      this.file = null;
-      this.base64Image = '';
       this.isRecording = false;
       this.audioBlob = null;
       this.mediaRecorder = null;
@@ -346,10 +326,13 @@ ion-item {
   gap: 8px;
   width: 100%;
 }
+
+/* Si 1 élément affiché → 1 colonne */
 .media-count-1 {
   grid-template-columns: 1fr;
 }
 
+/* Si 2 ou plus → toujours 2 colonnes max */
 .media-count-2,
 .media-count-3,
 .media-count-4,
@@ -362,21 +345,25 @@ ion-item {
   grid-template-columns: repeat(2, 1fr);
 }
 
-.media-count-3 {
-  grid-template-rows: auto auto;
+/* Ajustement des lignes suivant le nombre exact d’élements affichés */
+.media-count-2 {
+  grid-template-rows: 1fr;
 }
-
-.media-count-4,
-.media-count-5 {
+.media-count-3 {
   grid-template-rows: 1fr 1fr;
 }
+.media-count-4 {
+  grid-template-rows: 1fr 1fr;
+}
+
+/* (et ainsi de suite si vous souhaitez gérer plus) */
 
 .media-item {
   position: relative;
 }
 .media-content {
   width: 100%;
-  height: 100%;
+  max-height: 120px;
   object-fit: cover;
   border-radius: 1rem;
   box-shadow: var(--neumorphism-out-shadow);
@@ -393,12 +380,9 @@ ion-item {
   right: 1rem;
 }
 
-/* Styles pour le bouton « Voir plus » */
 .see-more-container {
   margin-top: 8px;
   text-align: center;
 }
-.see-more-button {
-  /* Ajoutez ici vos styles si besoin (padding, couleur de fond, etc.) */
-}
+
 </style>
