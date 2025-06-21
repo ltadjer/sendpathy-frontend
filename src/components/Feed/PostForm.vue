@@ -28,7 +28,7 @@
               v-model="content"
               placeholder="Qu'est-ce qui te tracasse ?"
               class="custom-textarea"
-              rows="5"
+              rows="10"
           ></ion-textarea>
         </ion-item>
         <ion-grid>

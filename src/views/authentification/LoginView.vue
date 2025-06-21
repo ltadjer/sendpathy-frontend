@@ -108,7 +108,6 @@ export default defineComponent({
 
     console.log('Dark mode:', this.isDarkMode);
 
-    // Écoute les changements de mode
     darkModeMediaQuery.addEventListener('change', (e) => {
       this.isDarkMode = e.matches;
     });

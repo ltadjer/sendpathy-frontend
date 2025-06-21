@@ -66,13 +66,11 @@ import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonCo
 import { useTagStore } from '@/stores/tag';
 import { useTriggerStore } from '@/stores/trigger';
 import { closeOutline } from 'ionicons/icons';
-import CustomButton from '@/components/Commun/CustomButton.vue';
 import { usePostStore } from '@/stores/post';
 
 export default defineComponent({
   name: 'PostSettingsModal',
   components: {
-    CustomButton,
     IonIcon,
     IonGrid, IonRow, IonCol, IonModal, IonHeader, IonToolbar, IonTitle,
     IonButtons, IonButton, IonContent, IonList, IonText
@@ -121,7 +119,7 @@ export default defineComponent({
     closeModal() {
       this.$emit('update:isOpen', false);
     },
-    async toggleSelection(type: 'tag' | 'trigger', id: number) {
+    async toggleSelection(type: 'tag' | 'trigger', id: string) {
       if (type === 'tag') {
         if (this.localSelectedTags.includes(id)) {
           this.localSelectedTags = this.localSelectedTags.filter(tagId => tagId !== id);
@@ -151,10 +149,16 @@ export default defineComponent({
       }
     },
     updateTags() {
-      this.$emit('update:selectedTags', this.localSelectedTags);
+      const selectedTags = this.localSelectedTags.map(tagId =>
+          this.tags.find(tag => tag.id === tagId)
+      );
+      this.$emit('update:selectedTags', selectedTags);
     },
     updateTriggers() {
-      this.$emit('update:selectedTriggers', this.localSelectedTriggers);
+      const selectedTriggers = this.localSelectedTriggers.map(triggerId =>
+          this.triggers.find(trigger => trigger.id === triggerId)
+      );
+      this.$emit('update:selectedTriggers', selectedTriggers);
     }
   },
   async mounted() {

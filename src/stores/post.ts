@@ -65,6 +65,13 @@ export const usePostStore = defineStore('post', {
         console.error('Failed to delete post:', error);
       }
     },
+    async translatePost(post, targetLang: string) {
+      try {
+        return await PostService.translatePost(post.id, targetLang);
+      } catch (error) {
+        console.error('Failed to translate post:', error);
+      }
+    },
     async addTagToPost(postId: string, tagId: string) {
       try {
         return await PostService.addTagToPost(postId, tagId);

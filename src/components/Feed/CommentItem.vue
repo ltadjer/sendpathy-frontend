@@ -66,6 +66,7 @@ import {
 } from '@ionic/vue';
 import { heart, heartOutline } from 'ionicons/icons';
 import { usePostStore } from '@/stores/post';
+import { translateText } from '@/utils/translate';
 
 export default defineComponent({
   name: 'CommentItem',

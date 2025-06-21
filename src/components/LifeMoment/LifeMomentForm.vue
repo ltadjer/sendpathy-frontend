@@ -66,7 +66,7 @@
               v-model="content"
               placeholder="Comment te sens-tu aujourd'hui?"
               class="custom-textarea"
-              rows="5"
+              rows="15"
           ></ion-textarea>
         </ion-item>
 

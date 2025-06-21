@@ -37,6 +37,7 @@ import { IonPage, } from '@ionic/vue';
 import { useAccountStore } from '@/stores/account';
 import { useConversationStore } from '@/stores/conversation';
 import MainHeader from '@/components/Commun/MainHeader.vue';
+import { IonHeader, IonSearchbar } from '@ionic/vue';
 
 export default defineComponent({
   name: 'ConversationView',
@@ -44,7 +45,10 @@ export default defineComponent({
     ConversationList,
     FriendshipsModal,
     IonPage,
-    MainHeader
+    MainHeader,
+    IonSearchbar,
+    IonHeader
+
   },
   data() {
     return {

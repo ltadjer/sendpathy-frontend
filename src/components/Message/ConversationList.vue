@@ -96,19 +96,17 @@ export default defineComponent({
     IonGrid, IonRow, IonCol,
     IonAvatar, IonLabel, IonNote, IonBadge,
     IonContent, IonList, IonItem,
-    IonItemSliding, IonItemOptions, IonItemOption, IonButton
+    IonItemSliding, IonItemOptions, IonItemOption,
   },
   computed: {
     filteredConversations() {
-      return this.conversations
-          .filter(conversation => {
-            if (this.searchTerm.trim() === '') {
-              return true;
-            }
-            return conversation.user?.username.toLowerCase().includes(this.searchTerm.toLowerCase());
-          })
-          .filter(conversation => conversation.lastMessage?.deletedBy !== this.currentUser.id);
-    },
+      return this.conversations.filter(conversation => {
+        if (this.searchTerm.trim() === '') {
+          return true;
+        }
+        return conversation.user?.username.toLowerCase().includes(this.searchTerm.toLowerCase());
+      });
+    }
   },
   methods: {
     async selectConversation(conversation) {

@@ -52,6 +52,18 @@ export default {
     return response.data;
   },
 
+    /**
+     * Translate the content of a post to a target language.
+     *
+     * @param {string} postId The ID of the post to translate.
+     * @param {string} targetLang The target language code (e.g., 'en', 'fr').
+     * @returns {Promise<string>} The translated content of the post.
+     */
+  async translatePost(postId: string, targetLang: string) {
+    const response = await api.post(`/posts/${postId}/translate`, {targetLang: targetLang});
+    return response.data.translatedContent;
+  },
+
   /**
    * Add a tag to a post.
    *

@@ -6,12 +6,11 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import MessageList from "@/components/Message/MessageList.vue";
-import MessageForm from "@/components/Message/MessageForm.vue";
 import {IonPage} from "@ionic/vue";
 import { useAccountStore } from '@/stores/account';
 import { useConversationStore } from '@/stores/conversation'
 export default defineComponent({
-  components: {MessageList, MessageForm, IonPage},
+  components: {MessageList, IonPage},
   data() {
     return {
       conversationId: '',

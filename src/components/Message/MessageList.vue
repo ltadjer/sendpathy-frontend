@@ -2,7 +2,7 @@
   <ion-header :translucent="true" class="ion-padding header-page">
     <ion-toolbar>
       <ion-item lines="none" class="ion-no-shadow">
-        <ion-back-button :defaultHref="''" :icon="arrowBackOutline" text="" />
+        <ion-back-button defaultHref="/conversations" :icon="arrowBackOutline" text="" />
         <div class="avatar-container" @click.stop="showUserProfile(receiver)">
           <ion-avatar slot="start">
             <img alt="User Avatar" :src="receiver?.avatar" />

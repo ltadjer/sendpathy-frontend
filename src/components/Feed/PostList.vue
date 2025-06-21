@@ -55,10 +55,11 @@
                 <ActionPopover
                     :trigger-id="'popover-button-' + post.id"
                     :actions="[
-                      { label: 'Traduire', handler: () => translatePost(post) },
-                      { label: 'Supprimer', handler: () => deleteOnePost(post.id) },
-                      { label: 'Signaler', handler: () => reportPost(post.id) }
-                    ]"
+                    { label: 'Traduire', handler: () => translatePost(post) },
+                    ...(post.user.id === currentUser.id ? [{ label: 'Supprimer', handler: () => deleteOnePost(post.id) }] : []),
+                    { label: 'Signaler', handler: () => reportPost(post.id) }
+                  ]"
+
                 />
               </ion-col>
             </ion-row>
@@ -116,7 +117,7 @@ import { usePostStore } from '@/stores/post';
 import PostFilterButton from '@/components/Feed/PostFilterButton.vue';
 import { timeSince } from '@/utils/date';
 import CustomButton from "@/components/Commun/CustomButton.vue";
-import { translateText } from '@/utils/translate';
+import {googleLangMap, translateText} from '@/utils/translate';
 import ActionPopover from "@/components/Commun/ActionPopover.vue";
 export default defineComponent({
   name: 'PostList',
@@ -179,13 +180,15 @@ export default defineComponent({
       });
     },
     paginatedPosts() {
-      console.log('posts:', this.posts);
       return this.posts.slice(0, this.currentPage * this.postsPerPage);
     },
   },
   methods: {
     timeSince,
     editPost(post) {
+      if (post.user.id !== this.currentUser.id) {
+        return;
+      }
       this.selectedPostId = post.id;
       this.isPostFormModalOpen = true;
     },
@@ -193,7 +196,6 @@ export default defineComponent({
       await usePostStore().deleteOnePost(postId);
     },
     async reportPost(postId) {
-      // Add your report post logic here
       console.log(`Reported post with id: ${postId}`);
     },
     openCommentModal(postId) {
@@ -244,8 +246,8 @@ export default defineComponent({
     },
     async translatePost(post) {
       const userLang = this.currentUser.nativeLanguage || navigator.language.split('-')[0];
-
-      const translatedText = await translateText(post.content, userLang);
+      const targetLang = googleLangMap[userLang] || 'fr';
+      const translatedText = await usePostStore().translatePost(post, targetLang);
       if (translatedText) {
         post.translatedContent = translatedText;
       }
