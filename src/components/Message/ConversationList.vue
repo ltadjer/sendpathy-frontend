@@ -150,4 +150,11 @@ ion-list {
 .time {
   color: var(--ion-text-color);
 }
+
+ion-item {
+  --background: var(--ion-background-color) !important;
+}
+ion-item-option {
+  --background: var(--ion-background-color);
+}
 </style>

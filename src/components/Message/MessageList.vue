@@ -14,21 +14,33 @@
   </ion-header>
 
   <ion-content
-    class="message-content"
-    forceOverscroll="true"
-    scrollEvents="true"
-    @ionScroll="onScroll"
+      ref="contentRef"
+      class="message-content"
+      forceOverscroll="true"
+      scrollEvents
+      @ionScroll="onScroll"
   >
+    <ion-infinite-scroll
+        threshold="15%"
+        position="top"
+        @ionInfinite="loadMoreMessages"
+    >
+      <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText=""
+      ></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
     <ion-list class="ion-padding">
       <template v-for="(messageGroup, index) in groupedMessages" :key="index">
         <div class="date-separator">{{ formatDate(messageGroup.date) }}</div>
         <ion-item
-          lines="none"
-          v-for="message in messageGroup.messages"
-          :key="message.id"
-          :class="{ 'message-out': message.isSentByCurrentUser, 'ion-no-shadow': !message.isSentByCurrentUser, }"
-          class="ion-margin-bottom"
-          @click="openPopover($event, message)"
+            lines="none"
+            v-for="message in messageGroup.messages"
+            :key="message.id"
+            :class="{ 'message-out': message.isSentByCurrentUser, 'ion-no-shadow': !message.isSentByCurrentUser }"
+            class="ion-margin-bottom"
+            @click="openPopover($event, message)"
         >
           <div class="avatar-container">
             <ion-avatar slot="start" v-if="!message.isSentByCurrentUser">
@@ -39,14 +51,17 @@
             <ion-label>
               <p :class="{ 'unread': !message.read }">{{ message.content }}</p>
             </ion-label>
-              <ion-text v-if="message.translatedContent" class="toggle-original" @click.stop="toggleOriginal(message)">
-                Voir l'original
-              </ion-text>
+            <ion-text
+                v-if="message.translatedContent"
+                class="toggle-original"
+                @click.stop="toggleOriginal(message)"
+            >
+              Voir l'original
+            </ion-text>
             <ion-note slot="end" class="time">
               <sub>{{ timeSince(message.createdAt) }}</sub>
             </ion-note>
           </div>
-
         </ion-item>
       </template>
     </ion-list>
@@ -54,17 +69,16 @@
     <ion-note v-if="!isFriend" class="ion-shadow-in ion-padding">
       Vous ne pouvez plus envoyer de messages à cette personne.
     </ion-note>
-
   </ion-content>
 
   <MessageForm
-    v-if="isFriend"
-    @newMessage="addMessage"
-    @editMessage="editMessage"
-    :conversation-id="conversationId"
-    :receiver-id="receiver?.id"
-    :sender-name="currentUser.username"
-    :editingMessage="editingMessage"
+      v-if="isFriend"
+      @newMessage="addMessage"
+      @editMessage="editMessage"
+      :conversation-id="conversationId"
+      :receiver-id="receiver?.id"
+      :sender-name="currentUser.username"
+      :editingMessage="editingMessage"
   />
 
   <ion-popover :is-open="popoverOpen" @didDismiss="popoverOpen = false" :event="popoverEvent">
@@ -78,22 +92,36 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted } from 'vue';
-import { IonToolbar, IonHeader, IonBackButton, IonTitle, IonContent, IonAvatar, IonItem, IonLabel, IonNote, IonList, IonPopover, IonText } from '@ionic/vue';
+import { defineComponent, onUnmounted, ref, nextTick } from 'vue';
+import {
+  IonToolbar, IonHeader, IonBackButton, IonTitle,
+  IonContent, IonAvatar, IonItem, IonLabel,
+  IonNote, IonList, IonPopover, IonText,
+  IonInfiniteScroll, IonInfiniteScrollContent
+} from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import WebSocketService from '@/services/websocket.service';
 import MessageForm from '@/components/Message/MessageForm.vue';
 import { timeSince, formatDate } from '@/utils/date';
-import { useConversationStore } from '@/stores/conversation'
+import { useConversationStore } from '@/stores/conversation';
 import { translateText } from '@/utils/translate';
 
 export default defineComponent({
   name: 'MessageList',
-  components: { IonToolbar, IonHeader, IonBackButton, IonTitle, MessageForm, IonContent, IonAvatar, IonItem, IonLabel, IonNote, IonList, IonPopover, IonText },
+  components: {
+    IonToolbar, IonHeader, IonBackButton, IonTitle,
+    IonContent, IonAvatar, IonItem, IonLabel,
+    IonNote, IonList, IonPopover, IonText,
+    IonInfiniteScroll, IonInfiniteScrollContent,
+    MessageForm
+  },
   props: {
     currentUser: { type: Object, required: true },
     conversationId: { type: String, required: true },
-    conversation: { type: Object,},
+    conversation: { type: Object }
+  },
+  setup() {
+    return { arrowBackOutline };
   },
   data() {
     return {
@@ -110,7 +138,7 @@ export default defineComponent({
   },
   computed: {
     filteredMessages() {
-      return this.messages.filter(message => message.deletedBy !== this.currentUser.id);
+      return this.messages.filter(m => m.deletedBy !== this.currentUser.id);
     },
     receiver() {
       return this.conversation?.user;
@@ -118,64 +146,55 @@ export default defineComponent({
     groupedMessages() {
       const groups = [];
       let currentGroup = { date: null, messages: [] };
-
       this.filteredMessages.forEach(message => {
-        const messageDate = new Date(message.createdAt).toDateString();
-        if (currentGroup.date !== messageDate) {
-          if (currentGroup.messages.length) {
-            groups.push(currentGroup);
-          }
-          currentGroup = { date: messageDate, messages: [] };
+        const dateStr = new Date(message.createdAt).toDateString();
+        if (currentGroup.date !== dateStr) {
+          if (currentGroup.messages.length) groups.push(currentGroup);
+          currentGroup = { date: dateStr, messages: [] };
         }
         currentGroup.messages.push(message);
       });
-
-      if (currentGroup.messages.length) {
-        groups.push(currentGroup);
-      }
-
+      if (currentGroup.messages.length) groups.push(currentGroup);
       return groups;
     },
     isFriend() {
-      if (!this.currentUser || !Array.isArray(this.currentUser.friendshipsReceived) || !Array.isArray(this.currentUser.friendshipsSent)) {
-        return false;
-      }
-
-      const isReceivedFriend = this.currentUser.friendshipsReceived.some(friendship =>
-        friendship.requesterId === this.receiver?.id && friendship.status === 'ACCEPTED'
-      );
-
-      const isSentFriend = this.currentUser.friendshipsSent.some(friendship =>
-        friendship.receiverId === this.receiver?.id && friendship.status === 'ACCEPTED'
-      );
-
-      return isReceivedFriend || isSentFriend;
+      if (!this.currentUser || !Array.isArray(this.currentUser.friendshipsReceived) || !Array.isArray(this.currentUser.friendshipsSent)) return false;
+      const recv = this.currentUser.friendshipsReceived.some(f => f.requesterId === this.receiver?.id && f.status === 'ACCEPTED');
+      const sent = this.currentUser.friendshipsSent.some(f => f.receiverId === this.receiver?.id && f.status === 'ACCEPTED');
+      return recv || sent;
     }
-  },
-  setup() {
-    return { arrowBackOutline };
   },
   methods: {
     timeSince,
     formatDate,
-    async fetchAllMessages() {
+    async fetchMessages() {
       if (this.loading || this.allMessagesLoaded) return;
       this.loading = true;
-      const newMessages = await useConversationStore().fetchAllMessages(this.conversationId, this.page, this.limit);
-      if (newMessages.length < this.limit) {
-        this.allMessagesLoaded = true;
-      }
-      this.messages = [...newMessages.reverse(), ...this.messages];
-      this.page += 1;
+      const newMsgs = await useConversationStore().fetchAllMessages(this.conversationId, this.page, this.limit);
+      if (newMsgs.length < this.limit) this.allMessagesLoaded = true;
+      this.messages = [...newMsgs.reverse(), ...this.messages];
+      this.page++;
       this.loading = false;
     },
-    onScroll(event) {
-      const scrollTop = event.detail.scrollTop;
-      if (scrollTop <= 10) {
-        this.fetchAllMessages();
+    async loadMoreMessages(event: any) {
+      await this.fetchMessages();
+      event.target.complete();
+    },
+    onScroll(event: any) {
+      // Optional scroll tracking
+    },
+    async scrollToBottom() {
+      await nextTick();
+      const el = (this.$refs.contentRef as any)?.$el;
+      if (el?.scrollToBottom) {
+        setTimeout(() => {
+          el.scrollToBottom(300);
+        }, 50);
+      } else {
+        console.warn('scrollToBottom non disponible', el);
       }
     },
-    openPopover(event, message) {
+    openPopover(event: any, message: any) {
       this.popoverEvent = event;
       this.selectedMessage = message;
       this.popoverOpen = true;
@@ -192,47 +211,45 @@ export default defineComponent({
       WebSocketService.emit('deleteMessageForUser', { id: this.selectedMessage.id });
       this.popoverOpen = false;
     },
-    addMessage(message) {
-      if (!this.messages.find(m => m.id === message.id)) {
-        message.isSentByCurrentUser = message.senderId === this.currentUser.id;
-        this.messages.push(message);
+    addMessage(msg: any) {
+      if (!this.messages.find(m => m.id === msg.id)) {
+        msg.isSentByCurrentUser = msg.senderId === this.currentUser.id;
+        this.messages.push(msg);
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
       }
     },
-    editMessage(updatedMessage) {
-      const index = this.messages.findIndex(m => m.id === updatedMessage.id);
-      if (index !== -1) {
-        this.messages[index].content = updatedMessage.content;
-      }
+    editMessage(updated: any) {
+      const idx = this.messages.findIndex(m => m.id === updated.id);
+      if (idx !== -1) this.messages[idx].content = updated.content;
     },
-    showUserProfile(user) {
-      this.$router.push({ name: 'UserProfile', params: { userId: user.id } });
-    },
-    async translateMessage(message) {
-      const userLang = this.currentUser.nativeLanguage || navigator.language.split('-')[0];
-      const translatedText = await translateText(message.content, userLang);
-
-      if (translatedText) {
-        message.translatedContent = translatedText;
-      }
-
+    async translateMessage(message: any) {
+      const lang = this.currentUser.nativeLanguage || navigator.language.split('-')[0];
+      const text = await translateText(message.content, lang);
+      if (text) message.translatedContent = text;
       this.popoverOpen = false;
     },
-    toggleOriginal(message) {
-      if (message.translatedContent) {
-        message.translatedContent = null;
-      }
+    toggleOriginal(message: any) {
+      if (message.translatedContent) message.translatedContent = null;
     },
+    showUserProfile(user: any) {
+      this.$router.push({ name: 'UserProfile', params: { userId: user.id } });
+    }
   },
   async mounted() {
-    await this.fetchAllMessages();
+    await this.fetchMessages();
+    this.$nextTick(() => {
+      this.scrollToBottom();
+    });
 
     WebSocketService.on('newMessage', this.addMessage);
     WebSocketService.on('messageUpdated', this.editMessage);
-    WebSocketService.on('messageDeleted', (messageId) => {
-      this.messages = this.messages.filter(m => m.id !== messageId);
+    WebSocketService.on('messageDeleted', (id: string) => {
+      this.messages = this.messages.filter(m => m.id !== id);
     });
-    WebSocketService.on('messageDeletedForUser', (messageId) => {
-      this.messages = this.messages.filter(m => m.id !== messageId);
+    WebSocketService.on('messageDeletedForUser', (id: string) => {
+      this.messages = this.messages.filter(m => m.id !== id);
     });
 
     onUnmounted(() => {
@@ -241,21 +258,17 @@ export default defineComponent({
       WebSocketService.off('messageDeleted');
     });
 
-    WebSocketService.socket.on('disconnect', () => {
-      console.warn('WebSocket disconnected');
-    });
-
-    WebSocketService.socket.on('connect', () => {
-      console.log('WebSocket connected');
-    });
-  },
+    WebSocketService.socket.on('disconnect', () => console.warn('WebSocket disconnected'));
+    WebSocketService.socket.on('connect', () => console.log('WebSocket connected'));
+  }
 });
 </script>
 
 <style scoped>
 .message-content {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  justify-content: flex-start;
   overflow-x: hidden;
   text-align: center;
 }
@@ -280,13 +293,12 @@ ion-note {
 
 .message-in {
   align-self: flex-start;
-  border-radius: 1rem;
-  padding: 0.8rem;
-  box-shadow: var(--neumorphism-in-shadow) !important;
+border-radius: 1rem;
+padding: 0.8rem;
+box-shadow: var(--neumorphism-in-shadow) !important;
 }
 
 .time {
   font-size: 0.8rem;
 }
-
 </style>

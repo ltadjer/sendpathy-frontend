@@ -1,4 +1,7 @@
 <template>
+  <div v-if="isDesktop">
+    <life-moment-form :lifeMoment="lifeMoment" @close="closeModal()"/>
+  </div>
       <life-moment-form-modal v-if="isLifeMomentFormModalOpen" :lifeMoment="selectedLifeMoment" @close="closeLifeMomentFormModal" />
       <ion-list class="ion-padding">
         <template v-if="lifeMoments && lifeMoments.length > 0">
@@ -86,10 +89,12 @@ import { ellipsisHorizontalOutline } from 'ionicons/icons';
 import { formatDate } from '@/utils/date';
 import CustomButton from "@/components/Commun/CustomButton.vue";
 import ActionPopover from '@/components/Commun/ActionPopover.vue';
+import LifeMomentForm from "@/components/LifeMoment/LifeMomentForm.vue";
 
 export default defineComponent({
   name: 'LifeMomentList',
   components: {
+    LifeMomentForm,
     CustomButton,
     IonList,
     IonItem,
@@ -117,6 +122,11 @@ export default defineComponent({
     currentUser: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    isDesktop() {
+      return window.innerWidth > 1200;
     },
   },
   methods: {

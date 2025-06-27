@@ -71,6 +71,9 @@ export default defineComponent({
         this.hasAccessCode = true;
         await this.fetchLifeMoments();
       }
+    },
+    closeModal() {
+      this.$emit('close');
     }
   },
   mounted() {
