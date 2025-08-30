@@ -8,24 +8,47 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <post-form :post="post" @post-updated="closeModal" :current-user="currentUser" @close="closeModal()"/>
+      <post-form
+        :post="post"
+        @post-updated="closeModal"
+        :current-user="currentUser"
+        @close="closeModal()"
+      />
     </ion-content>
   </ion-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent } from '@ionic/vue';
-import { closeOutline } from 'ionicons/icons';
-import PostForm from '@/components/Feed/PostForm.vue';
-import CustomButton from '@/components/Commun/CustomButton.vue'
+import { defineComponent } from 'vue'
+import {
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonContent
+} from '@ionic/vue'
+import { closeOutline } from 'ionicons/icons'
+import PostForm from '@/components/Feed/PostForm.vue'
+import CustomButton from '@/components/Common/CustomButton.vue'
 
 export default defineComponent({
   name: 'PostFormModal',
-  components: { CustomButton, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, PostForm },
+  components: {
+    CustomButton,
+    IonModal,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonContent,
+    PostForm
+  },
   props: {
     post: {
-      type: Object,
+      type: Object
     },
     currentUser: {
       type: Object,
@@ -33,13 +56,13 @@ export default defineComponent({
     }
   },
   setup() {
-    return { closeOutline };
+    return { closeOutline }
   },
   emits: ['close'],
   methods: {
     closeModal() {
-      this.$emit('close');
+      this.$emit('close')
     }
   }
-});
+})
 </script>

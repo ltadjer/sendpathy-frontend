@@ -3,7 +3,7 @@
     :is-open="isOpen"
     @did-dismiss="closeModal"
     :initial-breakpoint="isMobile ? 0.75 : undefined"
-    :breakpoints="isMobile ?[0, 0.5, 0.75] : undefined"
+    :breakpoints="isMobile ? [0, 0.5, 0.75] : undefined"
     handle-behavior="cycle"
   >
     <ion-header v-if="isDesktop">
@@ -21,7 +21,7 @@
         <ion-row>
           <ion-col v-for="(emoji, index) in emojiList" :key="index" size="3">
             <ion-item
-              :class="['emoji-item', { 'selected': selectedEmoji === emoji }]"
+              :class="['emoji-item', { selected: selectedEmoji === emoji }]"
               @click="selectEmoji(emoji)"
               lines="none"
             >
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import postService from '@/services/post.service.ts';
+import postService from '@/services/post.service.ts'
 import {
   IonModal,
   IonHeader,
@@ -49,9 +49,9 @@ import {
   IonCol,
   IonItem,
   IonLabel,
-  IonIcon,
-} from '@ionic/vue';
-import { closeOutline } from 'ionicons/icons';
+  IonIcon
+} from '@ionic/vue'
+import { closeOutline } from 'ionicons/icons'
 
 export default {
   name: 'EmotionsModal',
@@ -68,12 +68,12 @@ export default {
     IonCol,
     IonItem,
     IonLabel,
-    IonIcon,
+    IonIcon
   },
   props: {
     isOpen: {
       type: Boolean,
-      required: true,
+      required: true
     },
     selectedEmoji: {
       type: String,
@@ -81,38 +81,38 @@ export default {
     }
   },
   setup() {
-    return { closeOutline };
+    return { closeOutline }
   },
   computed: {
     isDesktop() {
-      return window.innerWidth >= 768;
+      return window.innerWidth >= 768
     },
     isMobile() {
-      return window.innerWidth < 768;
+      return window.innerWidth < 768
     }
   },
   data() {
     return {
-      emojiList: [],
-    };
+      emojiList: []
+    }
   },
   async mounted() {
     try {
-      this.emojiList = await postService.getEmojis();
+      this.emojiList = await postService.getEmojis()
     } catch (error) {
-      console.error('Error fetching emojis:', error);
+      console.error('Error fetching emojis:', error)
     }
   },
   methods: {
     selectEmoji(emoji) {
-      this.$emit('emoji-selected', emoji);
-      this.closeModal();
+      this.$emit('emoji-selected', emoji)
+      this.closeModal()
     },
     closeModal() {
-      this.$emit('update:isOpen', false);
-    },
-  },
-};
+      this.$emit('update:isOpen', false)
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -130,5 +130,4 @@ ion-item.emoji-item.selected,
 ion-item.emoji-item:hover {
   box-shadow: var(--neumorphism-in-shadow) !important;
 }
-
 </style>

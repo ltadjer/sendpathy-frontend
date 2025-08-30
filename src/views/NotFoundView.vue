@@ -4,30 +4,26 @@
       <div class="error-container">
         <h1 class="gradient-text">404</h1>
         <p>Oups ! La page que vous cherchez n'existe pas.</p>
-        <custom-button
-          :text="'Retour à l\'accueil'"
-          :icon="'home'"
-          @click="goHome"
-        ></custom-button>
+        <custom-button :text="'Retour à l\'accueil'" :icon="'home'" @click="goHome"></custom-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonPage, IonContent, } from '@ionic/vue';
-import CustomButton from "@/components/Commun/CustomButton.vue";
+import { defineComponent } from 'vue'
+import { IonPage, IonContent } from '@ionic/vue'
+import CustomButton from '@/components/Common/CustomButton.vue'
 
 export default defineComponent({
   name: 'NotFoundView',
-  components: {CustomButton, IonPage, IonContent, },
+  components: { CustomButton, IonPage, IonContent },
   methods: {
     goHome() {
-      this.$router.push('/');
+      this.$router.push('/')
     }
   }
-});
+})
 </script>
 
 <style scoped>

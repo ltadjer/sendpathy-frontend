@@ -8,34 +8,42 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <life-moment-form :lifeMoment="lifeMoment" @close="closeModal()"/>
+      <life-moment-form :lifeMoment="lifeMoment" @close="closeModal()" />
     </ion-content>
   </ion-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonButtons, IonContent } from '@ionic/vue';
-import { closeOutline } from 'ionicons/icons';
-import LifeMomentForm from '@/components/LifeMoment/LifeMomentForm.vue';
-import CustomButton from '@/components/Commun/CustomButton.vue'
+import { defineComponent } from 'vue'
+import { IonModal, IonHeader, IonToolbar, IonButtons, IonContent } from '@ionic/vue'
+import { closeOutline } from 'ionicons/icons'
+import LifeMomentForm from '@/components/LifeMoment/LifeMomentForm.vue'
+import CustomButton from '@/components/Common/CustomButton.vue'
 
 export default defineComponent({
   name: 'LifeMomentFormModal',
-  components: { CustomButton, IonModal, IonHeader, IonToolbar, IonButtons, IonContent, LifeMomentForm },
+  components: {
+    CustomButton,
+    IonModal,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonContent,
+    LifeMomentForm
+  },
   props: {
     lifeMoment: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   setup() {
-    return { closeOutline };
+    return { closeOutline }
   },
   emits: ['close'],
   methods: {
     closeModal() {
-      this.$emit('close');
+      this.$emit('close')
     }
   }
-});
+})
 </script>

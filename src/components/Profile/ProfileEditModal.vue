@@ -15,7 +15,10 @@
         <ion-grid>
           <ion-row>
             <ion-col class="center">
-              <ion-item lines="none" class="ion-align-items-center ion-justify-content-center ion-no-shadow">
+              <ion-item
+                lines="none"
+                class="ion-align-items-center ion-justify-content-center ion-no-shadow"
+              >
                 <div class="avatar-container">
                   <ion-avatar slot="start" class="large-avatar">
                     <img :src="selectedAvatar" alt="Avatar actuel" class="current-avatar" />
@@ -26,30 +29,46 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <custom-button expand="block" type="button" :text=" avatarsGenerated ? 'Recharger des avatars' : 'Changer d\'avatar' "@click="generateAvatars" class="ion-margin-bottom"></custom-button>
-
+              <custom-button
+                expand="block"
+                type="button"
+                :text="avatarsGenerated ? 'Recharger des avatars' : 'Changer d\'avatar'"
+                @click="generateAvatars"
+                class="ion-margin-bottom"
+              ></custom-button>
             </ion-col>
           </ion-row>
         </ion-grid>
 
         <ion-item lines="none" class="ion-no-shadow">
           <div class="avatar-selection">
-            <div v-for="(avatar, index) in avatars" :key="index" class="avatar-container"
-                 :class="{ 'selected': avatar === selectedAvatar }"
-                 @click="selectAvatar(avatar)">
-              <img
-                :src="avatar"
-                alt="Avatar proposé"
-                class="avatar-option"
-              />
+            <div
+              v-for="(avatar, index) in avatars"
+              :key="index"
+              class="avatar-container"
+              :class="{ selected: avatar === selectedAvatar }"
+              @click="selectAvatar(avatar)"
+            >
+              <img :src="avatar" alt="Avatar proposé" class="avatar-option" />
             </div>
           </div>
         </ion-item>
         <ion-item lines="none" class="ion-no-shadow">
-          <ion-input label="Pseudo" class="ion-input-spacing" v-model="username" placeholder="Pseudo"/>
+          <ion-input
+            label="Pseudo"
+            class="ion-input-spacing"
+            v-model="username"
+            placeholder="Pseudo"
+          />
         </ion-item>
         <ion-item lines="none" class="ion-no-shadow">
-          <ion-input label="Âge" class="ion-input-spacing" v-model="age" placeholder="Âge" type="number"/>
+          <ion-input
+            label="Âge"
+            class="ion-input-spacing"
+            v-model="age"
+            placeholder="Âge"
+            type="number"
+          />
         </ion-item>
         <ion-item lines="none" class="ion-no-shadow">
           <ion-textarea
@@ -62,29 +81,74 @@
           >
           </ion-textarea>
         </ion-item>
-        <custom-button expand="block" type="submit" text="Enregistrer" @click="saveChanges()"></custom-button>
+        <custom-button
+          expand="block"
+          type="submit"
+          text="Enregistrer"
+          @click="saveChanges()"
+        ></custom-button>
       </ion-list>
     </ion-content>
   </ion-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonItem, IonInput, IonTextarea, IonList, IonGrid, IonRow, IonCol, IonAvatar } from '@ionic/vue';
-import { closeOutline } from 'ionicons/icons';
-import CustomButton from '@/components/Commun/CustomButton.vue';
-import { useAccountStore } from '@/stores/account';
+import { defineComponent, PropType } from 'vue'
+import {
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonItem,
+  IonInput,
+  IonTextarea,
+  IonList,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonAvatar
+} from '@ionic/vue'
+import { closeOutline } from 'ionicons/icons'
+import CustomButton from '@/components/Common/CustomButton.vue'
+import { useAccountStore } from '@/stores/account'
 
 export default defineComponent({
   name: 'ProfileEditModal',
-  components: { IonList, IonGrid, IonRow, IonCol, IonAvatar, IonTextarea, CustomButton, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonItem, IonInput },
+  components: {
+    IonList,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonAvatar,
+    IonTextarea,
+    CustomButton,
+    IonModal,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonItem,
+    IonInput
+  },
   props: {
     isOpen: {
       type: Boolean,
       required: true
     },
     currentUser: {
-      type: Object as PropType<{ username: string; biography: string; avatar: string; age: number }>,
+      type: Object as PropType<{
+        username: string
+        biography: string
+        avatar: string
+        age: number
+      }>,
       required: true
     }
   },
@@ -96,14 +160,14 @@ export default defineComponent({
       age: this.currentUser.age,
       avatars: [],
       avatarsGenerated: false
-    };
+    }
   },
   setup() {
-    return { closeOutline };
+    return { closeOutline }
   },
   methods: {
     closeModal() {
-      this.$emit('close');
+      this.$emit('close')
     },
     async saveChanges() {
       const updatedUser = {
@@ -111,27 +175,29 @@ export default defineComponent({
         biography: this.biography,
         avatar: this.selectedAvatar,
         age: parseInt(this.age)
-      };
-      await useAccountStore().updateUser(updatedUser);
-      this.$emit('save', updatedUser);
-      this.closeModal();
+      }
+      await useAccountStore().updateUser(updatedUser)
+      this.$emit('save', updatedUser)
+      this.closeModal()
     },
     generateAvatars() {
-      const newAvatars = [];
-      const backgroundColors = ['b6e3f4', 'c0aede', 'd1d4f9', 'ffd5dc', 'ffdfbf'];
+      const newAvatars = []
+      const backgroundColors = ['b6e3f4', 'c0aede', 'd1d4f9', 'ffd5dc', 'ffdfbf']
       for (let i = 0; i < 6; i++) {
-        const seed = `${this.username}-${Math.random().toString(36).substr(2, 9)}`;
-        const backgroundColor = backgroundColors[i % backgroundColors.length];
-        newAvatars.push(`https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=${backgroundColor}`);
+        const seed = `${this.username}-${Math.random().toString(36).substr(2, 9)}`
+        const backgroundColor = backgroundColors[i % backgroundColors.length]
+        newAvatars.push(
+          `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=${backgroundColor}`
+        )
       }
-      this.avatars = newAvatars;
-      this.avatarsGenerated = true;
+      this.avatars = newAvatars
+      this.avatarsGenerated = true
     },
     selectAvatar(avatar) {
-      this.selectedAvatar = avatar;
+      this.selectedAvatar = avatar
     }
   }
-});
+})
 </script>
 
 <style scoped>

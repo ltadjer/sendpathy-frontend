@@ -29,30 +29,52 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonImg, IonButton } from '@ionic/vue';
-import { useReservationStore } from '@/stores/reservation';
-import ReservationService from '@/services/reservation.service';
+import { defineComponent } from 'vue'
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonImg,
+  IonButton
+} from '@ionic/vue'
+import { useReservationStore } from '@/stores/reservation'
+import ReservationService from '@/services/reservation.service'
 
 export default defineComponent({
   name: 'ReservationSummaryView',
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonImg, IonButton },
+  components: {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonImg,
+    IonButton
+  },
   setup() {
-    const reservationStore = useReservationStore();
+    const reservationStore = useReservationStore()
     return {
       reservation: reservationStore.reservation,
-      therapist: reservationStore.therapist,
-    };
+      therapist: reservationStore.therapist
+    }
   },
   methods: {
     async createOneReservation() {
-      const reservationStore = useReservationStore();
+      const reservationStore = useReservationStore()
       await ReservationService.createOneReservation({
         date: reservationStore.reservation.date,
-        title: reservationStore.reservation.title,
-      });
-      this.$router.push('/reservations');
-    },
-  },
-});
+        title: reservationStore.reservation.title
+      })
+      this.$router.push('/reservations')
+    }
+  }
+})
 </script>

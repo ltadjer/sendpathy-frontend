@@ -3,9 +3,9 @@
     <ion-list class="ion-padding">
       <template v-if="filteredConversations && filteredConversations.length > 0">
         <ion-item-sliding
-            v-for="conversation in filteredConversations"
-            :key="conversation.id"
-            class="conversation-item"
+          v-for="conversation in filteredConversations"
+          :key="conversation.id"
+          class="conversation-item"
         >
           <ion-item @click="selectConversation(conversation)" lines="none">
             <div class="avatar-container">
@@ -15,14 +15,29 @@
             </div>
             <ion-label>
               <h2>{{ conversation.user?.username }}</h2>
-              <p :class="{ 'last-message': true, 'unread': conversation.lastMessage?.read === false && conversation.lastMessage?.senderId !== currentUser.id }">
+              <p
+                :class="{
+                  'last-message': true,
+                  unread:
+                    conversation.lastMessage?.read === false &&
+                    conversation.lastMessage?.senderId !== currentUser.id
+                }"
+              >
                 {{ conversation.lastMessage?.content }}
               </p>
             </ion-label>
             <ion-note slot="end" class="time">
               {{ timeSince(conversation.lastMessage?.createdAt) }}
             </ion-note>
-            <ion-badge v-if="conversation.lastMessage?.read === false && conversation.lastMessage?.senderId !== currentUser.id" color="secondary" slot="end">1</ion-badge>
+            <ion-badge
+              v-if="
+                conversation.lastMessage?.read === false &&
+                conversation.lastMessage?.senderId !== currentUser.id
+              "
+              color="secondary"
+              slot="end"
+              >1</ion-badge
+            >
           </ion-item>
           <ion-item-options side="end">
             <ion-item-option @click="deleteOneConversation(conversation.id)">
@@ -36,19 +51,26 @@
           <ion-grid>
             <ion-row class="ion-justify-content-center">
               <ion-col size="12">
-          <ion-label>
-            <h2>Aucune conversation pour le moment... </h2>
-            <p>Osez faire le premier pas et partagez ce que vous ressentez. Vous n’êtes pas seul·e.</p>
-          </ion-label>
+                <ion-label>
+                  <h2>Aucune conversation pour le moment...</h2>
+                  <p>
+                    Osez faire le premier pas et partagez ce que vous ressentez. Vous n’êtes pas
+                    seul·e.
+                  </p>
+                </ion-label>
               </ion-col>
             </ion-row>
             <ion-row class="ion-justify-content-center">
               <ion-col size="12" class="ion-text-center">
-          <custom-button expand="block" @click="openFriendshipsModal" text="Créer une conversation">
-          </custom-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+                <custom-button
+                  expand="block"
+                  @click="openFriendshipsModal"
+                  text="Créer une conversation"
+                >
+                </custom-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-item>
       </template>
     </ion-list>
@@ -56,7 +78,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import {
   IonContent,
   IonList,
@@ -69,62 +91,73 @@ import {
   IonItemOptions,
   IonItemOption,
   IonButton,
-  IonCol, IonRow, IonGrid
-} from '@ionic/vue';
-import { timeSince } from '@/utils/date';
-import { useConversationStore } from '@/stores/conversation';
-import CustomButton from "@/components/Commun/CustomButton.vue";
+  IonCol,
+  IonRow,
+  IonGrid
+} from '@ionic/vue'
+import { timeSince } from '@/utils/date'
+import { useConversationStore } from '@/stores/conversation'
+import CustomButton from '@/components/Common/CustomButton.vue'
 
 export default defineComponent({
   name: 'ConversationList',
   props: {
     currentUser: {
       type: Object,
-      required: true,
+      required: true
     },
     conversations: {
       type: Array,
-      required: true,
+      required: true
     },
     searchTerm: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   components: {
     CustomButton,
-    IonGrid, IonRow, IonCol,
-    IonAvatar, IonLabel, IonNote, IonBadge,
-    IonContent, IonList, IonItem,
-    IonItemSliding, IonItemOptions, IonItemOption,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonAvatar,
+    IonLabel,
+    IonNote,
+    IonBadge,
+    IonContent,
+    IonList,
+    IonItem,
+    IonItemSliding,
+    IonItemOptions,
+    IonItemOption
   },
   computed: {
     filteredConversations() {
-      return this.conversations.filter(conversation => {
+      return this.conversations.filter((conversation) => {
         if (this.searchTerm.trim() === '') {
-          return true;
+          return true
         }
-        return conversation.user?.username.toLowerCase().includes(this.searchTerm.toLowerCase());
-      });
+        return conversation.user?.username.toLowerCase().includes(this.searchTerm.toLowerCase())
+      })
     }
   },
   methods: {
     async selectConversation(conversation) {
-      await this.markMessagesAsRead(conversation.id);
-      this.$router.push(`/conversations/${conversation.id}`);
+      await this.markMessagesAsRead(conversation.id)
+      this.$router.push(`/conversations/${conversation.id}`)
     },
     async markMessagesAsRead(conversationId) {
-      await useConversationStore().markMessagesAsRead(conversationId);
+      await useConversationStore().markMessagesAsRead(conversationId)
     },
     async deleteOneConversation(conversationId) {
-      await useConversationStore().deleteOneConversation(conversationId);
+      await useConversationStore().deleteOneConversation(conversationId)
     },
     openFriendshipsModal() {
-      this.$emit('open-friendships-modal');
+      this.$emit('open-friendships-modal')
     },
-    timeSince,
-  },
-});
+    timeSince
+  }
+})
 </script>
 
 <style scoped>

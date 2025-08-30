@@ -1,10 +1,13 @@
 <template>
   <ion-item
-      :lines="none"
-      :class="{ 'message-out': message.isSentByCurrentUser, 'ion-no-shadow': !message.isSentByCurrentUser }"
-      class="ion-margin-bottom"
-      :id="'popover-button-' + message.id"
-      @click.stop
+    :lines="none"
+    :class="{
+      'message-out': message.isSentByCurrentUser,
+      'ion-no-shadow': !message.isSentByCurrentUser
+    }"
+    class="ion-margin-bottom"
+    :id="'popover-button-' + message.id"
+    @click.stop
   >
     <div class="avatar-container">
       <ion-avatar v-if="!message.isSentByCurrentUser">
@@ -13,44 +16,45 @@
     </div>
     <div class="message-container" :class="{ 'message-in': !message.isSentByCurrentUser }">
       <ion-label>
-        <p :class="{ 'unread': !message.read }">{{ message.content }}</p>
+        <p :class="{ unread: !message.read }">{{ message.content }}</p>
       </ion-label>
-      <ion-text v-if="message.translatedContent" class="toggle-original" @click.stop="toggleOriginal(message)">
+      <ion-text
+        v-if="message.translatedContent"
+        class="toggle-original"
+        @click.stop="toggleOriginal(message)"
+      >
         Voir l'original
       </ion-text>
       <ion-note class="time">
         <sub>{{ timeSince(message.createdAt) }}</sub>
       </ion-note>
     </div>
-    <ActionPopover
-        :trigger-id="'popover-button-' + message.id"
-        :actions="actions"
-    />
+    <ActionPopover :trigger-id="'popover-button-' + message.id" :actions="actions" />
   </ion-item>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonItem, IonAvatar, IonLabel, IonText, IonNote } from '@ionic/vue';
-import ActionPopover from "@/components/Commun/ActionPopover.vue";
-import { timeSince } from '@/utils/date';
+import { defineComponent } from 'vue'
+import { IonItem, IonAvatar, IonLabel, IonText, IonNote } from '@ionic/vue'
+import ActionPopover from '@/components/Common/ActionPopover.vue'
+import { timeSince } from '@/utils/date'
 
 export default defineComponent({
   name: 'MessageItem',
   components: { IonItem, IonAvatar, IonLabel, IonText, IonNote, ActionPopover },
   props: {
     message: { type: Object, required: true },
-    actions: { type: Array, required: true },
+    actions: { type: Array, required: true }
   },
   methods: {
     timeSince,
     toggleOriginal(message) {
       if (message.translatedContent) {
-        message.translatedContent = null;
+        message.translatedContent = null
       }
-    },
-  },
-});
+    }
+  }
+})
 </script>
 
 <style scoped>

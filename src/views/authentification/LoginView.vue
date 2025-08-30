@@ -4,11 +4,7 @@
       <ion-grid class="flex-center">
         <ion-row>
           <ion-col class="ion-text-center">
-            <img
-                alt="Logo"
-                :src="getLogo"
-                width="120px"
-            />
+            <img alt="Logo" :src="getLogo" width="120px" />
             <form @submit.prevent="login" class="ion-text-start form-container">
               <ion-input
                 class="ion-input-spacing"
@@ -31,11 +27,7 @@
                   class="password-toggle-icon"
                 ></ion-icon>
               </ion-input>
-              <custom-button
-                expand="block"
-                type="submit"
-                text="Se connecter"
-              ></custom-button>
+              <custom-button expand="block" type="submit" text="Se connecter"></custom-button>
             </form>
           </ion-col>
         </ion-row>
@@ -68,9 +60,9 @@ import {
   IonIcon
 } from '@ionic/vue'
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons'
-import CustomButton from '@/components/Commun/CustomButton.vue'
-import darkLogo from "@/assets/img/logo-dark.svg";
-import lightLogo from "@/assets/img/logo-light.svg";
+import CustomButton from '@/components/Common/CustomButton.vue'
+import darkLogo from '@/assets/img/logo-dark.svg'
+import lightLogo from '@/assets/img/logo-light.svg'
 
 export default defineComponent({
   name: 'LoginView',
@@ -91,7 +83,7 @@ export default defineComponent({
       email: '' as string,
       password: '' as string,
       message: '' as string,
-      passwordType: 'password' as string,
+      passwordType: 'password' as string
     }
   },
   setup() {
@@ -99,18 +91,18 @@ export default defineComponent({
   },
   computed: {
     getLogo() {
-      return this.isDarkMode ? darkLogo : lightLogo;
-    },
+      return this.isDarkMode ? darkLogo : lightLogo
+    }
   },
   created() {
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    this.isDarkMode = darkModeMediaQuery.matches;
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    this.isDarkMode = darkModeMediaQuery.matches
 
-    console.log('Dark mode:', this.isDarkMode);
+    console.log('Dark mode:', this.isDarkMode)
 
     darkModeMediaQuery.addEventListener('change', (e) => {
-      this.isDarkMode = e.matches;
-    });
+      this.isDarkMode = e.matches
+    })
 
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.has('message')) {

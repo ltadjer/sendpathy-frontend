@@ -1,31 +1,35 @@
 <template>
   <ion-page>
     <MainHeader
-        title="Réservations"
-        :showAvatar="true"
-        :avatarSrc="currentUser?.avatar"
-        :showEndButtons="true"
-        :showLogo="false"
+      title="Réservations"
+      :showAvatar="true"
+      :avatarSrc="currentUser?.avatar"
+      :showEndButtons="true"
+      :showLogo="false"
     />
-    <reservation-list :reservations="reservations" :current-user="currentUser" :therapists="therapists"/>
+    <reservation-list
+      :reservations="reservations"
+      :current-user="currentUser"
+      :therapists="therapists"
+    />
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import {IonPage} from '@ionic/vue'
+import { IonPage } from '@ionic/vue'
 import { useReservationStore } from '@/stores/reservation'
 import { useAccountStore } from '@/stores/account'
 import ReservationList from '@/components/Reservation/ReservationList.vue'
 import authService from '@/services/auth.service'
-import MainHeader from '@/components/Commun/MainHeader.vue'
+import MainHeader from '@/components/Common/MainHeader.vue'
 
 export default defineComponent({
   name: 'ReservationView',
   components: {
     MainHeader,
     IonPage,
-    ReservationList,
+    ReservationList
   },
   data() {
     return {
@@ -34,15 +38,17 @@ export default defineComponent({
   },
   computed: {
     reservations() {
-      return useReservationStore().reservations?.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return useReservationStore()
+        .reservations?.slice()
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     },
     currentUser() {
-      return useAccountStore().user;
+      return useAccountStore().user
     }
   },
   async created() {
-    await useReservationStore().fetchAllReservations();
-    this.therapists = await authService.fetchAllTherapists();
+    await useReservationStore().fetchAllReservations()
+    this.therapists = await authService.fetchAllTherapists()
   }
-});
+})
 </script>

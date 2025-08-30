@@ -1,6 +1,6 @@
 import api from '@/services/api.service'
 
-export default  {
+export default {
   /**
    * Enregistre un nouvel utilisateur.
    * @param user - Les informations de l'utilisateur à enregistrer.
@@ -15,14 +15,14 @@ export default  {
    * @returns les nouvelles données de l'utilisateur comme réponse API, y compris les tokens
    */
   async login(user) {
-    return await api.post('/auth/login', user);
+    return await api.post('/auth/login', user)
   },
 
   /**
    * Déconnecte un utilisateur.
    */
   async logout() {
-      await api.post('/auth/logout')
+    await api.post('/auth/logout')
   },
 
   /**
@@ -31,7 +31,7 @@ export default  {
    */
 
   async checkAuth() {
-    return await api.get('/auth/me');
+    return await api.get('/auth/me')
   },
 
   /**
@@ -40,7 +40,7 @@ export default  {
    */
 
   async refreshToken() {
-    await api.post('/auth/refresh-token');
+    await api.post('/auth/refresh-token')
   },
   /**
    * Demande une réinitialisation de mot de passe pour un utilisateur.
@@ -48,7 +48,7 @@ export default  {
    * @returns les nouvelles données de l'utilisateur comme réponse API
    */
   async requestPasswordReset(email: string) {
-      return await api.post('/auth/request-password-reset', { email })
+    return await api.post('/auth/request-password-reset', { email })
   },
   /**
    * Réinitialise le mot de passe d'un utilisateur.
@@ -57,59 +57,56 @@ export default  {
    * @returns les nouvelles données de l'utilisateur comme réponse API
    */
   async resetPassword(token: string, newPassword: string) {
-      return await api.post('/auth/reset-password', {
-        token: token,
-        newPassword: newPassword
-      })
+    return await api.post('/auth/reset-password', {
+      token: token,
+      newPassword: newPassword
+    })
   },
 
   async updateAccessCode(accessCode: string) {
-      const response = await api.patch(`/users/access-code`, { accessCode: accessCode });
-      return response.data;
-
+    const response = await api.patch(`/users/access-code`, { accessCode: accessCode })
+    return response.data
   },
 
   async validateAccessCode(accessCode: string) {
-      const response = await api.post(`/users/validate-access-code`, { accessCode: accessCode });
-      return response.data;
+    const response = await api.post(`/users/validate-access-code`, { accessCode: accessCode })
+    return response.data
   },
 
   async setAccessCode(accessCode: string) {
-      return await api.post(`/users/access-code`, { accessCode: accessCode });
+    return await api.post(`/users/access-code`, { accessCode: accessCode })
   },
 
   /**
    * Fetch all users with the role of therapist.
    */
   async fetchAllTherapists() {
-    const response = await api.get('/users/therapists');
-    return response.data;
+    const response = await api.get('/users/therapists')
+    return response.data
   },
 
   async findOneById(id: string) {
-      const response = await api.get(`/users/${id}`);
-      return response.data;
+    const response = await api.get(`/users/${id}`)
+    return response.data
   },
 
   async updateUser(userId: string, updatedUser: any) {
-      const response = await api.patch(`/users/${userId}`, updatedUser);
-      return response.data;
+    const response = await api.patch(`/users/${userId}`, updatedUser)
+    return response.data
   },
 
   async updateUserTags(userId: string, tags: string[]) {
-      const response = await api.patch(`/users/${userId}/tags`, { tagIds: tags });
-      return response.data;
+    const response = await api.patch(`/users/${userId}/tags`, { tagIds: tags })
+    return response.data
   },
 
   async updateUserTriggers(userId: string, triggers: string[]) {
-      const response = await api.patch(`/users/${userId}/triggers`, { triggerIds: triggers });
-      return response.data;
+    const response = await api.patch(`/users/${userId}/triggers`, { triggerIds: triggers })
+    return response.data
   },
 
   async deleteUser(userId: string) {
-      const response = await api.delete(`/users/${userId}`);
-      return response.data;
-  },
-
+    const response = await api.delete(`/users/${userId}`)
+    return response.data
+  }
 }
-

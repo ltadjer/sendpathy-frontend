@@ -2,52 +2,33 @@
   <ion-card>
     <ion-card-content>
       <form @submit.prevent="submitLifeMoment">
-        <span style="font-size: 2rem;">{{ emotion }}</span>
+        <span style="font-size: 2rem">{{ emotion }}</span>
 
-        <div
-            v-if="contents.length"
-            :class="`media-grid media-count-${displayedContents.length}`"
-        >
-          <div
-              v-for="(content, index) in displayedContents"
-              :key="index"
-              class="media-item"
-          >
+        <div v-if="contents.length" :class="`media-grid media-count-${displayedContents.length}`">
+          <div v-for="(content, index) in displayedContents" :key="index" class="media-item">
             <div v-if="content.type.startsWith('image/')">
-              <img
-                  :src="`${content.fileUrl}`"
-                  alt="Image"
-                  class="media-content"
-              />
+              <img :src="getImageUrl(content)" alt="Image" class="media-content" />
               <ion-buttons class="delete-icon">
                 <custom-button
-                    @button-click="deleteOneContent(content, index)"
-                    :icon="closeOutline"
+                  @button-click="deleteOneContent(content, index)"
+                  :icon="closeOutline"
                 ></custom-button>
               </ion-buttons>
             </div>
             <div v-else-if="content.type.startsWith('video/')">
-              <video
-                  :src="`${content.fileUrl}`"
-                  controls
-                  class="media-content"
-              ></video>
+              <video :src="getImageUrl(content)" controls class="media-content"></video>
               <ion-icon
-                  name="close-circle"
-                  class="delete-icon"
-                  @click="deleteOneContent(content, index)"
+                name="close-circle"
+                class="delete-icon"
+                @click="deleteOneContent(content, index)"
               ></ion-icon>
             </div>
             <div v-else-if="content.type.startsWith('audio/')">
-              <video
-                  :src="`${content.fileUrl}`"
-                  controls
-                  class="media-content"
-              ></video>
+              <video :src="getImageUrl(content)" controls class="media-content"></video>
               <ion-icon
-                  name="close-circle"
-                  class="delete-icon"
-                  @click="deleteOneContent(content, index)"
+                name="close-circle"
+                class="delete-icon"
+                @click="deleteOneContent(content, index)"
               ></ion-icon>
             </div>
           </div>
@@ -55,43 +36,37 @@
 
         <div v-if="contents.length > 2" class="see-more-container">
           <custom-button
-              :text="showAllMedia ? 'Voir moins' : 'Voir plus'"
-              @click="toggleShowAll"
-              class="see-more-button"
+            :text="showAllMedia ? 'Voir moins' : 'Voir plus'"
+            @click="toggleShowAll"
+            class="see-more-button"
           ></custom-button>
         </div>
 
         <ion-item class="ion-no-shadow" lines="none">
           <ion-textarea
-              v-model="content"
-              placeholder="Comment te sens-tu aujourd'hui?"
-              class="custom-textarea"
-              rows="15"
+            v-model="content"
+            placeholder="Comment te sens-tu aujourd'hui?"
+            class="custom-textarea"
+            rows="15"
           ></ion-textarea>
         </ion-item>
 
         <ion-grid>
           <ion-row>
             <ion-col size="8">
-              <custom-button
-                  :icon="happyOutline"
-                  @click="openEmojiModal"
-              ></custom-button>
-              <custom-button
-                  :icon="imageOutline"
-                  @click="triggerFileInput"
-              ></custom-button>
+              <custom-button :icon="happyOutline" @click="openEmojiModal"></custom-button>
+              <custom-button :icon="imageOutline" @click="triggerFileInput"></custom-button>
               <input
-                  type="file"
-                  ref="fileInput"
-                  @change="onFileChange"
-                  accept="image/*,video/*,audio/*"
-                  multiple
-                  style="display: none;"
+                type="file"
+                ref="fileInput"
+                @change="onFileChange"
+                accept="image/*,video/*,audio/*"
+                multiple
+                style="display: none"
               />
               <custom-button
-                  :icon="isRecording ? stopOutline : micOutline"
-                  @click="toggleRecording"
+                :icon="isRecording ? stopOutline : micOutline"
+                @click="toggleRecording"
               ></custom-button>
             </ion-col>
             <ion-col size="4" class="ion-text-end">
@@ -104,15 +79,15 @@
   </ion-card>
 
   <emotions-modal
-      :isOpen="isEmojiModalOpen"
-      @update:isOpen="isEmojiModalOpen = $event"
-      @emoji-selected="updateEmotion"
-      :selected-emoji="emotion"
+    :isOpen="isEmojiModalOpen"
+    @update:isOpen="isEmojiModalOpen = $event"
+    @emoji-selected="updateEmotion"
+    :selected-emoji="emotion"
   ></emotions-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import {
   IonCard,
   IonCardContent,
@@ -123,18 +98,12 @@ import {
   IonCol,
   IonIcon,
   IonButtons
-} from '@ionic/vue';
-import {
-  happyOutline,
-  imageOutline,
-  micOutline,
-  stopOutline,
-  closeOutline
-} from 'ionicons/icons';
-import CustomButton from '@/components/Commun/CustomButton.vue';
-import EmotionsModal from '@/components/Commun/EmotionsModal.vue';
-import { useLifeMomentStore } from '@/stores/life-moment';
-import { useToastStore } from '@/stores/toast';
+} from '@ionic/vue'
+import { happyOutline, imageOutline, micOutline, stopOutline, closeOutline } from 'ionicons/icons'
+import CustomButton from '@/components/Common/CustomButton.vue'
+import EmotionsModal from '@/components/Common/EmotionsModal.vue'
+import { useLifeMomentStore } from '@/stores/life-moment'
+import { useToastStore } from '@/stores/toast'
 
 export default defineComponent({
   name: 'LifeMomentForm',
@@ -167,15 +136,16 @@ export default defineComponent({
       contents: [],
       isFileInputTriggered: false,
       apiUrl: import.meta.env.VITE_API_URL,
-      showAllMedia: false,
-    };
+      showAllMedia: false
+    }
   },
   computed: {
     displayedContents() {
+      console.log(this.showAllMedia, this.contents)
       if (this.showAllMedia || this.contents.length <= 2) {
-        return this.contents;
+        return this.contents
       }
-      return this.contents.slice(0, 2);
+      return this.contents.slice(0, 2)
     }
   },
   watch: {
@@ -183,32 +153,32 @@ export default defineComponent({
       immediate: true,
       handler(newVal) {
         if (newVal) {
-          this.content = newVal.content;
-          this.emotion = newVal.emotion;
-          this.contents = newVal.contents || [];
+          this.content = newVal.content
+          this.emotion = newVal.emotion
+          this.contents = newVal.contents || []
         } else {
-          this.resetForm();
+          this.resetForm()
         }
       }
     }
   },
   setup() {
-    return { happyOutline, imageOutline, micOutline, stopOutline, closeOutline };
+    return { happyOutline, imageOutline, micOutline, stopOutline, closeOutline }
   },
   emits: ['close', 'button-click'],
   methods: {
     triggerFileInput() {
       if (!this.isFileInputTriggered && this.$refs.fileInput) {
-        this.isFileInputTriggered = true;
-        this.$refs.fileInput.click();
+        this.isFileInputTriggered = true
+        this.$refs.fileInput.click()
       }
     },
     onFileChange(event) {
-      this.isFileInputTriggered = false;
-      const files = Array.from(event.target.files);
-      files.forEach(file => {
+      this.isFileInputTriggered = false
+      const files = Array.from(event.target.files)
+      files.forEach((file) => {
         if (this.validateFile(file)) {
-          this.getFileBase64(file).then(base64 => {
+          this.getFileBase64(file).then((base64) => {
             this.contents.push({
               type: file.type,
               content: '',
@@ -216,84 +186,87 @@ export default defineComponent({
               originalName: file.name,
               size: file.size,
               order: this.contents.length + 1
-            });
-          });
+            })
+          })
         }
-      });
-      const toastStore = useToastStore();
-      toastStore.showToast('N\'oubliez pas de cliquer sur "Partager" pour sauvegarder vos modifications.', 'primary');
+      })
+      const toastStore = useToastStore()
+      toastStore.showToast(
+        'N\'oubliez pas de cliquer sur "Partager" pour sauvegarder vos modifications.',
+        'primary'
+      )
       // Pour permettre de re-sélectionner les mêmes fichiers
-      event.target.value = null;
+      event.target.value = null
     },
     validateFile(file: File) {
-      const allowedTypes = ['image/png', 'image/jpeg', 'video/mp4', 'audio/mpeg'];
-      const maxSize = 10 * 1024 * 1024; // 10 Mo
+      const allowedTypes = ['image/png', 'image/jpeg', 'video/mp4', 'audio/mpeg']
+      const maxSize = 10 * 1024 * 1024 // 10 Mo
       if (!allowedTypes.includes(file.type)) {
-        alert('Type de fichier invalide');
-        return false;
+        alert('Type de fichier invalide')
+        return false
       }
       if (file.size > maxSize) {
-        alert('Le fichier dépasse 10 MB');
-        return false;
+        alert('Le fichier dépasse 10 MB')
+        return false
       }
-      return true;
+      return true
     },
     getFileBase64(file: File) {
       return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
+        const reader = new FileReader()
         reader.onloadend = () => {
-          const base64Content = (reader.result as string).split(',')[1];
-          resolve(base64Content);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+          const base64Content = (reader.result as string).split(',')[1]
+          resolve(base64Content)
+        }
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
     },
     getImageUrl(content) {
       if (content.fileUrl && content.fileUrl.startsWith('/uploads')) {
-        return `${import.meta.env.VITE_API_URL}${content.fileUrl}`;
+        return `${import.meta.env.VITE_API_URL}${content.fileUrl}`
       }
-      return `data:${content.type};base64,${content.base64Content}`;
+      return `data:${content.type};base64,${content.base64Content}`
     },
     toggleRecording() {
       if (this.isRecording) {
-        this.stopRecording();
+        this.stopRecording()
       } else {
-        this.startRecording();
+        this.startRecording()
       }
     },
     startRecording() {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        this.mediaRecorder = new MediaRecorder(stream);
-        this.mediaRecorder.start();
-        this.isRecording = true;
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        this.mediaRecorder = new MediaRecorder(stream)
+        this.mediaRecorder.start()
+        this.isRecording = true
 
-        const audioChunks: BlobPart[] = [];
-        this.mediaRecorder.addEventListener('dataavailable', event => {
-          audioChunks.push(event.data);
-        });
+        const audioChunks: BlobPart[] = []
+        this.mediaRecorder.addEventListener('dataavailable', (event) => {
+          audioChunks.push(event.data)
+        })
         this.mediaRecorder.addEventListener('stop', () => {
-          this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        });
-      });
+          this.audioBlob = new Blob(audioChunks, { type: 'audio/wav' })
+        })
+      })
     },
     stopRecording() {
-      this.mediaRecorder?.stop();
-      this.isRecording = false;
+      this.mediaRecorder?.stop()
+      this.isRecording = false
     },
     updateEmotion(emoji) {
-      this.emotion = emoji;
+      this.emotion = emoji
     },
     openEmojiModal() {
-      this.isEmojiModalOpen = true;
+      this.isEmojiModalOpen = true
     },
     async deleteOneContent(contentOrIndex: any, maybeIndex?: number) {
       if (contentOrIndex.id) {
-        await useLifeMomentStore().deleteOneContent(contentOrIndex.id);
-        const updated = await useLifeMomentStore().fetchOneLifeMomentById(this.lifeMoment.id);
-        this.contents = updated.contents;
+        await useLifeMomentStore().deleteOneContent(contentOrIndex.id)
+        const updated = await useLifeMomentStore().fetchOneLifeMomentById(this.lifeMoment.id)
+        this.contents = updated.contents
       } else {
-        this.contents.splice(maybeIndex!, 1);
+        this.contents.splice(maybeIndex!, 1)
       }
     },
     async submitLifeMoment() {
@@ -301,31 +274,31 @@ export default defineComponent({
         content: this.content,
         emotion: this.emotion || '',
         contents: this.contents || []
-      };
-      if (this.lifeMoment && this.lifeMoment.id) {
-        await useLifeMomentStore().updateOneLifeMoment(this.lifeMoment.id, formData);
-      } else {
-        await useLifeMomentStore().createOneLifeMoment(formData);
       }
-      this.resetForm();
-      this.$emit('close');
+      if (this.lifeMoment && this.lifeMoment.id) {
+        await useLifeMomentStore().updateOneLifeMoment(this.lifeMoment.id, formData)
+      } else {
+        await useLifeMomentStore().createOneLifeMoment(formData)
+      }
+      this.resetForm()
+      this.$emit('close')
     },
     resetForm() {
-      this.content = '';
-      this.file = null;
-      this.base64Image = '';
-      this.isRecording = false;
-      this.audioBlob = null;
-      this.mediaRecorder = null;
-      this.emotion = '';
-      this.contents = [];
-      this.showAllMedia = false;
+      this.content = ''
+      this.file = null
+      this.base64Image = ''
+      this.isRecording = false
+      this.audioBlob = null
+      this.mediaRecorder = null
+      this.emotion = ''
+      this.contents = []
+      this.showAllMedia = false
     },
     toggleShowAll() {
-      this.showAllMedia = !this.showAllMedia;
+      this.showAllMedia = !this.showAllMedia
     }
   }
-});
+})
 </script>
 
 <style scoped>
@@ -406,5 +379,4 @@ ion-item {
   margin-top: 8px;
   text-align: center;
 }
-
 </style>

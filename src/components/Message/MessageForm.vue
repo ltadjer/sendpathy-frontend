@@ -4,11 +4,7 @@
       <form @submit.prevent="sendMessage" class="message-form">
         <ion-item lines="none" class="ion-no-shadow">
           <ion-input v-model="messageContent" placeholder="Votre message" required></ion-input>
-          <custom-button
-            :icon="sendOutline"
-            slot="end"
-            @click.stop="sendMessage()"
-          />
+          <custom-button :icon="sendOutline" slot="end" @click.stop="sendMessage()" />
         </ion-item>
       </form>
     </ion-toolbar>
@@ -16,11 +12,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import WebSocketService from '@/services/websocket.service';
-import CustomButton from '@/components/Commun/CustomButton.vue';
-import { sendOutline } from 'ionicons/icons';
-import { IonFooter, IonToolbar, IonItem, IonInput } from '@ionic/vue';
+import { defineComponent } from 'vue'
+import WebSocketService from '@/services/websocket.service'
+import CustomButton from '@/components/Common/CustomButton.vue'
+import { sendOutline } from 'ionicons/icons'
+import { IonFooter, IonToolbar, IonItem, IonInput } from '@ionic/vue'
 
 export default defineComponent({
   name: 'MessageForm',
@@ -29,58 +25,58 @@ export default defineComponent({
     return {
       messageContent: '',
       isEditing: false,
-      editingMessageId: null as string | null,
-    };
+      editingMessageId: null as string | null
+    }
   },
   props: {
     conversationId: { type: String, required: true },
     senderName: { type: String, required: true },
     receiverId: { type: String, required: true },
-    editingMessage: { type: Object, default: null },
+    editingMessage: { type: Object, default: null }
   },
   watch: {
     editingMessage(newMessage) {
       if (newMessage) {
-        this.messageContent = newMessage.content;
-        this.isEditing = true;
-        this.editingMessageId = newMessage.id;
+        this.messageContent = newMessage.content
+        this.isEditing = true
+        this.editingMessageId = newMessage.id
       } else {
-        this.resetForm();
+        this.resetForm()
       }
-    },
+    }
   },
   setup() {
-    return { sendOutline };
+    return { sendOutline }
   },
   methods: {
     sendMessage() {
-      if (!this.messageContent.trim()) return;
+      if (!this.messageContent.trim()) return
 
       if (this.isEditing && this.editingMessageId) {
         // 🔹 Mise à jour via WebSocket
         WebSocketService.emit('updateMessage', {
           id: this.editingMessageId,
-          content: this.messageContent,
-        });
+          content: this.messageContent
+        })
       } else {
         // 🔹 Envoi d’un nouveau message via WebSocket
         WebSocketService.emit('message', {
           content: this.messageContent,
           receiverId: this.receiverId,
           senderName: this.senderName,
-          conversationId: this.conversationId,
-        });
+          conversationId: this.conversationId
+        })
       }
 
-      this.resetForm();
+      this.resetForm()
     },
     resetForm() {
-      this.messageContent = '';
-      this.isEditing = false;
-      this.editingMessageId = null;
-    },
-  },
-});
+      this.messageContent = ''
+      this.isEditing = false
+      this.editingMessageId = null
+    }
+  }
+})
 </script>
 
 <style scoped>

@@ -53,13 +53,21 @@
             <ion-item lines="none" class="ion-no-shadow">
               <div class="avatar-container ion-no-margin">
                 <ion-avatar class="avatar-option">
-                  <img :src="currentUser.avatar" :alt="currentUser.username" class="avatar-option">
+                  <img
+                    :src="currentUser.avatar"
+                    :alt="currentUser.username"
+                    class="avatar-option"
+                  />
                 </ion-avatar>
               </div>
               <ion-input
                 type="text"
                 v-model="newComment"
-                :placeholder="replyTarget ? `Répondre à @${replyTarget.user.username}` : 'Ajouter un commentaire...'"
+                :placeholder="
+                  replyTarget
+                    ? `Répondre à @${replyTarget.user.username}`
+                    : 'Ajouter un commentaire...'
+                "
               ></ion-input>
             </ion-item>
           </ion-col>
@@ -73,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import {
   IonModal,
   IonContent,
@@ -90,13 +98,13 @@ import {
   IonTitle,
   IonToolbar,
   IonHeader,
-  IonButtons,
-} from '@ionic/vue';
+  IonButtons
+} from '@ionic/vue'
 
-import CommentItem from './CommentItem.vue';
-import { usePostStore } from '@/stores/post';
-import CustomButton from '@/components/Commun/CustomButton.vue';
-import { paperPlaneOutline, closeOutline } from 'ionicons/icons';
+import CommentItem from './CommentItem.vue'
+import { usePostStore } from '@/stores/post'
+import CustomButton from '@/components/Common/CustomButton.vue'
+import { paperPlaneOutline, closeOutline } from 'ionicons/icons'
 
 export default defineComponent({
   name: 'PostCommentModal',
@@ -123,67 +131,67 @@ export default defineComponent({
   props: {
     comments: {
       type: Array,
-      required: true,
+      required: true
     },
     postId: {
       type: String,
-      required: true,
+      required: true
     },
     currentUser: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       newComment: '',
       replyTarget: null,
       defaultAvatar: '',
-      isSubmitting: false as boolean,
-    };
+      isSubmitting: false as boolean
+    }
   },
   computed: {
     isDesktop() {
-      return window.innerWidth >= 768;
+      return window.innerWidth >= 768
     },
     isMobile() {
-      return window.innerWidth < 768;
+      return window.innerWidth < 768
     }
   },
   setup() {
-    return { paperPlaneOutline, closeOutline };
+    return { paperPlaneOutline, closeOutline }
   },
   emits: ['close'],
   methods: {
     closeModal() {
-      this.$emit('close');
+      this.$emit('close')
     },
     setReplyTarget(comment) {
-      this.replyTarget = comment;
+      this.replyTarget = comment
     },
 
     async submitCommentOrReply() {
-      if (this.isSubmitting || this.newComment.trim() === '') return;
+      if (this.isSubmitting || this.newComment.trim() === '') return
 
-      this.isSubmitting = true;
+      this.isSubmitting = true
       try {
         if (this.replyTarget) {
           await usePostStore().addCommentToComment(this.replyTarget.id, {
-            content: this.newComment,
-          });
+            content: this.newComment
+          })
         } else {
           await usePostStore().addCommentToPost(this.postId, {
-            content: this.newComment,
-          });
+            content: this.newComment
+          })
         }
-        this.newComment = '';
-        this.replyTarget = null;
+        this.newComment = ''
+        this.replyTarget = null
       } finally {
-        this.isSubmitting = false;
+        this.isSubmitting = false
       }
-    },
-  },
-});
+    }
+  }
+})
 </script>
 
 <style scoped>
@@ -214,7 +222,7 @@ ion-text {
 }
 
 ion-input {
-  margin:  0 !important;
+  margin: 0 !important;
 }
 
 ion-item {

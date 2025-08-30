@@ -1,95 +1,120 @@
 <template>
   <div v-if="isDesktop">
-    <life-moment-form :lifeMoment="lifeMoment" @close="closeModal()"/>
+    <life-moment-form :lifeMoment="lifeMoment" @close="closeModal()" />
   </div>
-      <life-moment-form-modal v-if="isLifeMomentFormModalOpen" :lifeMoment="selectedLifeMoment" @close="closeLifeMomentFormModal" />
-      <ion-list class="ion-padding">
-        <template v-if="lifeMoments && lifeMoments.length > 0">
-        <ion-item class="ion-margin-bottom" lines="none" v-for="lifeMoment in lifeMoments" :key="lifeMoment.id" @click.stop="editLifeMoment(lifeMoment)">
-          <ion-grid>
-            <ion-row>
-              <ion-col>
-                <ion-grid>
-                  <ion-row class="content-row ion-align-items-start">
-                    <ion-col size="12" size-lg="6" class="text-column">
-                      <div style="font-size: 2rem">{{ lifeMoment.emotion }}</div><br />
-                      <ion-text class="ion-margin-top">{{ lifeMoment.content }}</ion-text>
-                    </ion-col>
-                    <ion-col size="12" size-lg="6" class="carousel-column">
-                      <ion-row v-if="lifeMoment.contents && lifeMoment.contents.length > 0"   class="media-grid"
-                               :class="`media-count-${lifeMoment.contents?.length || 0}`">
-                        <template v-for="(content, index) in lifeMoment.contents" :key="content.id">
-                          <ion-col v-if="index < 4" class="media-item">
-                            <img v-if="content.type.startsWith('image/')" :src="`${content.fileUrl}`" class="media-content" alt="img" />
-                            <video v-else-if="content.type.startsWith('video/')" :src="`${content.fileUrl}`" controls class="media-content"></video>
-                          </ion-col>
-                        </template>
-                        <ion-col v-if="lifeMoment.contents.length > 4" class="overlay-more">
-        <span class="gradient-text">
-          +{{ lifeMoment.contents.length - 4 }}
-        </span>
+  <life-moment-form-modal
+    v-if="isLifeMomentFormModalOpen"
+    :lifeMoment="selectedLifeMoment"
+    @close="closeLifeMomentFormModal"
+  />
+  <ion-list class="ion-padding">
+    <template v-if="lifeMoments && lifeMoments.length > 0">
+      <ion-item
+        class="ion-margin-bottom"
+        lines="none"
+        v-for="lifeMoment in lifeMoments"
+        :key="lifeMoment.id"
+        @click.stop="editLifeMoment(lifeMoment)"
+      >
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-grid>
+                <ion-row class="content-row ion-align-items-start">
+                  <ion-col size="12" size-lg="6" class="text-column">
+                    <div style="font-size: 2rem">{{ lifeMoment.emotion }}</div>
+                    <br />
+                    <ion-text class="ion-margin-top">{{ lifeMoment.content }}</ion-text>
+                  </ion-col>
+                  <ion-col size="12" size-lg="6" class="carousel-column">
+                    <ion-row
+                      v-if="lifeMoment.contents && lifeMoment.contents.length > 0"
+                      class="media-grid"
+                      :class="`media-count-${lifeMoment.contents?.length || 0}`"
+                    >
+                      <template v-for="(content, index) in lifeMoment.contents" :key="content.id">
+                        <ion-col v-if="index < 4" class="media-item">
+                          <img
+                            v-if="content.type.startsWith('image/')"
+                            :src="`${content.fileUrl}`"
+                            class="media-content"
+                            alt="img"
+                          />
+                          <video
+                            v-else-if="content.type.startsWith('video/')"
+                            :src="`${content.fileUrl}`"
+                            controls
+                            class="media-content"
+                          ></video>
                         </ion-col>
-                      </ion-row>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row class="separator ion-margin-top"></ion-row>
-                  <ion-row class="ion-padding-top">
-                    <ion-col>
-                      <ion-text>{{ formatDate(lifeMoment.createdAt) }}</ion-text>
-                    </ion-col>
-                    <ion-col size="2" class="ion-text-end">
-                      <ion-icon
-                          class="custom-icon"
-                          :id="'popover-button-' + lifeMoment.id"
-                          :icon="ellipsisHorizontalOutline"
-                          @click.stop
-                      ></ion-icon>
-                      <ActionPopover
-                          :trigger-id="'popover-button-' + lifeMoment.id"
-                          :actions="[
-                    { label: 'Supprimer', handler: () => deleteOneLifeMoment(lifeMoment.id) }
-                  ]"
-                      />
-                    </ion-col>
+                      </template>
+                      <ion-col v-if="lifeMoment.contents.length > 4" class="overlay-more">
+                        <span class="gradient-text"> +{{ lifeMoment.contents.length - 4 }} </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
                 </ion-row>
-                </ion-grid>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-item>
-        </template>
-        <template v-else>
-          <ion-item lines="none" class="no-life-moments">
-            <ion-grid>
-              <ion-row class="ion-justify-content-center">
-                <ion-col size="12">
-                  <ion-label>
-                    <h2 class="font-bold">Aucun moment partagé pour l’instant</h2>
-                    <p>Capturez un instant, une émotion, un souvenir... et laissez une trace authentique de votre parcours.</p>
-                  </ion-label>
-                </ion-col>
-              </ion-row>
-              <ion-row class="ion-justify-content-center">
-                <ion-col size="12" class="ion-text-center">
-                  <custom-button expand="block" @click="openLifeMomentForm" text="Ajouter un moment">
-                  </custom-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-        </template>
-      </ion-list>
+                <ion-row class="separator ion-margin-top"></ion-row>
+                <ion-row class="ion-padding-top">
+                  <ion-col>
+                    <ion-text>{{ formatDate(lifeMoment.createdAt) }}</ion-text>
+                  </ion-col>
+                  <ion-col size="2" class="ion-text-end">
+                    <ion-icon
+                      class="custom-icon"
+                      :id="'popover-button-' + lifeMoment.id"
+                      :icon="ellipsisHorizontalOutline"
+                      @click.stop
+                    ></ion-icon>
+                    <ActionPopover
+                      :trigger-id="'popover-button-' + lifeMoment.id"
+                      :actions="[
+                        { label: 'Supprimer', handler: () => deleteOneLifeMoment(lifeMoment.id) }
+                      ]"
+                    />
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </template>
+    <template v-else>
+      <ion-item lines="none" class="no-life-moments">
+        <ion-grid>
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="12">
+              <ion-label>
+                <h2 class="font-bold">Aucun moment partagé pour l’instant</h2>
+                <p>
+                  Capturez un instant, une émotion, un souvenir... et laissez une trace authentique
+                  de votre parcours.
+                </p>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="12" class="ion-text-center">
+              <custom-button expand="block" @click="openLifeMomentForm" text="Ajouter un moment">
+              </custom-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </template>
+  </ion-list>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import {IonList, IonItem, IonGrid, IonRow, IonCol, IonIcon, IonText, IonLabel } from '@ionic/vue';
-import { useLifeMomentStore } from '@/stores/life-moment';
-import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue';
-import { ellipsisHorizontalOutline } from 'ionicons/icons';
-import { formatDate } from '@/utils/date';
-import CustomButton from "@/components/Commun/CustomButton.vue";
-import ActionPopover from '@/components/Commun/ActionPopover.vue';
-import LifeMomentForm from "@/components/LifeMoment/LifeMomentForm.vue";
+import { defineComponent } from 'vue'
+import { IonList, IonItem, IonGrid, IonRow, IonCol, IonIcon, IonText, IonLabel } from '@ionic/vue'
+import { useLifeMomentStore } from '@/stores/life-moment'
+import LifeMomentFormModal from '@/components/LifeMoment/LifeMomentFormModal.vue'
+import { ellipsisHorizontalOutline } from 'ionicons/icons'
+import { formatDate } from '@/utils/date'
+import CustomButton from '@/components/Common/CustomButton.vue'
+import ActionPopover from '@/components/Common/ActionPopover.vue'
+import LifeMomentForm from '@/components/LifeMoment/LifeMomentForm.vue'
 
 export default defineComponent({
   name: 'LifeMomentList',
@@ -105,51 +130,50 @@ export default defineComponent({
     IonIcon,
     IonText,
     LifeMomentFormModal,
-    ActionPopover,
+    ActionPopover
   },
   data() {
     return {
       selectedLifeMoment: null,
       isLifeMomentFormModalOpen: false as boolean,
       apiUrl: import.meta.env.VITE_API_URL
-    };
+    }
   },
   props: {
     lifeMoments: {
       type: Array,
-      required: true,
+      required: true
     },
     currentUser: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     isDesktop() {
-      return window.innerWidth > 1200;
-    },
+      return window.innerWidth > 1200
+    }
   },
   methods: {
     formatDate,
     editLifeMoment(lifeMoment) {
-      this.selectedLifeMoment = lifeMoment;
-      this.isLifeMomentFormModalOpen = true;
+      this.selectedLifeMoment = lifeMoment
+      this.isLifeMomentFormModalOpen = true
     },
     async deleteOneLifeMoment(lifeMomentId) {
-      await useLifeMomentStore().deleteOneLifeMoment(lifeMomentId);
+      await useLifeMomentStore().deleteOneLifeMoment(lifeMomentId)
     },
     closeLifeMomentFormModal() {
-      this.isLifeMomentFormModalOpen = false;
+      this.isLifeMomentFormModalOpen = false
     },
     openLifeMomentForm() {
-      this.isLifeMomentFormModalOpen = true;
-    },
-
+      this.isLifeMomentFormModalOpen = true
+    }
   },
   setup() {
-    return { ellipsisHorizontalOutline };
-  },
-});
+    return { ellipsisHorizontalOutline }
+  }
+})
 </script>
 <style scoped>
 .media-grid {
@@ -161,8 +185,15 @@ export default defineComponent({
   grid-template-columns: 1fr;
 }
 
-.media-count-2, .media-count-3, .media-count-4, .media-count-5,
-.media-count-6, .media-count-7, .media-count-8, .media-count-9, .media-count-10 {
+.media-count-2,
+.media-count-3,
+.media-count-4,
+.media-count-5,
+.media-count-6,
+.media-count-7,
+.media-count-8,
+.media-count-9,
+.media-count-10 {
   grid-template-columns: repeat(2, 1fr);
 }
 
@@ -170,7 +201,8 @@ export default defineComponent({
   grid-template-rows: auto auto;
 }
 
-.media-count-4, .media-count-5 {
+.media-count-4,
+.media-count-5 {
   grid-template-rows: 1fr 1fr;
 }
 

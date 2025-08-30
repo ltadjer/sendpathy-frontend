@@ -54,30 +54,89 @@
           </ion-row>
           <ion-row class="flex-end">
             <ion-col class="flex-end">
-                <custom-button text="Envoyer une onde" @click="handleFriendshipAction" v-if="!isCurrentUser && !isPendingFriendship && !isPendingSentFriendship && !isOnlyFollower && !isOnlyFollowing && !isFriend" />
-                <custom-button text="Répondre à l’onde" @click="requestFriendship" v-if="!isCurrentUser && !isPendingFriendship && !isPendingSentFriendship && isOnlyFollower" />
-                <custom-button text="Accepter la connexion" @click="acceptFriendship" v-if="!isCurrentUser && isPendingFriendship" />
-                <custom-button text="Ignorer la connexion" @click="declineFriendship" v-if="!isCurrentUser && isPendingFriendship" />
-                <custom-button text="Supprimer la demande" @click="removePendingRequest" v-if="!isCurrentUser && isPendingSentFriendship" />
+              <custom-button
+                text="Envoyer une onde"
+                @click="handleFriendshipAction"
+                v-if="
+                  !isCurrentUser &&
+                  !isPendingFriendship &&
+                  !isPendingSentFriendship &&
+                  !isOnlyFollower &&
+                  !isOnlyFollowing &&
+                  !isFriend
+                "
+              />
+              <custom-button
+                text="Répondre à l’onde"
+                @click="requestFriendship"
+                v-if="
+                  !isCurrentUser &&
+                  !isPendingFriendship &&
+                  !isPendingSentFriendship &&
+                  isOnlyFollower
+                "
+              />
+              <custom-button
+                text="Accepter la connexion"
+                @click="acceptFriendship"
+                v-if="!isCurrentUser && isPendingFriendship"
+              />
+              <custom-button
+                text="Ignorer la connexion"
+                @click="declineFriendship"
+                v-if="!isCurrentUser && isPendingFriendship"
+              />
+              <custom-button
+                text="Supprimer la demande"
+                @click="removePendingRequest"
+                v-if="!isCurrentUser && isPendingSentFriendship"
+              />
               <custom-button text="Écrire" @click="createOneConversation" v-if="canMessageUser" />
-              <custom-button text="Rompre le lien" @click="removeFriendship" v-if="!isCurrentUser && (isOnlyFollower || isOnlyFollowing || isFriend) && !isPendingFriendship" />
+              <custom-button
+                text="Rompre le lien"
+                @click="removeFriendship"
+                v-if="
+                  !isCurrentUser &&
+                  (isOnlyFollower || isOnlyFollowing || isFriend) &&
+                  !isPendingFriendship
+                "
+              />
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-item>
 
       <ion-segment v-model="selectedSegment" class="ion-padding">
-        <ion-segment-button value="posts" :class="{'ion-shadow-in': selectedSegment === 'posts'}">
-          <ion-label><span :class="{'gradient-text': selectedSegment === 'posts'}">Posts</span></ion-label>
+        <ion-segment-button value="posts" :class="{ 'ion-shadow-in': selectedSegment === 'posts' }">
+          <ion-label
+            ><span :class="{ 'gradient-text': selectedSegment === 'posts' }">Posts</span></ion-label
+          >
         </ion-segment-button>
-        <ion-segment-button value="lifeMoments" :class="{'ion-shadow-in': selectedSegment === 'lifeMoments'}" v-if="isCurrentUser">
-          <ion-label><span :class="{'gradient-text': selectedSegment === 'lifeMoments'}">Moments</span></ion-label>
+        <ion-segment-button
+          value="lifeMoments"
+          :class="{ 'ion-shadow-in': selectedSegment === 'lifeMoments' }"
+          v-if="isCurrentUser"
+        >
+          <ion-label
+            ><span :class="{ 'gradient-text': selectedSegment === 'lifeMoments' }"
+              >Moments</span
+            ></ion-label
+          >
         </ion-segment-button>
       </ion-segment>
 
       <post-list v-if="selectedSegment === 'posts'" :posts="filteredPosts" :current-user="user" />
-      <life-moment-list v-if="selectedSegment === 'lifeMoments' && isCurrentUser" :life-moments="filteredLifeMoments" :current-user="user" />
-      <profile-edit-modal :is-open="isModalOpen" :current-user="user" @close="closeModal" @save="updateUserProfile" />
+      <life-moment-list
+        v-if="selectedSegment === 'lifeMoments' && isCurrentUser"
+        :life-moments="filteredLifeMoments"
+        :current-user="user"
+      />
+      <profile-edit-modal
+        :is-open="isModalOpen"
+        :current-user="user"
+        @close="closeModal"
+        @save="updateUserProfile"
+      />
       <profile-friendships-modal
         :is-open="isFriendshipsModalOpen"
         :followers="followers"
@@ -92,20 +151,37 @@
   </ion-page>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonAvatar, IonButtons, IonLabel, IonGrid,
-  IonRow, IonCol, IonText, IonSegment, IonSegmentButton, IonBackButton, useIonRouter } from '@ionic/vue';
-import { arrowBackOutline, closeOutline } from 'ionicons/icons';
-import { usePostStore } from '@/stores/post';
-import { useLifeMomentStore } from '@/stores/life-moment';
-import PostList from '@/components/Feed/PostList.vue';
-import LifeMomentList from '@/components/LifeMoment/LifeMomentList.vue';
-import CustomButton from '@/components/Commun/CustomButton.vue';
-import ProfileEditModal from '@/components/Profile/ProfileEditModal.vue';
-import ProfileFriendshipsModal from '@/components/Profile/ProfileFriendshipsModal.vue';
-import { useAccountStore } from '@/stores/account';
-import { useFriendshipStore } from '@/stores/friendship';
-import { useConversationStore } from '@/stores/conversation';
+import { defineComponent } from 'vue'
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonAvatar,
+  IonButtons,
+  IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonText,
+  IonSegment,
+  IonSegmentButton,
+  IonBackButton,
+  useIonRouter
+} from '@ionic/vue'
+import { arrowBackOutline, closeOutline } from 'ionicons/icons'
+import { usePostStore } from '@/stores/post'
+import { useLifeMomentStore } from '@/stores/life-moment'
+import PostList from '@/components/Feed/PostList.vue'
+import LifeMomentList from '@/components/LifeMoment/LifeMomentList.vue'
+import CustomButton from '@/components/Common/CustomButton.vue'
+import ProfileEditModal from '@/components/Profile/ProfileEditModal.vue'
+import ProfileFriendshipsModal from '@/components/Profile/ProfileFriendshipsModal.vue'
+import { useAccountStore } from '@/stores/account'
+import { useFriendshipStore } from '@/stores/friendship'
+import { useConversationStore } from '@/stores/conversation'
 
 export default defineComponent({
   name: 'ProfilePage',
@@ -122,7 +198,11 @@ export default defineComponent({
     IonLabel,
     IonBackButton,
     IonGrid,
-    IonRow, IonCol, IonText, IonSegment, IonSegmentButton,
+    IonRow,
+    IonCol,
+    IonText,
+    IonSegment,
+    IonSegmentButton,
     PostList,
     LifeMomentList,
     ProfileEditModal,
@@ -146,179 +226,251 @@ export default defineComponent({
       user: null,
       isPendingFriendship: false,
       isPendingSentFriendship: false,
-      isFriend: false,
-    };
+      isFriend: false
+    }
   },
   setup() {
-    const router = useIonRouter();
+    const router = useIonRouter()
 
-    return { arrowBackOutline, closeOutline, router };
+    return { arrowBackOutline, closeOutline, router }
   },
   async created() {
-    this.user = await useAccountStore().findOneById(this.userId);
-    await usePostStore().fetchAllPosts();
+    this.user = await useAccountStore().findOneById(this.userId)
+    await usePostStore().fetchAllPosts()
     if (this.isCurrentUser) {
-      await useLifeMomentStore().fetchLifeMoments();
-      this.user = this.currentUser;
+      await useLifeMomentStore().fetchLifeMoments()
+      this.user = this.currentUser
     } else {
-      this.user = await useAccountStore().findOneById(this.userId);
-      await useConversationStore().fetchAllConversations();
+      this.user = await useAccountStore().findOneById(this.userId)
+      await useConversationStore().fetchAllConversations()
     }
-    this.isPendingFriendship = !!this.pendingFriendships.find(user => user.id === this.userId);
-    this.isPendingSentFriendship = !!this.pendingSentFriendships.find(user => user.id === this.userId);
-    this.isFriend = this.currentUser.friendshipsSent?.find(friendship => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED') &&
-      this.currentUser.friendshipsReceived?.find(friendship => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED');
-    },
+    this.isPendingFriendship = !!this.pendingFriendships.find((user) => user.id === this.userId)
+    this.isPendingSentFriendship = !!this.pendingSentFriendships.find(
+      (user) => user.id === this.userId
+    )
+    this.isFriend =
+      this.currentUser.friendshipsSent?.find(
+        (friendship) => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED'
+      ) &&
+      this.currentUser.friendshipsReceived?.find(
+        (friendship) => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED'
+      )
+  },
   computed: {
     currentUser() {
-      return useAccountStore().user;
+      return useAccountStore().user
     },
     posts() {
-      return usePostStore().posts.slice().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      return usePostStore()
+        .posts.slice()
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     },
     lifeMoments() {
-      return useLifeMomentStore().lifeMoments.slice().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      return useLifeMomentStore()
+        .lifeMoments.slice()
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     },
     conversations() {
-      return useConversationStore().conversations;
+      return useConversationStore().conversations
     },
     filteredPosts() {
-      return this.posts.filter(post => post.userId === this.user?.id);
+      return this.posts.filter((post) => post.userId === this.user?.id)
     },
     filteredLifeMoments() {
-      return this.lifeMoments.filter(lifeMoment => lifeMoment.userId === this.user.id);
+      return this.lifeMoments.filter((lifeMoment) => lifeMoment.userId === this.user.id)
     },
     followers() {
-      return this.user ? this.user.friendshipsReceived?.filter(friendship => friendship.status === 'ACCEPTED').map(friendship => friendship.requester) : [];
+      return this.user
+        ? this.user.friendshipsReceived
+            ?.filter((friendship) => friendship.status === 'ACCEPTED')
+            .map((friendship) => friendship.requester)
+        : []
     },
     followings() {
-      return this.user ? this.user.friendshipsSent?.filter(friendship => friendship.status === 'ACCEPTED').map(friendship => friendship.receiver) : [];
+      return this.user
+        ? this.user.friendshipsSent
+            ?.filter((friendship) => friendship.status === 'ACCEPTED')
+            .map((friendship) => friendship.receiver)
+        : []
     },
     isCurrentUser() {
-      return this.currentUser?.id ===  this.$route.params.userId;
+      return this.currentUser?.id === this.$route.params.userId
     },
     pendingFriendships() {
-      return this.currentUser ? this.currentUser.friendshipsReceived?.filter(friendship => friendship.status === 'PENDING').map(friendship => friendship.requester) : [];
+      return this.currentUser
+        ? this.currentUser.friendshipsReceived
+            ?.filter((friendship) => friendship.status === 'PENDING')
+            .map((friendship) => friendship.requester)
+        : []
     },
     pendingSentFriendships() {
-      return this.currentUser ? this.currentUser.friendshipsSent?.filter(friendship => friendship.status === 'PENDING').map(friendship => friendship.receiver) : [];
+      return this.currentUser
+        ? this.currentUser.friendshipsSent
+            ?.filter((friendship) => friendship.status === 'PENDING')
+            .map((friendship) => friendship.receiver)
+        : []
     },
     currentFriendship() {
-      return this.currentUser?.friendshipsSent?.find(friendship => friendship.receiverId === this.userId) ||
-        this.currentUser?.friendshipsReceived?.find(friendship => friendship.requesterId === this.userId);
+      return (
+        this.currentUser?.friendshipsSent?.find(
+          (friendship) => friendship.receiverId === this.userId
+        ) ||
+        this.currentUser?.friendshipsReceived?.find(
+          (friendship) => friendship.requesterId === this.userId
+        )
+      )
     },
     isOnlyFollower() {
-      return this.currentUser?.friendshipsReceived?.some(friendship => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED') &&
-        !this.currentUser?.friendshipsSent?.some(friendship => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED');
+      return (
+        this.currentUser?.friendshipsReceived?.some(
+          (friendship) => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED'
+        ) &&
+        !this.currentUser?.friendshipsSent?.some(
+          (friendship) => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED'
+        )
+      )
     },
     isOnlyFollowing() {
-      return this.currentUser?.friendshipsSent?.some(friendship => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED') &&
-        !this.currentUser?.friendshipsReceived?.some(friendship => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED');
+      return (
+        this.currentUser?.friendshipsSent?.some(
+          (friendship) => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED'
+        ) &&
+        !this.currentUser?.friendshipsReceived?.some(
+          (friendship) => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED'
+        )
+      )
     },
     isDesktop() {
-      return window.innerWidth > 992;
+      return window.innerWidth > 992
     },
     canMessageUser() {
-      return this.isFriend || this.isOnlyFollower || this.isOnlyFollowing;
-    },
+      return this.isFriend || this.isOnlyFollower || this.isOnlyFollowing
+    }
   },
   methods: {
     openModal() {
-      this.isModalOpen = true;
+      this.isModalOpen = true
     },
     closeModal() {
-      this.isModalOpen = false;
+      this.isModalOpen = false
     },
     updateUserProfile(updatedUser) {
-      this.user.username = updatedUser.username;
-      this.user.biography = updatedUser.biography;
-      this.user.avatar = updatedUser.avatar;
-      this.user.age = updatedUser.age;
+      this.user.username = updatedUser.username
+      this.user.biography = updatedUser.biography
+      this.user.avatar = updatedUser.avatar
+      this.user.age = updatedUser.age
     },
     openFriendshipsModal(segment) {
-      this.initialSegment = segment;
-      this.isFriendshipsModalOpen = true;
+      this.initialSegment = segment
+      this.isFriendshipsModalOpen = true
     },
     closeFriendshipsModal() {
-      this.isFriendshipsModalOpen = false;
+      this.isFriendshipsModalOpen = false
     },
     async removeUser({ userId, type }) {
-      const friendship = this.currentUser.friendshipsReceived?.find(friendship => friendship.requesterId === userId) ||
-        this.currentUser.friendshipsSent?.find(friendship => friendship.receiverId === userId);
+      const friendship =
+        this.currentUser.friendshipsReceived?.find(
+          (friendship) => friendship.requesterId === userId
+        ) ||
+        this.currentUser.friendshipsSent?.find((friendship) => friendship.receiverId === userId)
       if (friendship) {
-        await useFriendshipStore().deleteOneFriendship(friendship.id);
+        await useFriendshipStore().deleteOneFriendship(friendship.id)
         if (type === 'followers') {
-          this.followers = this.followers.filter(user => user.id !== userId);
+          this.followers = this.followers.filter((user) => user.id !== userId)
         } else {
-          this.followings = this.followings.filter(user => user.id !== userId);
+          this.followings = this.followings.filter((user) => user.id !== userId)
         }
       }
     },
     showUserProfile(user) {
-      this.router.push({ name: 'UserProfile', params: { userId: user.id } });
+      this.router.push({ name: 'UserProfile', params: { userId: user.id } })
     },
     async handleFriendshipAction() {
       if (this.isFriend) {
-        const friendship = this.currentUser.friendshipsReceived?.find(friendship => friendship.requesterId === this.userId);
-        await useFriendshipStore().deleteOneFriendship(friendship.id);
-        this.isPendingSentFriendship = false;
-        this.isFriend = false;
+        const friendship = this.currentUser.friendshipsReceived?.find(
+          (friendship) => friendship.requesterId === this.userId
+        )
+        await useFriendshipStore().deleteOneFriendship(friendship.id)
+        this.isPendingSentFriendship = false
+        this.isFriend = false
       } else {
-        await this.requestFriendship();
+        await this.requestFriendship()
       }
-      await useAccountStore().refreshCurrentUser();
+      await useAccountStore().refreshCurrentUser()
     },
     async requestFriendship() {
-      await useFriendshipStore().createOneFriendship({ requesterId: this.currentUser.id, receiverId: this.user.id, status: 'PENDING' });
-      this.isPendingSentFriendship = true;
+      await useFriendshipStore().createOneFriendship({
+        requesterId: this.currentUser.id,
+        receiverId: this.user.id,
+        status: 'PENDING'
+      })
+      this.isPendingSentFriendship = true
     },
     async acceptFriendship() {
-      const friendship = this.currentUser.friendshipsReceived?.find(friendship => friendship.requesterId === this.userId);
-      await useFriendshipStore().acceptFriendship(friendship.id);
-      await useAccountStore().refreshCurrentUser();
-      if(this.currentUser.friendshipsSent?.find(friendship => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED') &&
-        this.currentUser.friendshipsReceived?.find(friendship => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED')) {
-        this.isFriend = true;
+      const friendship = this.currentUser.friendshipsReceived?.find(
+        (friendship) => friendship.requesterId === this.userId
+      )
+      await useFriendshipStore().acceptFriendship(friendship.id)
+      await useAccountStore().refreshCurrentUser()
+      if (
+        this.currentUser.friendshipsSent?.find(
+          (friendship) => friendship.receiverId === this.userId && friendship.status === 'ACCEPTED'
+        ) &&
+        this.currentUser.friendshipsReceived?.find(
+          (friendship) => friendship.requesterId === this.userId && friendship.status === 'ACCEPTED'
+        )
+      ) {
+        this.isFriend = true
       }
-      this.isPendingFriendship = false;
-      },
+      this.isPendingFriendship = false
+    },
     async declineFriendship() {
-      await useFriendshipStore().deleteOneFriendship(this.currentFriendship.id);
-      this.isPendingFriendship = false;
+      await useFriendshipStore().deleteOneFriendship(this.currentFriendship.id)
+      this.isPendingFriendship = false
     },
     async removeFriendship() {
-      const friendshipReceived = this.currentUser.friendshipsReceived?.find(friendship => friendship.requesterId === this.userId);
-      const friendshipSent = this.currentUser.friendshipsSent?.find(friendship => friendship.receiverId === this.userId);
-      if(friendshipReceived) {
-        await useFriendshipStore().deleteOneFriendship(friendshipReceived.id);
+      const friendshipReceived = this.currentUser.friendshipsReceived?.find(
+        (friendship) => friendship.requesterId === this.userId
+      )
+      const friendshipSent = this.currentUser.friendshipsSent?.find(
+        (friendship) => friendship.receiverId === this.userId
+      )
+      if (friendshipReceived) {
+        await useFriendshipStore().deleteOneFriendship(friendshipReceived.id)
       }
-      if(friendshipSent) {
-        await useFriendshipStore().deleteOneFriendship(friendshipSent.id);
+      if (friendshipSent) {
+        await useFriendshipStore().deleteOneFriendship(friendshipSent.id)
       }
-      this.isPendingFriendship = false;
-      this.isFriend = false;
+      this.isPendingFriendship = false
+      this.isFriend = false
     },
     async removePendingRequest() {
-      await useFriendshipStore().deleteOneFriendship(this.currentFriendship.id);
-      this.isPendingSentFriendship = false;
+      await useFriendshipStore().deleteOneFriendship(this.currentFriendship.id)
+      this.isPendingSentFriendship = false
     },
     async createOneConversation() {
-      const existingConversation = this.conversations.find(conversation =>
-        conversation.user && conversation.user.id === this.user.id
-      );
+      const existingConversation = this.conversations.find(
+        (conversation) => conversation.user && conversation.user.id === this.user.id
+      )
 
       if (existingConversation) {
-        this.$router.push({ name: 'ConversationList', params: { conversationId: existingConversation.id } });
+        this.$router.push({
+          name: 'ConversationList',
+          params: { conversationId: existingConversation.id }
+        })
       } else {
         const conversation = await useConversationStore().createOneConversation({
           userIds: [this.user.id, this.currentUser.id],
           conversationType: 'PRIVATE'
-        });
-        this.$router.push({ name: 'ConversationList', params: { conversationId: conversation?.id } });
+        })
+        this.$router.push({
+          name: 'ConversationList',
+          params: { conversationId: conversation?.id }
+        })
       }
     }
-  },
-});
+  }
+})
 </script>
 <style scoped>
 ion-grid {
@@ -396,5 +548,4 @@ ion-grid {
 ion-header {
   padding: 0 1rem;
 }
-
 </style>

@@ -1,4 +1,4 @@
-import api from './api.service';
+import api from './api.service'
 
 export default {
   /**
@@ -6,10 +6,10 @@ export default {
    */
   async fetchAllReservations() {
     try {
-      const response = await api.get('/reservations');
-      return response.data;
+      const response = await api.get('/reservations')
+      return response.data
     } catch (error) {
-      console.error('Failed to fetch reservations:', error);
+      console.error('Failed to fetch reservations:', error)
     }
   },
 
@@ -20,10 +20,10 @@ export default {
    */
   async fetchOneReservationById(reservationId) {
     try {
-      const response = await api.get(`/reservations/${reservationId}`);
-      return response.data;
+      const response = await api.get(`/reservations/${reservationId}`)
+      return response.data
     } catch (error) {
-      console.error('Failed to fetch reservation:', error);
+      console.error('Failed to fetch reservation:', error)
     }
   },
 
@@ -34,10 +34,10 @@ export default {
    */
   async createOneReservation(reservationData) {
     try {
-      const response = await api.post('/reservations', reservationData);
-      return response.data;
+      const response = await api.post('/reservations', reservationData)
+      return response.data
     } catch (error) {
-      console.error('Failed to create reservation:', error);
+      console.error('Failed to create reservation:', error)
     }
   },
 
@@ -49,10 +49,10 @@ export default {
    */
   async updateOneReservation(reservationId, reservationData) {
     try {
-      const response = await api.patch(`/reservations/${reservationId}`, reservationData);
-      return response.data;
+      const response = await api.patch(`/reservations/${reservationId}`, reservationData)
+      return response.data
     } catch (error) {
-      console.error('Failed to update reservation:', error);
+      console.error('Failed to update reservation:', error)
     }
   },
 
@@ -63,13 +63,9 @@ export default {
    */
   async deleteOneReservation(reservationId) {
     try {
-      await api.delete(`/reservations/${reservationId}`);
+      await api.delete(`/reservations/${reservationId}`)
     } catch (error) {
-      console.error('Failed to delete reservation:', error);
+      console.error('Failed to delete reservation:', error)
     }
-  },
-
-
-
-
+  }
 }

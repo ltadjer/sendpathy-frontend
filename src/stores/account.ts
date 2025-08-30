@@ -1,244 +1,253 @@
-import { defineStore } from 'pinia';
-import AuthService from '@/services/auth.service';
-import WebSocketService from '@/services/websocket.service';
-import { useToastStore } from '@/stores/toast';
+import { defineStore } from 'pinia'
+import AuthService from '@/services/auth.service'
+import WebSocketService from '@/services/websocket.service'
+import { useToastStore } from '@/stores/toast'
 
 export const useAccountStore = defineStore('account', {
   state: () => ({
     user: null,
     isAuthenticated: false,
-    _refreshTimeoutId: null as ReturnType<typeof setTimeout> | null,
+    _refreshTimeoutId: null as ReturnType<typeof setTimeout> | null
   }),
   actions: {
     scheduleRefresh(lifetimeMs = 15 * 60 * 1000) {
       // on vide l'ancien timer si existant
-      if (this._refreshTimeoutId) clearTimeout(this._refreshTimeoutId);
+      if (this._refreshTimeoutId) clearTimeout(this._refreshTimeoutId)
 
-      const timeout = lifetimeMs - 60 * 1000;
+      const timeout = lifetimeMs - 60 * 1000
       this._refreshTimeoutId = setTimeout(async () => {
         try {
-          await this.refreshToken();
-          this.scheduleRefresh(lifetimeMs);
+          await this.refreshToken()
+          this.scheduleRefresh(lifetimeMs)
         } catch {
-          await this.logout();
+          await this.logout()
         }
-      }, timeout);
+      }, timeout)
     },
     async register(user) {
-      const toastStore = useToastStore();
+      const toastStore = useToastStore()
       try {
-        const response = await AuthService.register(user);
+        const response = await AuthService.register(user)
         if (response) {
-         if (response.status === 201) {
-            toastStore.showToast('Inscription réussie, veuillez confirmer votre email', 'primary');
+          if (response.status === 201) {
+            toastStore.showToast('Inscription réussie, veuillez confirmer votre email', 'primary')
           }
         }
       } catch (error) {
         if (error.response?.status === 409 || error.response?.status === 400) {
-          toastStore.showToast('Échec de l\'inscription, l\'utilisateur existe déjà', 'primary');
+          toastStore.showToast("Échec de l'inscription, l'utilisateur existe déjà", 'primary')
         } else {
-          toastStore.showToast('Une erreur est survenue, veuillez réessayer.', 'danger');
+          toastStore.showToast('Une erreur est survenue, veuillez réessayer.', 'danger')
         }
       }
     },
 
-    async login(user: { email: string, password: string }) {
-      const toastStore = useToastStore();
+    async login(user: { email: string; password: string }) {
+      const toastStore = useToastStore()
       try {
-        const response = await AuthService.login(user);
-        this.isAuthenticated = true;
-        this.user = response.data;
-        console.log('User data:', this.user);
+        const response = await AuthService.login(user)
+        this.isAuthenticated = true
+        this.user = response.data
+        console.log('User data:', this.user)
 
         if (response.status === 200 || response.status === 201) {
           setTimeout(() => {
-            toastStore.showToast('Connexion réussie', 'primary');
-          }, 500);
-          this.scheduleRefresh(15 * 60 * 1000);
+            toastStore.showToast('Connexion réussie', 'primary')
+          }, 500)
+          this.scheduleRefresh(15 * 60 * 1000)
         }
       } catch (error: any) {
-        console.error('Login failed:', error);
+        console.error('Login failed:', error)
         if (error.response?.data?.message === 'Username already taken') {
-          this.toastStore.showToast('Ce nom d\'utilisateur est déjà pris.', 'primary');
+          this.toastStore.showToast("Ce nom d'utilisateur est déjà pris.", 'primary')
         }
         if (error.response?.status === 401 || error.response?.status === 409) {
-          toastStore.showToast('Échec de la connexion, vérifiez vos identifiants ou confirmez votre email', 'primary');
+          toastStore.showToast(
+            'Échec de la connexion, vérifiez vos identifiants ou confirmez votre email',
+            'primary'
+          )
         } else {
-          toastStore.showToast('Une erreur est survenue, veuillez réessayer.', 'danger');
+          toastStore.showToast('Une erreur est survenue, veuillez réessayer.', 'danger')
         }
       }
     },
 
     async checkAuth() {
       try {
-        const response = await AuthService.checkAuth();
-        this.user = response.data;
-        this.isAuthenticated = true;
-        this.scheduleRefresh(15 * 60 * 1000);
+        const response = await AuthService.checkAuth()
+        this.user = response.data
+        this.isAuthenticated = true
+        this.scheduleRefresh(15 * 60 * 1000)
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error('Failed to fetch user data:', error)
       }
     },
 
     async logout() {
-      const toastStore = useToastStore();
-      await AuthService.logout();
-      localStorage.removeItem('accessToken');
-        localStorage.removeItem('onboardingCompleted');
-      toastStore.showToast('Déconnexion réussie', 'primary');
-      this.isAuthenticated = false;
-      this.user = null;
-      WebSocketService.disconnect();
+      const toastStore = useToastStore()
+      await AuthService.logout()
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('onboardingCompleted')
+      toastStore.showToast('Déconnexion réussie', 'primary')
+      this.isAuthenticated = false
+      this.user = null
+      WebSocketService.disconnect()
 
       // STOPPER le timer de refresh
       if (this._refreshTimeoutId) {
-        clearTimeout(this._refreshTimeoutId);
-        this._refreshTimeoutId = null;
+        clearTimeout(this._refreshTimeoutId)
+        this._refreshTimeoutId = null
       }
     },
 
     async refreshToken() {
       try {
-        await AuthService.refreshToken();
+        await AuthService.refreshToken()
       } catch (error) {
-        console.error('Failed to refresh token:', error);
-        await this.logout();
+        console.error('Failed to refresh token:', error)
+        await this.logout()
       }
     },
 
     async validateAccessCode(code: string) {
       try {
-        const response = await AuthService.validateAccessCode(code);
-        this.user.accessCode = response;
-        return response;
+        const response = await AuthService.validateAccessCode(code)
+        this.user.accessCode = response
+        return response
       } catch (error) {
-        console.error('Failed to validate access code:', error);
+        console.error('Failed to validate access code:', error)
       }
     },
 
     async updateAccessCode(code: string) {
-      const toastStore = useToastStore();
+      const toastStore = useToastStore()
       try {
-        const response = await AuthService.updateAccessCode(code);
-        this.user.accessCode = response;
-        toastStore.showToast('Code d\'accès mis à jour avec succès', 'primary');
-        return response;
+        const response = await AuthService.updateAccessCode(code)
+        this.user.accessCode = response
+        toastStore.showToast("Code d'accès mis à jour avec succès", 'primary')
+        return response
       } catch (error) {
-        toastStore.showToast('Échec de la mise à jour du code d\'accès', 'danger');
-        console.error('Failed to update access code:', error);
+        toastStore.showToast("Échec de la mise à jour du code d'accès", 'danger')
+        console.error('Failed to update access code:', error)
       }
     },
 
     async setAccessCode(code: string) {
-      const toastStore = useToastStore();
+      const toastStore = useToastStore()
       try {
-        const response = await AuthService.setAccessCode(code);
-        if(response && response.status === 200 || response.status === 201) {
-          this.user.accessCode = response.data;
-            toastStore.showToast('Code d\'accès défini avec succès', 'primary');
-          return response;
+        const response = await AuthService.setAccessCode(code)
+        if ((response && response.status === 200) || response.status === 201) {
+          this.user.accessCode = response.data
+          toastStore.showToast("Code d'accès défini avec succès", 'primary')
+          return response
         } else if (response.data.status === 400) {
-          toastStore.showToast('Échec de la définition du code d\'accès', 'danger');
+          toastStore.showToast("Échec de la définition du code d'accès", 'danger')
           return ''
         }
       } catch (error) {
-        toastStore.showToast('Une erreur est survenu, veillez réessayer.', 'danger');
-        console.error('Failed to set access code:', error);
+        toastStore.showToast('Une erreur est survenu, veillez réessayer.', 'danger')
+        console.error('Failed to set access code:', error)
       }
     },
 
     async requestPasswordReset(email: string) {
-      const toastStore = useToastStore();
+      const toastStore = useToastStore()
       try {
-        const response = await AuthService.requestPasswordReset(email);
+        const response = await AuthService.requestPasswordReset(email)
         if (response) {
           if (response.status === 200 || response.status === 201) {
-            toastStore.showToast('Email de réinitialisation de mot de passe envoyé. Veuillez vérifier votre email.', 'primary');
+            toastStore.showToast(
+              'Email de réinitialisation de mot de passe envoyé. Veuillez vérifier votre email.',
+              'primary'
+            )
           } else if (response.data.status === 404) {
-            toastStore.showToast('Aucun utilisateur trouvé avec cet email.', 'danger');
+            toastStore.showToast('Aucun utilisateur trouvé avec cet email.', 'danger')
           } else if (response.data.status === 400) {
-            toastStore.showToast('Échec de la demande de réinitialisation de mot de passe.', 'danger');
+            toastStore.showToast(
+              'Échec de la demande de réinitialisation de mot de passe.',
+              'danger'
+            )
           }
         }
       } catch (error) {
-        toastStore.showToast('Une erreur est survenue, veuillez réessayez.', 'danger');
-        console.error('Failed to request password reset:', error);
+        toastStore.showToast('Une erreur est survenue, veuillez réessayez.', 'danger')
+        console.error('Failed to request password reset:', error)
       }
     },
     async resetPassword(token: string, newPassword: string) {
-      const toastStore = useToastStore();
+      const toastStore = useToastStore()
       try {
-        const response = await AuthService.resetPassword(token, newPassword);
+        const response = await AuthService.resetPassword(token, newPassword)
         if (response) {
           if (response.data.status === 200 || response.data.status === 201) {
-            toastStore.showToast('Mot de passe réinitialisé avec succès.', 'primary');
+            toastStore.showToast('Mot de passe réinitialisé avec succès.', 'primary')
           } else if (response.data.status === 400) {
-            toastStore.showToast('Échec de la réinitialisation du mot de passe.', 'danger');
+            toastStore.showToast('Échec de la réinitialisation du mot de passe.', 'danger')
           }
         }
       } catch (error) {
-        toastStore.showToast('Une erreur est survenue, veuillez réessayez.', 'danger');
-        console.error('Failed to reset password:', error);
+        toastStore.showToast('Une erreur est survenue, veuillez réessayez.', 'danger')
+        console.error('Failed to reset password:', error)
       }
     },
 
     async findOneById(id: string) {
       try {
-        const response = await AuthService.findOneById(id);
-        console.log('User data:', response.data);
-        return response;
+        const response = await AuthService.findOneById(id)
+        console.log('User data:', response.data)
+        return response
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error('Failed to fetch user data:', error)
       }
     },
 
     async refreshCurrentUser() {
       try {
-        this.user = await AuthService.findOneById(this.user.id);
+        this.user = await AuthService.findOneById(this.user.id)
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error('Failed to fetch user data:', error)
       }
     },
 
     async updateUser(updatedUser) {
-      const toastStore = useToastStore();
+      const toastStore = useToastStore()
       try {
-        this.user = await AuthService.updateUser(this.user.id, updatedUser);
-        console.log('Updated user:', this.user);
-        toastStore.showToast('Profil mis à jour avec succès', 'primary');
+        this.user = await AuthService.updateUser(this.user.id, updatedUser)
+        console.log('Updated user:', this.user)
+        toastStore.showToast('Profil mis à jour avec succès', 'primary')
       } catch (error) {
-        toastStore.showToast('Échec de la mise à jour du profil', 'danger');
-        console.error('Failed to update user:', error);
+        toastStore.showToast('Échec de la mise à jour du profil', 'danger')
+        console.error('Failed to update user:', error)
       }
     },
 
     async updateUserTags(userId: string, tags: string[]) {
       try {
-        const response = await AuthService.updateUserTags(userId, tags);
-        this.user = response;
-        return response;
+        const response = await AuthService.updateUserTags(userId, tags)
+        this.user = response
+        return response
       } catch (error) {
-        console.error('Failed to update user tags:', error);
+        console.error('Failed to update user tags:', error)
       }
     },
 
     async updateUserTriggers(userId: string, triggers: string[]) {
       try {
-        const response = await AuthService.updateUserTriggers(userId, triggers);
-        this.user = response;
-        return response;
+        const response = await AuthService.updateUserTriggers(userId, triggers)
+        this.user = response
+        return response
       } catch (error) {
-        console.error('Failed to update user triggers:', error);
+        console.error('Failed to update user triggers:', error)
       }
     },
 
     async deleteUser(userId: string) {
       try {
-        return await AuthService.deleteUser(userId);
+        return await AuthService.deleteUser(userId)
         // TODO: Redirect to login page after deleting user account
       } catch (error) {
-        console.error('Failed to delete user:', error);
-        }
+        console.error('Failed to delete user:', error)
+      }
     }
   }
-});
+})

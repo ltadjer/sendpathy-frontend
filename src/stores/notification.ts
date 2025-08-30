@@ -1,35 +1,35 @@
-import { defineStore } from 'pinia';
-import notificationService from '@/services/notification.service';
-import NotificationWebSocketService from '@/services/notification-websocket.service';
+import { defineStore } from 'pinia'
+import notificationService from '@/services/notification.service'
+import NotificationWebSocketService from '@/services/notification-websocket.service'
 
 export const useNotificationStore = defineStore('notification', {
   state: () => ({
-    notifications: [],
+    notifications: []
   }),
   actions: {
     async fetchAllNotifications() {
-      this.notifications = await notificationService.fetchAllNotifications();
+      this.notifications = await notificationService.fetchAllNotifications()
     },
     async markAsRead(notificationId: string) {
-      await notificationService.markAsRead(notificationId);
-      this.notifications = this.notifications.filter(n => n.id !== notificationId);
+      await notificationService.markAsRead(notificationId)
+      this.notifications = this.notifications.filter((n) => n.id !== notificationId)
     },
     async updateNotificationMessage(notificationId: string, message: string) {
-      await notificationService.updateNotificationMessage(notificationId, message);
+      await notificationService.updateNotificationMessage(notificationId, message)
     },
     addNotification(notification) {
-      this.notifications.push(notification);
+      this.notifications.push(notification)
     },
     async deleteOneNotification(notificationId: string) {
-      const response = await notificationService.deleteOneNotification(notificationId);
+      const response = await notificationService.deleteOneNotification(notificationId)
       if (response.status === 200) {
-        this.notifications = this.notifications.filter(n => n.id !== notificationId);
+        this.notifications = this.notifications.filter((n) => n.id !== notificationId)
       } else {
-        console.error('Error deleting notification:', response);
+        console.error('Error deleting notification:', response)
       }
     }
   },
   created() {
-    NotificationWebSocketService.on('newNotification', this.addNotification);
-  },
-});
+    NotificationWebSocketService.on('newNotification', this.addNotification)
+  }
+})

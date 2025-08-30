@@ -2,23 +2,44 @@
   <ion-content>
     <template v-if="reservations && reservations.length > 0">
       <ion-segment v-model="selectedSegment" class="ion-padding">
-        <ion-segment-button value="upcoming" :class="{'ion-shadow-in': selectedSegment === 'upcoming'}">
-          <ion-label><span :class="{'gradient-text': selectedSegment === 'upcoming'}">A venir</span></ion-label>
+        <ion-segment-button
+          value="upcoming"
+          :class="{ 'ion-shadow-in': selectedSegment === 'upcoming' }"
+        >
+          <ion-label
+            ><span :class="{ 'gradient-text': selectedSegment === 'upcoming' }"
+              >A venir</span
+            ></ion-label
+          >
         </ion-segment-button>
-        <ion-segment-button value="past" :class="{'ion-shadow-in': selectedSegment === 'past'}">
-          <ion-label><span :class="{'gradient-text': selectedSegment === 'past'}">Passées</span></ion-label>
+        <ion-segment-button value="past" :class="{ 'ion-shadow-in': selectedSegment === 'past' }">
+          <ion-label
+            ><span :class="{ 'gradient-text': selectedSegment === 'past' }"
+              >Passées</span
+            ></ion-label
+          >
         </ion-segment-button>
       </ion-segment>
 
       <ion-grid class="ion-padding-start ion-padding-end">
         <ion-row>
-          <ion-col size="12" size-md="6" v-for="reservation in filteredReservations" :key="reservation.id">
+          <ion-col
+            size="12"
+            size-md="6"
+            v-for="reservation in filteredReservations"
+            :key="reservation.id"
+          >
             <ion-card class="reservation-card">
               <ion-card-header>
-                <ion-card-title> Dr {{ getTherapistName(reservation.slot.therapistId) }}
+                <ion-card-title>
+                  Dr {{ getTherapistName(reservation.slot.therapistId) }}
                   <ion-icon class="custom-icon" :icon="enterOutline">
-                    <a v-if="reservation.videoCallLink" :href="reservation.videoCallLink" target="_blank"></a>
-                  </ion-icon></ion-card-title>
+                    <a
+                      v-if="reservation.videoCallLink"
+                      :href="reservation.videoCallLink"
+                      target="_blank"
+                    ></a> </ion-icon
+                ></ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <ion-grid>
@@ -35,14 +56,17 @@
                     </ion-col>
                     <ion-col size="6">
                       <ion-card-subtitle>Heure</ion-card-subtitle>
-                      <ion-card-title>{{ formatTime(reservation.slot.startTime) }} - {{ formatTime(reservation.slot.endTime) }}</ion-card-title>
+                      <ion-card-title
+                        >{{ formatTime(reservation.slot.startTime) }} -
+                        {{ formatTime(reservation.slot.endTime) }}</ion-card-title
+                      >
                     </ion-col>
                   </ion-row>
                 </ion-grid>
                 <ion-grid>
                   <ion-row>
                     <ion-col size="6">
-                      <ion-button expand="block"  @click="updateReservation(reservation.id)">
+                      <ion-button expand="block" @click="updateReservation(reservation.id)">
                         <span class="gradient-text">Déplacer le RDV</span>
                       </ion-button>
                     </ion-col>
@@ -68,9 +92,9 @@
         ]"
       ></ion-alert>
     </template>
-   <template v-else>
-     <ion-grid class="ion-padding">
-       <ion-row>
+    <template v-else>
+      <ion-grid class="ion-padding">
+        <ion-row>
           <ion-col size="12">
             <ion-item lines="none" class="no-reservations">
               <ion-grid>
@@ -78,9 +102,11 @@
                   <ion-col size="12">
                     <ion-label>
                       <h2 class="font-bold">Aucune consultation</h2>
-                      <p>Prendre soin de soi, c’est déjà un grand pas. Réservez un moment d’écoute bienveillant quand vous serez prêt·e.</p>
+                      <p>
+                        Prendre soin de soi, c’est déjà un grand pas. Réservez un moment d’écoute
+                        bienveillant quand vous serez prêt·e.
+                      </p>
                     </ion-label>
-
                   </ion-col>
                 </ion-row>
                 <ion-row class="ion-justify-content-center">
@@ -92,24 +118,57 @@
                 </ion-row>
               </ion-grid>
             </ion-item>
-
           </ion-col>
-       </ion-row>
-     </ion-grid>
-   </template>
+        </ion-row>
+      </ion-grid>
+    </template>
   </ion-content>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonContent, IonItem, IonLabel, IonCard, IonCardTitle, IonCardSubtitle, IonCardContent, IonCardHeader, IonGrid, IonRow, IonCol, IonIcon, IonSegment, IonSegmentButton, IonAlert, IonButton } from '@ionic/vue';
-import { enterOutline } from 'ionicons/icons';
-import { formatTime } from '@/utils/date';
-import { useReservationStore } from '@/stores/reservation';
+import { defineComponent } from 'vue'
+import {
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonCard,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonCardHeader,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonSegment,
+  IonSegmentButton,
+  IonAlert,
+  IonButton
+} from '@ionic/vue'
+import { enterOutline } from 'ionicons/icons'
+import { formatTime } from '@/utils/date'
+import { useReservationStore } from '@/stores/reservation'
 
 export default defineComponent({
   name: 'ReservationList',
-  components: { IonContent, IonItem, IonLabel, IonCard, IonCardTitle, IonCardSubtitle, IonCardContent, IonCardHeader, IonGrid, IonRow, IonCol, IonIcon, IonSegment, IonSegmentButton, IonAlert, IonButton },
+  components: {
+    IonContent,
+    IonItem,
+    IonLabel,
+    IonCard,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonCardContent,
+    IonCardHeader,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonIcon,
+    IonSegment,
+    IonSegmentButton,
+    IonAlert,
+    IonButton
+  },
 
   props: {
     currentUser: {
@@ -130,56 +189,56 @@ export default defineComponent({
     return {
       selectedSegment: 'upcoming',
       isAlertOpen: false,
-      reservationToDelete: null,
-    };
+      reservationToDelete: null
+    }
   },
 
   computed: {
     filteredReservations() {
-      if (!this.reservations) return [];
+      if (!this.reservations) return []
 
-      const currentDate = new Date();
-      return this.reservations.filter(reservation => {
-        const reservationDate = new Date(reservation.slot.startTime);
+      const currentDate = new Date()
+      return this.reservations.filter((reservation) => {
+        const reservationDate = new Date(reservation.slot.startTime)
         if (this.selectedSegment === 'upcoming') {
-          return reservationDate >= currentDate;
+          return reservationDate >= currentDate
         } else {
-          return reservationDate < currentDate;
+          return reservationDate < currentDate
         }
-      });
+      })
     }
   },
   setup() {
-    return { enterOutline };
+    return { enterOutline }
   },
   methods: {
     formatTime,
     formatDate(date: string) {
-      return new Date(date).toLocaleDateString();
+      return new Date(date).toLocaleDateString()
     },
     getTherapistName(therapistId: string) {
-      const therapist = this.therapists?.find(t => t.id === therapistId);
-      return therapist ? `${therapist.firstName} ${therapist.lastName}` : 'Inconnu';
+      const therapist = this.therapists?.find((t) => t.id === therapistId)
+      return therapist ? `${therapist.firstName} ${therapist.lastName}` : 'Inconnu'
     },
     async updateReservation(reservationId) {
-      this.$router.push({ name: 'ReservationForm', params: { reservationId } });
+      this.$router.push({ name: 'ReservationForm', params: { reservationId } })
     },
     deleteOneReservation(reservationId) {
-      this.reservationToDelete = reservationId;
-      this.isAlertOpen = true;
+      this.reservationToDelete = reservationId
+      this.isAlertOpen = true
     },
     async confirmDelete() {
       if (this.reservationToDelete) {
-        await useReservationStore().deleteOneReservation(this.reservationToDelete);
-        this.reservationToDelete = null;
+        await useReservationStore().deleteOneReservation(this.reservationToDelete)
+        this.reservationToDelete = null
       }
-      this.isAlertOpen = false;
+      this.isAlertOpen = false
     },
     openReservationForm() {
-      this.$router.push('/reservations/nouvelle-reservation/');
+      this.$router.push('/reservations/nouvelle-reservation/')
     }
   }
-});
+})
 </script>
 
 <style scoped>
@@ -203,5 +262,4 @@ ion-card-header ion-card-title {
   justify-content: space-between;
   align-items: center;
 }
-
 </style>

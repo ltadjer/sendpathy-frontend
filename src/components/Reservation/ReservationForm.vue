@@ -21,36 +21,39 @@
         <ion-col>
           <h4>Choisir la date de la consultation</h4>
           <ion-accordion-group class="ion-shadow-out rounded-accordion">
-              <ion-accordion
-                class="ion-shadow-out ion-margin-bottom"
-                v-for="(slots, date, index) in paginatedSlots"
-                :key="date"
-              >
-                <ion-item lines="none" slot="header" class="ion-no-shadow">
-                  <ion-label>{{ date }}</ion-label>
-                </ion-item>
-                <ion-list slot="content">
-                  <ion-chip
-                    v-for="slot in slots"
-                    :key="slot.id"
-                    @click="selectSlot(slot)"
-                    :class="{ 'ion-shadow-in': selectedSlot === slot.id }"
-                  >
-                    <span class="gradient-text">{{ formatTime(slot.startTime) }}</span>
-                  </ion-chip>
-                </ion-list>
-              </ion-accordion>
-            </ion-accordion-group>
+            <ion-accordion
+              class="ion-shadow-out ion-margin-bottom"
+              v-for="(slots, date, index) in paginatedSlots"
+              :key="date"
+            >
+              <ion-item lines="none" slot="header" class="ion-no-shadow">
+                <ion-label>{{ date }}</ion-label>
+              </ion-item>
+              <ion-list slot="content">
+                <ion-chip
+                  v-for="slot in slots"
+                  :key="slot.id"
+                  @click="selectSlot(slot)"
+                  :class="{ 'ion-shadow-in': selectedSlot === slot.id }"
+                >
+                  <span class="gradient-text">{{ formatTime(slot.startTime) }}</span>
+                </ion-chip>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
 
-            <div class="ion-text-center ion-margin-top" v-if="hasMoreDates">
-              <ion-button expand="block" @click="loadMoreDates">Voir plus de dates</ion-button>
-            </div>
+          <div class="ion-text-center ion-margin-top" v-if="hasMoreDates">
+            <ion-button expand="block" @click="loadMoreDates">Voir plus de dates</ion-button>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
 
     <div class="ion-text-center ion-margin-top">
-      <custom-button :text="reservationId ? 'Modifier' : 'Réserver'" @click="submitReservation"></custom-button>
+      <custom-button
+        :text="reservationId ? 'Modifier' : 'Réserver'"
+        @click="submitReservation"
+      ></custom-button>
     </div>
 
     <ion-alert
@@ -59,24 +62,34 @@
       :buttons="alertButtons"
       :inputs="alertInputs"
       cssClass="custom-alert"
-    @didDismiss="isAlertOpen = false"
+      @didDismiss="isAlertOpen = false"
     ></ion-alert>
-
   </ion-list>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import {
-  IonList, IonListHeader, IonGrid, IonRow, IonCol, IonItem, IonLabel,
-  IonButton, IonAccordionGroup, IonAccordion, IonChip, IonAlert, IonIcon
-} from '@ionic/vue';
-import CustomButton from '@/components/Commun/CustomButton.vue';
-import { useToastStore } from '@/stores/toast';
-import { useReservationStore } from '@/stores/reservation';
-import { formatTime } from '@/utils/date';
+  IonList,
+  IonListHeader,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonItem,
+  IonLabel,
+  IonButton,
+  IonAccordionGroup,
+  IonAccordion,
+  IonChip,
+  IonAlert,
+  IonIcon
+} from '@ionic/vue'
+import CustomButton from '@/components/Common/CustomButton.vue'
+import { useToastStore } from '@/stores/toast'
+import { useReservationStore } from '@/stores/reservation'
+import { formatTime } from '@/utils/date'
 
-import { caretDownOutline } from 'ionicons/icons';
+import { caretDownOutline } from 'ionicons/icons'
 
 export default defineComponent({
   props: {
@@ -88,8 +101,19 @@ export default defineComponent({
   },
   components: {
     CustomButton,
-    IonList, IonListHeader, IonGrid, IonRow, IonCol, IonItem, IonLabel,
-    IonButton, IonAccordionGroup, IonAccordion, IonChip, IonAlert, IonIcon
+    IonList,
+    IonListHeader,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonAccordionGroup,
+    IonAccordion,
+    IonChip,
+    IonAlert,
+    IonIcon
   },
   data() {
     return {
@@ -102,103 +126,101 @@ export default defineComponent({
         {
           text: 'Annuler',
           role: 'cancel',
-          cssClass: 'alert-button',
+          cssClass: 'alert-button'
         },
         {
           text: 'OK',
           cssClass: 'alert-button',
           classCss: 'button-ok',
           handler: (selectedId: string) => {
-            this.$emit('update:selectedTherapist', selectedId);
-            this.updateTherapistName();
+            this.$emit('update:selectedTherapist', selectedId)
+            this.updateTherapistName()
           }
         }
       ]
-    };
+    }
   },
   setup() {
-    return { caretDownOutline };
+    return { caretDownOutline }
   },
   watch: {
     selectedTherapist() {
-      this.updateTherapistName();
+      this.updateTherapistName()
     },
     therapists: {
       immediate: true,
       handler() {
-        this.updateAlertInputs();
+        this.updateAlertInputs()
       }
     }
   },
   computed: {
     paginatedSlots() {
-      const dates = Object.keys(this.availableSlotsByDate);
-      const start = 0;
-      const end = this.currentPage * this.itemsPerPage;
-      const paginatedDates = dates.slice(start, end);
+      const dates = Object.keys(this.availableSlotsByDate)
+      const start = 0
+      const end = this.currentPage * this.itemsPerPage
+      const paginatedDates = dates.slice(start, end)
 
       return paginatedDates.reduce((result, date) => {
-        result[date] = this.availableSlotsByDate[date];
-        return result;
-      }, {});
+        result[date] = this.availableSlotsByDate[date]
+        return result
+      }, {})
     },
     hasMoreDates() {
-      return (
-        Object.keys(this.availableSlotsByDate).length >
-        this.currentPage * this.itemsPerPage
-      );
-    },
+      return Object.keys(this.availableSlotsByDate).length > this.currentPage * this.itemsPerPage
+    }
   },
   methods: {
     presentAlert() {
-      this.isAlertOpen = true;
+      this.isAlertOpen = true
     },
     updateTherapistName() {
-      const therapist = this.therapists?.find(t => t.id === this.selectedTherapist);
-      this.selectedTherapistName = therapist ? `${therapist.firstName} ${therapist.lastName}` : '';
+      const therapist = this.therapists?.find((t) => t.id === this.selectedTherapist)
+      this.selectedTherapistName = therapist ? `${therapist.firstName} ${therapist.lastName}` : ''
     },
     updateAlertInputs() {
-      this.alertInputs = this.therapists?.map(therapist => ({
-        label: `${therapist.firstName} ${therapist.lastName}`,
-        type: 'radio',
-        value: therapist.id
-      })) || [];
+      this.alertInputs =
+        this.therapists?.map((therapist) => ({
+          label: `${therapist.firstName} ${therapist.lastName}`,
+          type: 'radio',
+          value: therapist.id
+        })) || []
     },
     formatTime,
     selectSlot(slot) {
-      this.$emit('update:selectedSlot', slot.id);
+      this.$emit('update:selectedSlot', slot.id)
     },
     loadMoreDates() {
-      this.currentPage++;
+      this.currentPage++
     },
     async submitReservation() {
       if (!this.selectedSlot || !this.selectedTherapist) {
-        useToastStore().showToast('Veuillez sélectionner un créneau et un psychologue');
-        return;
+        useToastStore().showToast('Veuillez sélectionner un créneau et un psychologue')
+        return
       }
       if (this.reservationId) {
         await useReservationStore().updateOneReservation(this.reservationId, {
           slotId: this.selectedSlot,
-          therapistId: this.selectedTherapist,
-        });
-        useToastStore().showToast('Réservation modifiée avec succès');
+          therapistId: this.selectedTherapist
+        })
+        useToastStore().showToast('Réservation modifiée avec succès')
       } else {
         await useReservationStore().createOneReservation({
           slotId: this.selectedSlot,
-          therapistId: this.selectedTherapist,
-        });
-        await useReservationStore().fetchAllReservations();
-        useToastStore().showToast('Réservation créée avec succès');
+          therapistId: this.selectedTherapist
+        })
+        await useReservationStore().fetchAllReservations()
+        useToastStore().showToast('Réservation créée avec succès')
       }
-      this.$emit('reservation-submitted');
+      this.$emit('reservation-submitted')
     }
   }
-});
+})
 </script>
 
 <style scoped>
-
-ion-accordion, ion-accordion ion-item {
+ion-accordion,
+ion-accordion ion-item {
   --background: none;
   background-color: transparent;
   border-radius: 1rem;

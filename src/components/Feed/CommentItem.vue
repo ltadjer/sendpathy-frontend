@@ -12,31 +12,50 @@
             <div class="comment-header">
               <span class="username">{{ comment.user.username }}</span>
               <span>
-              <ion-icon
-                class="icon-size"
-                @click="toggleLike(comment)"
-                :icon="comment.isLiked ? heart : heartOutline"
-              ></ion-icon>
-              <span v-if="comment.likes" class="likes-count">{{ comment.likes.length }}</span>
-            </span>
+                <ion-icon
+                  class="icon-size"
+                  @click="toggleLike(comment)"
+                  :icon="comment.isLiked ? heart : heartOutline"
+                ></ion-icon>
+                <span v-if="comment.likes" class="likes-count">{{ comment.likes.length }}</span>
+              </span>
             </div>
             <p class="comment-text">
               {{ comment.translatedContent || comment.content }}
             </p>
             <div class="comment-actions">
-              <ion-text v-if="!comment.translatedContent" @click.stop="translateComment(comment)" class="translate-text">
+              <ion-text
+                v-if="!comment.translatedContent"
+                @click.stop="translateComment(comment)"
+                class="translate-text"
+              >
                 Traduire
               </ion-text>
-              <ion-text v-if="comment.translatedContent" @click.stop="toggleOriginal(comment)" class="toggle-original">
+              <ion-text
+                v-if="comment.translatedContent"
+                @click.stop="toggleOriginal(comment)"
+                class="toggle-original"
+              >
                 Voir l'original
               </ion-text>
-              <ion-text v-if="comment.replies && comment.replies.length > 0" @click="toggleReplies(comment)">
+              <ion-text
+                v-if="comment.replies && comment.replies.length > 0"
+                @click="toggleReplies(comment)"
+              >
                 {{ comment.showReplies ? 'Masquer les réponses' : 'Afficher les réponses' }}
               </ion-text>
               <ion-text @click="$emit('reply', comment)" class="reply-text">Répondre</ion-text>
-              <ion-text v-if="comment.user.id === currentUser.id" @click="deleteComment(comment)" class="delete-text">Supprimer</ion-text>
+              <ion-text
+                v-if="comment.user.id === currentUser.id"
+                @click="deleteComment(comment)"
+                class="delete-text"
+                >Supprimer</ion-text
+              >
             </div>
-            <div v-if="comment.showReplies && comment.replies && comment.replies.length > 0" class="replies">
+            <div
+              v-if="comment.showReplies && comment.replies && comment.replies.length > 0"
+              class="replies"
+            >
               <comment-item
                 v-for="reply in comment.replies"
                 :key="reply.id"
@@ -54,19 +73,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import {
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonText,
-  IonIcon,
-  IonAvatar,
-  IonItem,
-} from '@ionic/vue';
-import { heart, heartOutline } from 'ionicons/icons';
-import { usePostStore } from '@/stores/post';
-import { translateText } from '@/utils/translate';
+import { defineComponent } from 'vue'
+import { IonGrid, IonRow, IonCol, IonText, IonIcon, IonAvatar, IonItem } from '@ionic/vue'
+import { heart, heartOutline } from 'ionicons/icons'
+import { usePostStore } from '@/stores/post'
+import { translateText } from '@/utils/translate'
 
 export default defineComponent({
   name: 'CommentItem',
@@ -77,64 +88,64 @@ export default defineComponent({
     IonCol,
     IonText,
     IonIcon,
-    IonItem,
+    IonItem
   },
   props: {
     comment: {
       type: Object,
-      required: true,
+      required: true
     },
     postId: {
       type: String,
-      required: true,
+      required: true
     },
     currentUser: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       heart,
       heartOutline,
-      defaultAvatar: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
-    };
+      defaultAvatar: 'https://ionicframework.com/docs/img/demos/thumbnail.svg'
+    }
   },
   methods: {
     toggleReplies(comment) {
-      comment.showReplies = !comment.showReplies;
+      comment.showReplies = !comment.showReplies
     },
     async deleteComment(comment) {
       if (comment.parentId) {
-        await usePostStore().deleteCommentFromComment(comment.parentId, comment.id);
+        await usePostStore().deleteCommentFromComment(comment.parentId, comment.id)
       } else {
-        await usePostStore().deleteCommentFromPost(this.postId, comment.id);
+        await usePostStore().deleteCommentFromPost(this.postId, comment.id)
       }
     },
     async toggleLike(comment) {
       if (comment.isLiked) {
-        await usePostStore().unlikeComment(comment.id);
-        comment.isLiked = false;
+        await usePostStore().unlikeComment(comment.id)
+        comment.isLiked = false
       } else {
-        await usePostStore().likeComment(comment.id);
-        comment.isLiked = true;
+        await usePostStore().likeComment(comment.id)
+        comment.isLiked = true
       }
     },
     async translateComment(comment) {
-      const userLang = this.currentUser.nativeLanguage || navigator.language.split('-')[0];
-      const translatedText = await translateText(comment.content, userLang);
+      const userLang = this.currentUser.nativeLanguage || navigator.language.split('-')[0]
+      const translatedText = await translateText(comment.content, userLang)
       if (translatedText) {
-        comment.translatedContent = translatedText;
+        comment.translatedContent = translatedText
       }
     },
     toggleOriginal(comment) {
-      comment.translatedContent = comment.translatedContent ? null : comment.content;
-    },
+      comment.translatedContent = comment.translatedContent ? null : comment.content
+    }
   },
   created() {
-    this.comment.showReplies = false;
-  },
-});
+    this.comment.showReplies = false
+  }
+})
 </script>
 
 <style scoped>
@@ -191,5 +202,4 @@ ion-avatar {
   width: 40px;
   height: 40px;
 }
-
 </style>

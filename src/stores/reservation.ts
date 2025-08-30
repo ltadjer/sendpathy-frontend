@@ -1,67 +1,70 @@
-import { defineStore } from 'pinia';
-import ReservationService from '@/services/reservation.service';
+import { defineStore } from 'pinia'
+import ReservationService from '@/services/reservation.service'
 export const useReservationStore = defineStore('reservation', {
   state: () => ({
     reservation: {
       date: '',
-      time: '',
+      time: ''
     },
     therapist: {
       name: '',
       description: '',
-      image: '',
-    },
+      image: ''
+    }
   }),
   actions: {
     setReservation(reservation) {
-      this.reservation = reservation;
+      this.reservation = reservation
     },
     setTherapist(therapist) {
-      this.therapist = therapist;
+      this.therapist = therapist
     },
     async fetchAllReservations() {
       try {
-        this.reservations = await ReservationService.fetchAllReservations();
+        this.reservations = await ReservationService.fetchAllReservations()
       } catch (error) {
-        console.error('Failed to fetch reservations:', error);
+        console.error('Failed to fetch reservations:', error)
       }
     },
 
     async fetchOneReservationById(reservationId) {
       try {
-        return await ReservationService.fetchOneReservationById(reservationId);
+        return await ReservationService.fetchOneReservationById(reservationId)
       } catch (error) {
-        console.error('Failed to fetch reservation:', error);
+        console.error('Failed to fetch reservation:', error)
       }
     },
 
     async createOneReservation(reservationData) {
       try {
-        const newReservation = await ReservationService.createOneReservation(reservationData);
-        this.reservations.push(newReservation);
+        const newReservation = await ReservationService.createOneReservation(reservationData)
+        this.reservations.push(newReservation)
       } catch (error) {
-        console.error('Failed to create reservation:', error);
+        console.error('Failed to create reservation:', error)
       }
     },
 
     async updateOneReservation(reservationId, reservationData) {
       try {
-        const updatedReservation = await ReservationService.updateOneReservation(reservationId, reservationData);
-        const index = this.reservations.findIndex((l) => l.id === reservationId);
-        this.reservations[index] = updatedReservation;
+        const updatedReservation = await ReservationService.updateOneReservation(
+          reservationId,
+          reservationData
+        )
+        const index = this.reservations.findIndex((l) => l.id === reservationId)
+        this.reservations[index] = updatedReservation
       } catch (error) {
-        console.error('Failed to update reservation:', error);
+        console.error('Failed to update reservation:', error)
       }
     },
 
     async deleteOneReservation(reservationId) {
       try {
-        console.log('Deleting reservation with ID:', reservationId);
-        await ReservationService.deleteOneReservation(reservationId);
-        this.reservations = this.reservations.filter((l) => l.id !== reservationId);
+        console.log('Deleting reservation with ID:', reservationId)
+        await ReservationService.deleteOneReservation(reservationId)
+        this.reservations = this.reservations.filter((l) => l.id !== reservationId)
       } catch (error) {
-        console.error('Failed to delete reservation:', error);
+        console.error('Failed to delete reservation:', error)
       }
-    },
-  },
-});
+    }
+  }
+})

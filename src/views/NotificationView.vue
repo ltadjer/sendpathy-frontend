@@ -10,23 +10,51 @@
     </ion-header>
     <ion-content>
       <ion-list v-if="notifications && notifications.length > 0" class="ion-padding">
-        <ion-item-sliding v-for="notification in notifications" :key="notification.id" class="notification-item">
-        <ion-item lines="none" class="notification-item">
-          <ion-avatar slot="start">
-            <img :src="notification.sender.avatar" alt="Sender Avatar" />
-          </ion-avatar>
-          <ion-label>
-            <h2>{{ notification.message }}</h2>
-            <p>{{ formatDate(notification.createdAt) }}</p>
-          </ion-label>
-          <div v-if="notification.type === 'FRIEND_REQUEST' && !isFriendshipAccepted(notification.sender.id)" class="notification-actions">
-            <custom-button @click="acceptFriendRequest(notification)" text="Accepter"></custom-button>
-            <custom-button @click="ignoreFriendRequest(notification)" text="Ignorer"></custom-button>
-          </div>
-          <div v-else-if="notification.type === 'FRIEND_REQUEST_ACCEPTED' && isFriendshipAccepted(notification.sender.id) && !isFriend(notification.sender.id) && !isFriendshipPending(notification.sender.id) && isSent" class="notification-actions">
-            <custom-button @click="inviteBack(notification.sender.id)" text="Inviter en retour"></custom-button>
-          </div>
-        </ion-item>
+        <ion-item-sliding
+          v-for="notification in notifications"
+          :key="notification.id"
+          class="notification-item"
+        >
+          <ion-item lines="none" class="notification-item">
+            <ion-avatar slot="start">
+              <img :src="notification.sender.avatar" alt="Sender Avatar" />
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ notification.message }}</h2>
+              <p>{{ formatDate(notification.createdAt) }}</p>
+            </ion-label>
+            <div
+              v-if="
+                notification.type === 'FRIEND_REQUEST' &&
+                !isFriendshipAccepted(notification.sender.id)
+              "
+              class="notification-actions"
+            >
+              <custom-button
+                @click="acceptFriendRequest(notification)"
+                text="Accepter"
+              ></custom-button>
+              <custom-button
+                @click="ignoreFriendRequest(notification)"
+                text="Ignorer"
+              ></custom-button>
+            </div>
+            <div
+              v-else-if="
+                notification.type === 'FRIEND_REQUEST_ACCEPTED' &&
+                isFriendshipAccepted(notification.sender.id) &&
+                !isFriend(notification.sender.id) &&
+                !isFriendshipPending(notification.sender.id) &&
+                isSent
+              "
+              class="notification-actions"
+            >
+              <custom-button
+                @click="inviteBack(notification.sender.id)"
+                text="Inviter en retour"
+              ></custom-button>
+            </div>
+          </ion-item>
           <ion-item-options side="end">
             <ion-item-option @click="deleteNotification(notification.id)">
               <span class="item-option-text">Supprimer</span>
@@ -45,14 +73,13 @@
           </ion-row>
         </ion-grid>
       </ion-item>
-
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useNotificationStore } from '@/stores/notification';
+import { defineComponent } from 'vue'
+import { useNotificationStore } from '@/stores/notification'
 import {
   IonPage,
   IonHeader,
@@ -67,16 +94,21 @@ import {
   IonButtons,
   IonItemSliding,
   IonItemOptions,
-  IonItemOption, IonGrid, IonRow, IonCol,
-} from '@ionic/vue';
-import { arrowBackOutline } from 'ionicons/icons';
-import { useFriendshipStore } from '@/stores/friendship';
+  IonItemOption,
+  IonGrid,
+  IonRow,
+  IonCol
+} from '@ionic/vue'
+import { arrowBackOutline } from 'ionicons/icons'
+import { useFriendshipStore } from '@/stores/friendship'
 import { useAccountStore } from '@/stores/account'
-import CustomButton from "@/components/Commun/CustomButton.vue";
+import CustomButton from '@/components/Common/CustomButton.vue'
 
 export default defineComponent({
   components: {
-    IonCol, IonRow, IonGrid,
+    IonCol,
+    IonRow,
+    IonGrid,
     CustomButton,
     IonBackButton,
     IonButtons,
@@ -91,77 +123,98 @@ export default defineComponent({
     IonAvatar,
     IonItemSliding,
     IonItemOptions,
-    IonItemOption,
+    IonItemOption
   },
   data() {
     return {
-      isSent: false,
-    };
+      isSent: false
+    }
   },
   computed: {
     notifications() {
-      return useNotificationStore().notifications;
+      return useNotificationStore().notifications
     },
     friendships() {
-      return useFriendshipStore().friendships;
+      return useFriendshipStore().friendships
     },
     currentUser() {
-      return useAccountStore().user;
-    },
+      return useAccountStore().user
+    }
   },
   setup() {
     return {
-      arrowBackOutline,
-    };
+      arrowBackOutline
+    }
   },
   async created() {
-    await useFriendshipStore().fetchAllFriendships();
-    await useNotificationStore().fetchAllNotifications();
+    await useFriendshipStore().fetchAllFriendships()
+    await useNotificationStore().fetchAllNotifications()
   },
   methods: {
     async markAsRead(notificationId: string) {
-      await useNotificationStore().markAsRead(notificationId);
+      await useNotificationStore().markAsRead(notificationId)
     },
     isFriendshipAccepted(senderId: string) {
-      const isReceiver = this.friendships.find(f => f.requesterId === senderId && f.receiverId === this.currentUser.id);
-      return isReceiver && isReceiver.status === 'ACCEPTED';
+      const isReceiver = this.friendships.find(
+        (f) => f.requesterId === senderId && f.receiverId === this.currentUser.id
+      )
+      return isReceiver && isReceiver.status === 'ACCEPTED'
     },
     isFriend(userId: string) {
-      return this.friendships.some(f => (f.requesterId === userId && f.receiverId === userId) && f.status === 'ACCEPTED');
+      return this.friendships.some(
+        (f) => f.requesterId === userId && f.receiverId === userId && f.status === 'ACCEPTED'
+      )
     },
     isFriendshipPending(userId: string) {
-      return this.friendships.some(f => f.requesterId === this.currentUser.id && f.receiverId === userId);
+      return this.friendships.some(
+        (f) => f.requesterId === this.currentUser.id && f.receiverId === userId
+      )
     },
     async acceptFriendRequest(notification) {
-      const friendship = this.friendships.find(f => f.requesterId === notification.sender.id && f.receiverId === this.currentUser.id);
+      const friendship = this.friendships.find(
+        (f) => f.requesterId === notification.sender.id && f.receiverId === this.currentUser.id
+      )
       if (friendship) {
-        await useFriendshipStore().acceptFriendship(friendship.id);
-        notification.message = `${notification.sender.username} a commencé à vous suivre`;
-        await useNotificationStore().updateNotificationMessage(notification.id, notification.message);
-        await useNotificationStore().fetchAllNotifications();
+        await useFriendshipStore().acceptFriendship(friendship.id)
+        notification.message = `${notification.sender.username} a commencé à vous suivre`
+        await useNotificationStore().updateNotificationMessage(
+          notification.id,
+          notification.message
+        )
+        await useNotificationStore().fetchAllNotifications()
       }
     },
     async ignoreFriendRequest(notification) {
-      const friendship = this.friendships.find(f => f.requesterId === notification.sender.id);
+      const friendship = this.friendships.find((f) => f.requesterId === notification.sender.id)
       if (friendship) {
-        await useFriendshipStore().deleteOneFriendship(friendship.id);
+        await useFriendshipStore().deleteOneFriendship(friendship.id)
       }
     },
     async deleteNotification(notificationId: string) {
-      await useNotificationStore().deleteOneNotification(notificationId);
-      await useNotificationStore().fetchAllNotifications();
+      await useNotificationStore().deleteOneNotification(notificationId)
+      await useNotificationStore().fetchAllNotifications()
     },
     async inviteBack(userId: string) {
-      await useFriendshipStore().createOneFriendship({ requesterId: this.currentUser.id, receiverId: userId, status: 'PENDING' });
-      this.isSent = true;
-      await useNotificationStore().fetchAllNotifications();
+      await useFriendshipStore().createOneFriendship({
+        requesterId: this.currentUser.id,
+        receiverId: userId,
+        status: 'PENDING'
+      })
+      this.isSent = true
+      await useNotificationStore().fetchAllNotifications()
     },
     formatDate(dateString: string) {
-      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      return new Date(dateString).toLocaleDateString('fr-FR', options);
-    },
-  },
-});
+      const options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }
+      return new Date(dateString).toLocaleDateString('fr-FR', options)
+    }
+  }
+})
 </script>
 
 <style scoped>

@@ -1,14 +1,13 @@
-import api from './api.service';
-import { Emojis } from '@/enums/emojis.enum';
-
+import api from './api.service'
+import { Emojis } from '@/enums/emojis.enum'
 
 export default {
   /**
    * Fetch all conversations for the logged-in user.
    */
   async fetchAllPosts() {
-    const response = await api.get('/posts');
-    return response.data;
+    const response = await api.get('/posts')
+    return response.data
   },
 
   /**
@@ -18,8 +17,8 @@ export default {
    */
 
   async fetchOnePostById(postId) {
-    const response = await api.get(`/posts/${postId}`);
-    return response.data;
+    const response = await api.get(`/posts/${postId}`)
+    return response.data
   },
 
   /**
@@ -29,7 +28,7 @@ export default {
    */
 
   async createOnePost(postData) {
-    return await api.post('/posts', postData);
+    return await api.post('/posts', postData)
   },
 
   /**
@@ -39,7 +38,7 @@ export default {
    * @param {object} postData The new data for the post.
    */
   async updateOnePost(postId, postData) {
-    return await api.patch(`/posts/${postId}`, postData);
+    return await api.patch(`/posts/${postId}`, postData)
   },
 
   /**
@@ -48,20 +47,20 @@ export default {
    * @param {string} postId The ID of the post to delete.
    */
   async deleteOnePost(postId) {
-    const response = await api.delete(`/posts/${postId}`);
-    return response.data;
+    const response = await api.delete(`/posts/${postId}`)
+    return response.data
   },
 
-    /**
-     * Translate the content of a post to a target language.
-     *
-     * @param {string} postId The ID of the post to translate.
-     * @param {string} targetLang The target language code (e.g., 'en', 'fr').
-     * @returns {Promise<string>} The translated content of the post.
-     */
+  /**
+   * Translate the content of a post to a target language.
+   *
+   * @param {string} postId The ID of the post to translate.
+   * @param {string} targetLang The target language code (e.g., 'en', 'fr').
+   * @returns {Promise<string>} The translated content of the post.
+   */
   async translatePost(postId: string, targetLang: string) {
-    const response = await api.post(`/posts/${postId}/translate`, {targetLang: targetLang});
-    return response.data.translatedContent;
+    const response = await api.post(`/posts/${postId}/translate`, { targetLang: targetLang })
+    return response.data.translatedContent
   },
 
   /**
@@ -72,8 +71,8 @@ export default {
    */
 
   async addTagToPost(postId, tagId) {
-    const response = await api.post(`/posts/${postId}/tags/${tagId}`);
-    return response.data;
+    const response = await api.post(`/posts/${postId}/tags/${tagId}`)
+    return response.data
   },
 
   /**
@@ -83,8 +82,8 @@ export default {
    * @param {string} tagId The ID of the tag to remove from the post.
    */
   async removeTagFromPost(postId, tagId) {
-    const response = await api.delete(`/posts/${postId}/tags/${tagId}`);
-    return response.data;
+    const response = await api.delete(`/posts/${postId}/tags/${tagId}`)
+    return response.data
   },
 
   /**
@@ -93,8 +92,8 @@ export default {
    * @param triggerId The ID of the trigger to add to the post.
    */
   async addTriggerToPost(postId, triggerId) {
-    const response = await api.post(`/posts/${postId}/triggers/${triggerId}`);
-    return response.data;
+    const response = await api.post(`/posts/${postId}/triggers/${triggerId}`)
+    return response.data
   },
 
   /**
@@ -104,11 +103,11 @@ export default {
    */
 
   async removeTriggerFromPost(postId, triggerId) {
-    const response = await api.delete(`/posts/${postId}/triggers/${triggerId}`);
-    return response.data;
+    const response = await api.delete(`/posts/${postId}/triggers/${triggerId}`)
+    return response.data
   },
 
   async getEmojis() {
-    return Object.values(Emojis);
+    return Object.values(Emojis)
   }
 }

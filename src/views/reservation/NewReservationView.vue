@@ -8,7 +8,9 @@
               <img alt="User Avatar" :src="currentUser?.avatar" />
             </ion-avatar>
           </div>
-          <ion-title>{{ reservationId ? 'Modifier la réservation' : 'Nouvelle réservation' }}</ion-title>
+          <ion-title>{{
+            reservationId ? 'Modifier la réservation' : 'Nouvelle réservation'
+          }}</ion-title>
         </ion-item>
         <ion-buttons slot="end">
           <ion-button size="small" class="ion-no-shadow">
@@ -31,14 +33,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import availableSlotService from '@/services/available-slot.service';
-import authService from '@/services/auth.service';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonAvatar, IonButtons, IonButton } from '@ionic/vue';
-import { useAccountStore } from '@/stores/account';
-import ReservationForm from '@/components/Reservation/ReservationForm.vue';
-import { useReservationStore } from '@/stores/reservation';
-import { formatDate } from '@/utils/date';
+import { defineComponent } from 'vue'
+import availableSlotService from '@/services/available-slot.service'
+import authService from '@/services/auth.service'
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonAvatar,
+  IonButtons,
+  IonButton
+} from '@ionic/vue'
+import { useAccountStore } from '@/stores/account'
+import ReservationForm from '@/components/Reservation/ReservationForm.vue'
+import { useReservationStore } from '@/stores/reservation'
+import { formatDate } from '@/utils/date'
 
 export default defineComponent({
   data() {
@@ -47,53 +59,60 @@ export default defineComponent({
       selectedSlot: null,
       therapists: [],
       selectedTherapist: null,
-      reservationId: null,
-    };
+      reservationId: null
+    }
   },
   components: {
     ReservationForm,
-    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonAvatar, IonButtons, IonButton
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonItem,
+    IonAvatar,
+    IonButtons,
+    IonButton
   },
   computed: {
     currentUser() {
-      return useAccountStore().user;
-    },
+      return useAccountStore().user
+    }
   },
   async created() {
-    const slots = await availableSlotService.fetchAllAvailableSlots();
-    this.availableSlotsByDate = this.groupSlotsByDate(slots);
-    this.therapists = await authService.fetchAllTherapists();
-    this.reservationId = this.$route.params.reservationId;
+    const slots = await availableSlotService.fetchAllAvailableSlots()
+    this.availableSlotsByDate = this.groupSlotsByDate(slots)
+    this.therapists = await authService.fetchAllTherapists()
+    this.reservationId = this.$route.params.reservationId
     if (this.reservationId) {
-      await this.loadReservationData();
+      await this.loadReservationData()
     }
   },
   methods: {
     formatDate,
     groupSlotsByDate(slots) {
-      slots.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+      slots.sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
       return slots.reduce((acc, slot) => {
-        const date = this.formatDate(slot.startTime);
+        const date = this.formatDate(slot.startTime)
         if (!acc[date]) {
-          acc[date] = [];
+          acc[date] = []
         }
-        acc[date].push(slot);
-        return acc;
-      }, {});
+        acc[date].push(slot)
+        return acc
+      }, {})
     },
     async loadReservationData() {
-      const reservation = await useReservationStore().fetchOneReservationById(this.reservationId);
-      this.selectedSlot = reservation.slotId;
-      this.selectedTherapist = reservation.slot.therapistId;
+      const reservation = await useReservationStore().fetchOneReservationById(this.reservationId)
+      this.selectedSlot = reservation.slotId
+      this.selectedTherapist = reservation.slot.therapistId
     },
     handleReservationSubmitted() {
-      this.$router.push({ name: 'ReservationList' });
+      this.$router.push({ name: 'ReservationList' })
     }
   }
-});
+})
 </script>
 <style scoped>
-
 @media (min-width: 1024px) {
   .ion-page {
     display: flex;
@@ -103,6 +122,5 @@ export default defineComponent({
   ion-content {
     width: 60%;
   }
-
 }
 </style>

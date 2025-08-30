@@ -26,13 +26,13 @@
               <ion-button
                 v-for="tag in tags"
                 :key="tag.id"
-                :class="{'selected': Array.from(localSelectedTags).includes(tag.id)}"
+                :class="{ selected: Array.from(localSelectedTags).includes(tag.id) }"
                 @click="toggleSelection('tag', tag.id)"
                 expand="block"
               >
-          <span :class="{'gradient-text': Array.from(localSelectedTags).includes(tag.id)}">
-              {{ tag.name }}
-            </span>
+                <span :class="{ 'gradient-text': Array.from(localSelectedTags).includes(tag.id) }">
+                  {{ tag.name }}
+                </span>
               </ion-button>
             </ion-list>
           </ion-col>
@@ -45,13 +45,13 @@
               <ion-button
                 v-for="trigger in triggers"
                 :key="trigger.id"
-                :class="{'selected gradient-text': localSelectedTriggers.includes(trigger.id)}"
+                :class="{ 'selected gradient-text': localSelectedTriggers.includes(trigger.id) }"
                 @click="toggleSelection('trigger', trigger.id)"
                 expand="block"
               >
-                <span :class="{'gradient-text': localSelectedTriggers.includes(trigger.id)}">
-                {{ trigger.name }}
-              </span>
+                <span :class="{ 'gradient-text': localSelectedTriggers.includes(trigger.id) }">
+                  {{ trigger.name }}
+                </span>
               </ion-button>
             </ion-list>
           </ion-col>
@@ -61,24 +61,48 @@
   </ion-modal>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonList, IonText } from '@ionic/vue';
-import { useTagStore } from '@/stores/tag';
-import { useTriggerStore } from '@/stores/trigger';
-import { closeOutline } from 'ionicons/icons';
-import { usePostStore } from '@/stores/post';
+import { defineComponent } from 'vue'
+import {
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonList,
+  IonText
+} from '@ionic/vue'
+import { useTagStore } from '@/stores/tag'
+import { useTriggerStore } from '@/stores/trigger'
+import { closeOutline } from 'ionicons/icons'
+import { usePostStore } from '@/stores/post'
 
 export default defineComponent({
   name: 'PostSettingsModal',
   components: {
     IonIcon,
-    IonGrid, IonRow, IonCol, IonModal, IonHeader, IonToolbar, IonTitle,
-    IonButtons, IonButton, IonContent, IonList, IonText
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonModal,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonContent,
+    IonList,
+    IonText
   },
   props: {
     isOpen: {
       type: Boolean,
-      required: true,
+      required: true
     },
     selectedTags: {
       type: Array,
@@ -96,78 +120,80 @@ export default defineComponent({
     return {
       localSelectedTags: [],
       localSelectedTriggers: []
-    };
+    }
   },
   computed: {
     tags() {
-      return useTagStore().tags;
+      return useTagStore().tags
     },
     triggers() {
-      return useTriggerStore().triggers;
+      return useTriggerStore().triggers
     },
     isDesktop() {
-      return window.innerWidth >= 768;
+      return window.innerWidth >= 768
     },
     isMobile() {
-      return window.innerWidth < 768;
+      return window.innerWidth < 768
     }
   },
   setup() {
-    return { closeOutline };
+    return { closeOutline }
   },
   methods: {
     closeModal() {
-      this.$emit('update:isOpen', false);
+      this.$emit('update:isOpen', false)
     },
     async toggleSelection(type: 'tag' | 'trigger', id: string) {
       if (type === 'tag') {
         if (this.localSelectedTags.includes(id)) {
-          this.localSelectedTags = this.localSelectedTags.filter(tagId => tagId !== id);
+          this.localSelectedTags = this.localSelectedTags.filter((tagId) => tagId !== id)
           if (this.postId) {
-            await usePostStore().removeTagFromPost(this.postId, id);
+            await usePostStore().removeTagFromPost(this.postId, id)
           }
         } else {
-          this.localSelectedTags.push(id);
+          this.localSelectedTags.push(id)
           if (this.postId) {
-            await usePostStore().addTagToPost(this.postId, id);
+            await usePostStore().addTagToPost(this.postId, id)
           }
         }
-        this.updateTags();
+        this.updateTags()
       } else if (type === 'trigger') {
         if (this.localSelectedTriggers.includes(id)) {
-          this.localSelectedTriggers = this.localSelectedTriggers.filter(triggerId => triggerId !== id);
+          this.localSelectedTriggers = this.localSelectedTriggers.filter(
+            (triggerId) => triggerId !== id
+          )
           if (this.postId) {
-            await usePostStore().removeTriggerFromPost(this.postId, id);
+            await usePostStore().removeTriggerFromPost(this.postId, id)
           }
         } else {
-          this.localSelectedTriggers.push(id);
+          this.localSelectedTriggers.push(id)
           if (this.postId) {
-            await usePostStore().addTriggerToPost(this.postId, id);
+            await usePostStore().addTriggerToPost(this.postId, id)
           }
         }
-        this.updateTriggers();
+        this.updateTriggers()
       }
     },
     updateTags() {
-      const selectedTags = this.localSelectedTags.map(tagId =>
-          this.tags.find(tag => tag.id === tagId)
-      );
-      this.$emit('update:selectedTags', selectedTags);
+      const selectedTags = this.localSelectedTags.map((tagId) =>
+        this.tags.find((tag) => tag.id === tagId)
+      )
+      this.$emit('update:selectedTags', selectedTags)
     },
     updateTriggers() {
-      const selectedTriggers = this.localSelectedTriggers.map(triggerId =>
-          this.triggers.find(trigger => trigger.id === triggerId)
-      );
-      this.$emit('update:selectedTriggers', selectedTriggers);
+      const selectedTriggers = this.localSelectedTriggers.map((triggerId) =>
+        this.triggers.find((trigger) => trigger.id === triggerId)
+      )
+      this.$emit('update:selectedTriggers', selectedTriggers)
     }
   },
   async mounted() {
-    await useTagStore().fetchAllTags();
-    await useTriggerStore().fetchAllTriggers();
-    this.localSelectedTags = this.selectedTags.map(tag => tag.id);
-    this.localSelectedTriggers = this.selectedTriggers.map(trigger => trigger.id);
+    await useTagStore().fetchAllTags()
+    await useTriggerStore().fetchAllTriggers()
+    this.localSelectedTags = this.selectedTags.map((tag) => tag.id)
+    this.localSelectedTriggers = this.selectedTriggers.map((trigger) => trigger.id)
   }
-});
+})
 </script>
 
 <style scoped>

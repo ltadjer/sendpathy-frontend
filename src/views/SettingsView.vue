@@ -10,9 +10,9 @@
     </ion-header>
     <ion-content>
       <confirm-delete-popup
-          :show="showDeleteAlert"
-          @close="showDeleteAlert = false"
-          @confirm="confirmDeleteAccount"
+        :show="showDeleteAlert"
+        @close="showDeleteAlert = false"
+        @confirm="confirmDeleteAccount"
       />
       <ion-list class="ion-padding">
         <!-- Public Information -->
@@ -23,7 +23,11 @@
           <ion-item lines="none">
             <ion-label>Pseudo</ion-label>
             <ion-icon :icon="pencilOutline" slot="end" @click="editField('username')"></ion-icon>
-            <ion-input v-if="editingField === 'username'" v-model="currentUser.username" @focusout="saveField('username')"></ion-input>
+            <ion-input
+              v-if="editingField === 'username'"
+              v-model="currentUser.username"
+              @focusout="saveField('username')"
+            ></ion-input>
             <ion-label v-else>{{ currentUser.username }}</ion-label>
           </ion-item>
         </ion-item-group>
@@ -36,13 +40,23 @@
           <ion-item lines="none">
             <ion-label>Email</ion-label>
             <ion-icon :icon="pencilOutline" slot="end" @click="editField('email')"></ion-icon>
-            <ion-input v-if="editingField === 'email'" v-model="currentUser.email" @focusout="saveField('email')"></ion-input>
+            <ion-input
+              v-if="editingField === 'email'"
+              v-model="currentUser.email"
+              @focusout="saveField('email')"
+            ></ion-input>
             <ion-label v-else>{{ currentUser.email }}</ion-label>
           </ion-item>
           <ion-item lines="none">
             <ion-label>Âge</ion-label>
             <ion-icon :icon="pencilOutline" slot="end" @click="editField('age')"></ion-icon>
-            <ion-input v-if="editingField === 'age'" v-model="currentUser.age" @focusout="saveField('age')" placeholder="Âge" type="number"/>
+            <ion-input
+              v-if="editingField === 'age'"
+              v-model="currentUser.age"
+              @focusout="saveField('age')"
+              placeholder="Âge"
+              type="number"
+            />
             <ion-label v-else>{{ currentUser.age }}</ion-label>
           </ion-item>
         </ion-item-group>
@@ -71,7 +85,11 @@
           </ion-item-divider>
           <ion-item lines="none">
             <ion-label>Language</ion-label>
-            <ion-select v-model="currentUser.nativeLanguage" interface="popover" @ionChange="saveField('nativeLanguage')">
+            <ion-select
+              v-model="currentUser.nativeLanguage"
+              interface="popover"
+              @ionChange="saveField('nativeLanguage')"
+            >
               <ion-select-option v-for="language in languages" :key="language" :value="language">
                 {{ language }}
               </ion-select-option>
@@ -79,7 +97,12 @@
           </ion-item>
           <ion-item lines="none" v-if="triggers && triggers.length > 0">
             <ion-label>Triggers</ion-label>
-            <ion-select v-model="selectedTriggers" interface="popover" multiple="true" @ionChange="updateTriggers">
+            <ion-select
+              v-model="selectedTriggers"
+              interface="popover"
+              multiple="true"
+              @ionChange="updateTriggers"
+            >
               <ion-select-option v-for="trigger in triggers" :key="trigger.id" :value="trigger.id">
                 {{ trigger.name }}
               </ion-select-option>
@@ -87,7 +110,12 @@
           </ion-item>
           <ion-item lines="none" v-if="tags && tags.length > 0">
             <ion-label>Tags</ion-label>
-            <ion-select v-model="selectedTags" interface="popover" multiple="true" @ionChange="updateTags">
+            <ion-select
+              v-model="selectedTags"
+              interface="popover"
+              multiple="true"
+              @ionChange="updateTags"
+            >
               <ion-select-option v-for="tag in tags" :key="tag.id" :value="tag.id">
                 {{ tag.name }}
               </ion-select-option>
@@ -147,21 +175,18 @@
             <custom-button @click="logout" text="Se déconnecter"></custom-button>
           </ion-item>
         </ion-item-group>
-
       </ion-list>
-
     </ion-content>
-
   </ion-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch } from 'vue';
-import { pencilOutline, arrowBackOutline } from 'ionicons/icons';
-import { useTagStore } from '@/stores/tag';
-import { useTriggerStore } from '@/stores/trigger';
-import { useAccountStore } from '@/stores/account';
-import CustomButton from '@/components/Commun/CustomButton.vue';
+import { defineComponent, onMounted, watch } from 'vue'
+import { pencilOutline, arrowBackOutline } from 'ionicons/icons'
+import { useTagStore } from '@/stores/tag'
+import { useTriggerStore } from '@/stores/trigger'
+import { useAccountStore } from '@/stores/account'
+import CustomButton from '@/components/Common/CustomButton.vue'
 import {
   IonPage,
   IonHeader,
@@ -179,10 +204,10 @@ import {
   IonIcon,
   IonButtons,
   IonBackButton,
-  IonItemGroup,
-} from '@ionic/vue';
+  IonItemGroup
+} from '@ionic/vue'
 import { googleLangMap } from '@/utils/translate'
-import ConfirmDeletePopup from "@/components/Commun/ConfirmDeletePopup.vue";
+import ConfirmDeletePopup from '@/components/Common/ConfirmDeletePopup.vue'
 
 export default defineComponent({
   name: 'SettingsView',
@@ -205,7 +230,7 @@ export default defineComponent({
     IonSelectOption,
     IonToggle,
     IonIcon,
-    IonItemGroup,
+    IonItemGroup
   },
   data() {
     return {
@@ -213,7 +238,7 @@ export default defineComponent({
       accessCode: '',
       notifications: {
         posts: true,
-        privateMessages: true,
+        privateMessages: true
       },
       years: [],
       languages: [
@@ -226,116 +251,116 @@ export default defineComponent({
         'Coréen',
         'Russe',
         'Portugais',
-        'Italien',
+        'Italien'
       ],
-      editingField: '',
-    };
+      editingField: ''
+    }
   },
-      setup() {
-        const account = useAccountStore();
+  setup() {
+    const account = useAccountStore()
 
-        // 1) détecter navigateur si pas de préférence
-        onMounted(() => {
-          if (!account.user.nativeLanguage) {
-            const code = navigator.language.split('-')[0]; // ex "fr"
-            const label = ({ fr:'Français', en:'Anglais' })[code] || 'Français';
-            account.updateUser({ nativeLanguage: label });
-          }
-        });
+    // 1) détecter navigateur si pas de préférence
+    onMounted(() => {
+      if (!account.user.nativeLanguage) {
+        const code = navigator.language.split('-')[0] // ex "fr"
+        const label = { fr: 'Français', en: 'Anglais' }[code] || 'Français'
+        account.updateUser({ nativeLanguage: label })
+      }
+    })
 
-        // 2) à chaque changement dans Settings, piloter le widget
-        watch(
-            () => account.user.nativeLanguage,
-            (label) => {
-              const code = googleLangMap[label] || 'fr';
-              localStorage.setItem('userLang', code);
-            }
-        );
+    // 2) à chaque changement dans Settings, piloter le widget
+    watch(
+      () => account.user.nativeLanguage,
+      (label) => {
+        const code = googleLangMap[label] || 'fr'
+        localStorage.setItem('userLang', code)
+      }
+    )
     return {
       pencilOutline,
       arrowBackOutline
-    };
+    }
   },
   async created() {
-    const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 18;
+    const currentYear = new Date().getFullYear()
+    const startYear = currentYear - 18
     for (let year = startYear; year >= startYear - 82; year--) {
-      this.years.push(year);
+      this.years.push(year)
     }
-    await useTagStore().fetchAllTags();
-    await useTriggerStore().fetchAllTriggers();
-    console.log('tags',this.currentUser.tags);
+    await useTagStore().fetchAllTags()
+    await useTriggerStore().fetchAllTriggers()
+    console.log('tags', this.currentUser.tags)
   },
   computed: {
     triggers() {
-      return useTriggerStore().triggers;
+      return useTriggerStore().triggers
     },
     tags() {
-      return useTagStore().tags;
+      return useTagStore().tags
     },
     currentUser() {
-      return useAccountStore().user;
+      return useAccountStore().user
     },
     selectedTriggers() {
-      return this.currentUser.triggers.map((trigger) => trigger.id);
+      return this.currentUser.triggers.map((trigger) => trigger.id)
     },
     selectedTags() {
-      return this.currentUser.tags.map((tag) => tag.id);
-    },
+      return this.currentUser.tags.map((tag) => tag.id)
+    }
   },
   methods: {
     editField(field) {
-      this.editingField = field;
+      this.editingField = field
     },
     async saveField() {
-      this.editingField = '';
+      this.editingField = ''
       const updatedUser = {
         username: this.currentUser.username,
         email: this.currentUser.email,
         age: this.currentUser.age,
-        nativeLanguage: this.currentUser.nativeLanguage,
-      };
+        nativeLanguage: this.currentUser.nativeLanguage
+      }
 
-      await useAccountStore().updateUser(updatedUser);
+      await useAccountStore().updateUser(updatedUser)
     },
     async saveAccessCode() {
-      this.editingField = '';
+      this.editingField = ''
       try {
-        await useAccountStore().updateAccessCode(this.accessCode);
-        console.log('Access code updated successfully');
+        await useAccountStore().updateAccessCode(this.accessCode)
+        console.log('Access code updated successfully')
       } catch (error) {
-        console.error('Failed to update access code:', error);
+        console.error('Failed to update access code:', error)
       }
     },
     async updateTags(event) {
-      const selectedTags = event.target.value;
-      await useAccountStore().updateUserTags(this.currentUser.id, selectedTags);
+      const selectedTags = event.target.value
+      await useAccountStore().updateUserTags(this.currentUser.id, selectedTags)
     },
     async updateTriggers(event) {
-      const selectedTriggers = event.target.value;
-      await useAccountStore().updateUserTriggers(this.currentUser.id, selectedTriggers);
+      const selectedTriggers = event.target.value
+      await useAccountStore().updateUserTriggers(this.currentUser.id, selectedTriggers)
     },
     deleteAccount() {
-      this.showDeleteAlert = true;
-      console.log('delete account', this.showDeleteAlert);
+      this.showDeleteAlert = true
+      console.log('delete account', this.showDeleteAlert)
     },
     async confirmDeleteAccount() {
-      await useAccountStore().deleteUser(this.currentUser.id);
-      this.showDeleteAlert = false;
+      await useAccountStore().deleteUser(this.currentUser.id)
+      this.showDeleteAlert = false
     },
     async logout() {
-      const store = useAccountStore();
-      await store.logout();
-      this.$router.push('/connexion');
-    },
-  },
-});
+      const store = useAccountStore()
+      await store.logout()
+      this.$router.push('/connexion')
+    }
+  }
+})
 </script>
 
 <style scoped>
 ion-item-divider {
   margin-top: 1rem;
-  border-bottom: 1px solid #FD7DFB20;
+  border-bottom: 1px solid #fd7dfb20;
   border-radius: 1rem 1rem 0 0;
 }
 
@@ -377,5 +402,4 @@ ion-toggle {
 ion-toggle::part(handle) {
   box-shadow: var(--neumorphism-out-shadow);
 }
-
 </style>
