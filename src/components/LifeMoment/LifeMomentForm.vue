@@ -6,8 +6,8 @@
 
         <div v-if="contents.length" :class="`media-grid media-count-${displayedContents.length}`">
           <div v-for="(content, index) in displayedContents" :key="index" class="media-item">
-            <div v-if="content.type.startsWith('image/')">
-              <img :src="getImageUrl(content)" alt="Image" class="media-content" />
+            <div v-if="content.type.startsWith('image/')" class="media-content">
+              <img :src="getImageUrl(content)" alt="Image" />
               <ion-buttons class="delete-icon">
                 <custom-button
                   @button-click="deleteOneContent(content, index)"
@@ -223,6 +223,9 @@ export default defineComponent({
       })
     },
     getImageUrl(content) {
+      if (content.fileUrl && content.fileUrl.startsWith('https://')) {
+        return content.fileUrl;
+      }
       if (content.fileUrl && content.fileUrl.startsWith('/uploads')) {
         return `${import.meta.env.VITE_API_URL}${content.fileUrl}`
       }
@@ -358,15 +361,17 @@ ion-item {
 }
 .media-content {
   width: 100%;
-  max-height: 120px;
-  object-fit: cover;
-  border-radius: 1rem;
-  box-shadow: var(--neumorphism-out-shadow);
-  padding: 6px;
+  height: 100%;
 }
 
 .media-content img {
   border-radius: 1rem;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-height: 120px;
+  box-shadow: var(--neumorphism-out-shadow);
+  padding: 6px;
 }
 
 .delete-icon {
